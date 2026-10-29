@@ -383,7 +383,8 @@ p{margin:0}
 @media (min-width:861px){.story:has(.poster.photo){grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(28px,4vw,56px)}.poster.photo{margin-right:calc(-1*max(0px,(100vw - 1180px)/2) - var(--gutter-r) + 24px)!important;margin-top:8px!important}}
 
 /* timeline: material swatches on a woven band */
-.mt-trackwrap{scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);padding-top:8px;padding-bottom:6px}
+.mt-trackwrap{scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);padding-top:18px;padding-bottom:6px}
+.mt-track li:first-child .mt-stop{padding-left:12px}
 .mt-trackwrap::-webkit-scrollbar{display:none}
 .mt-track{grid-auto-columns:minmax(132px,1fr)}
 .mt-track::before{top:23px;height:12px;border-radius:6px;opacity:.28;background:repeating-linear-gradient(135deg,var(--marigold) 0 9px,var(--poppy) 9px 18px,var(--ink) 18px 27px)}
@@ -403,13 +404,15 @@ p{margin:0}
 .sw-mylar{background:linear-gradient(135deg,rgba(255,255,255,.9) 0 18%,transparent 34% 60%,rgba(255,255,255,.7) 72%,transparent 86%),radial-gradient(circle,#f7f8fa 0 60%,#c9ced6 61% 100%)}
 .sw-return{box-shadow:3px 3px 0 var(--ink),0 0 0 0 var(--marigold)}
 @media (prefers-reduced-motion:reduce){.mt-track::after{transition:none}}
-.porch-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:end;max-width:none}
+
 .porch-head h2{font-weight:600}
 .porch-sub{margin:0 0 .4em;font-family:var(--display);font-size:clamp(1.15rem,1rem + .7vw,1.55rem);line-height:1.3;color:var(--on-vat);font-variation-settings:"SOFT" 100,"WONK" 1}
 .porch-sub em{color:var(--marigold)}
 @media (max-width:860px){.porch-head{grid-template-columns:1fr}}
 #concepts .immersive{box-shadow:0 0 0 3px var(--ink),14px 14px 0 3px var(--marigold)}
 @media (max-width:700px){#concepts .immersive{box-shadow:0 0 0 3px var(--ink),8px 8px 0 3px var(--marigold)}}
+.top nav .navlink,.top .brand,.top nav .btn{white-space:nowrap}
+@media (max-width:1060px){.top nav{gap:13px;font-size:.68rem;letter-spacing:.06em}}@media (max-width:930px){.top nav .navlink{display:none}}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
@@ -432,11 +435,11 @@ p{margin:0}
     </a>
     <nav aria-label="Sections">
       <a class="navlink" href="#story">Story</a>
-      <a class="navlink" href="#materiality">Materiality</a>
+      <a class="navlink" href="#materiality">Banjo timeline</a>
       <a class="navlink" href="#path">My path</a>
-      <a class="navlink" href="#roots">Roots</a>
+      <a class="navlink" href="#roots">My roots</a>
       <a class="navlink" href="#porch">The porch</a>
-      <a class="navlink" href="#songmap">Rabbit holes</a>
+      <a class="navlink" href="#songmap">Bubble maps</a>
       <a class="navlink" href="#contact">Contact</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
     </nav>
@@ -573,12 +576,11 @@ p{margin:0}
   <section class="band dyed" id="path" aria-labelledby="path-title">
     <div class="wrap">
       <div class="head">
-        <p class="eyebrow">My path to the porch</p>
-        <h2 id="path-title">A lifetime of folk instruments, <em>then home.</em></h2>
+        <h2 id="path-title">My path to <em>the banjo</em></h2>
       </div>
       <div class="path">
         <div class="roots">
-          <p>I'm African-American, raised in <strong>Freetown, on Harriet Tubman Lane, in Columbia, Maryland</strong>. My great-grandmother was a recycler. My family has a junkyard, and my grandfather ran a hauling business, bringing mulch to people and hauling away what they no longer wanted. It was a grounded upbringing, and it still anchors me.</p>
+          <p>I was raised on Harriet Tubman Lane in <strong>Freetown, a part of Columbia, Maryland</strong>. My great-grandmother was a recycler. My family has a junkyard, and my grandfather ran a hauling business, bringing mulch to people and hauling away what they no longer wanted. It was a grounded upbringing, and it still anchors me.</p>
           <div class="holler">
             <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M9 34c0-9 4-15 13-15s13 6 13 15" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linecap="round"/><path d="M13 21l-2-9 7 5M31 21l2-9-7 5" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linejoin="round"/><circle cx="18" cy="27" r="1.6" fill="#f2e8d2"/><circle cx="26" cy="27" r="1.6" fill="#f2e8d2"/></svg>
             <p>We always had about ten cats around, and my grandfather raised me to have a holler to call them home.</p>
@@ -589,7 +591,7 @@ p{margin:0}
           <li><span class="when">2006 · Crete, Greece</span><h3>Tzouras</h3><p>Studying abroad, I started diving into folk instrumentation.</p></li>
           <li><span class="when">2007 · Film thesis · Guinea, West Africa</span><h3>Dunun</h3><p>As a film student, I spent my senior thesis filming a djembe orchestra: djembe, kora, dunun and more. Filming them started my own journey with the dunun set (dundunba, sangban and kenkeni).</p>
             <figure class="still wide" style="margin-top:12px;max-width:560px"><img src="img/guinea-2007.jpg" width="1400" height="931" loading="lazy" alt="On a beach in Guinea, dancers in tie-dyed dresses and drummers with djembe and dunun perform as a film camera in the foreground records them." style="width:100%;height:auto;border-radius:8px;border:2px solid rgba(242,232,210,.35)"><figcaption>On set in Guinea, 2007</figcaption></figure>
-            <figure class="still wide" style="margin-top:12px;max-width:560px"><video controls playsinline preload="none" poster="img/tv-sculpture.jpg" width="720" height="398" aria-label="Footage from Guinea: Amadou Kouyate playing kora against a turquoise wall, street scenes and a tailor's shop." style="width:100%;height:auto;aspect-ratio:720/398;border-radius:8px;border:2px solid rgba(242,232,210,.35);background:#000;display:block"><source src="img/tv-sculpture.mp4" type="video/mp4"></video><figcaption><a href="https://www.decolonizingthemusicroom.org/community-artist-visiting-educator-program" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Amadou Kouyate</a> playing kora, with street scenes, Guinea 2007 · from my TV sculpture video</figcaption></figure></li>
+            <figure class="still wide" style="margin-top:12px;max-width:560px"><video controls playsinline preload="none" poster="img/tv-sculpture.jpg" width="720" height="398" aria-label="Footage from Guinea: Amadou Kouyaté playing kora against a turquoise wall, street scenes and a tailor's shop." style="width:100%;height:auto;aspect-ratio:720/398;border-radius:8px;border:2px solid rgba(242,232,210,.35);background:#000;display:block"><source src="img/tv-sculpture.mp4" type="video/mp4"></video><figcaption><a href="https://msac.org/directory/artists/amadou-kouyate" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Amadou Kouyaté</a> playing kora, with street scenes, Guinea 2007 · from my TV sculpture video</figcaption></figure></li>
           <li><span class="when">November 2015 to March 2016 · Shanghai</span><h3>Erhu</h3><p>I took erhu lessons in my free time while working abroad as a Disney Imagineer building Shanghai Disneyland.</p>
             <div class="camp">
               <figure class="still"><img src="img/erhu-chair.jpg" width="1200" height="797" loading="lazy" alt="Genell's erhu and bow resting on a cream armchair against warm wood panelling in Shanghai."><figcaption>My erhu, Shanghai</figcaption></figure>
@@ -650,8 +652,7 @@ p{margin:0}
   <section class="band undyed" id="roots" aria-labelledby="roots-title">
     <div class="wrap">
       <div class="head">
-        <p class="eyebrow">Where my roots reach</p>
-        <h2 id="roots-title">Four places, <em>one thread.</em></h2>
+        <h2 id="roots-title">My <em>roots</em></h2>
       </div>
       <ol class="places">
           <li><span class="pin">1</span><div><h3>Cameroon</h3><p>Hausa and Tikar roots, in present-day Cameroon.</p></div></li>
@@ -667,7 +668,6 @@ p{margin:0}
     <div class="wrap">
       <div class="head porch-head">
         <h2 id="porch-title">Join the <em>Virtual Porch</em> on Patreon</h2>
-        <p class="porch-sub">Pull up a chair. Sit on the stoop. <em>We're tracing musical history together.</em></p>
       </div>
       <div class="pillars">
         <article class="pillar">
@@ -683,22 +683,22 @@ p{margin:0}
         <article class="pillar">
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
           <h3>Immersive Reimagining</h3>
-          <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive, like the interactive <a href="#songmap" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song rabbit holes</a> below.</p>
+          <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive, like the interactive <a href="#songmap" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song bubble maps</a> below.</p>
         </article>
       </div>
 
       <div class="sample" id="songmap">
         <div class="head sample-head">
-          <p class="eyebrow">Free sample · Song rabbit hole 01</p>
-          <h3 id="songmap-title">The Wellerman, <em>down the rabbit hole.</em></h3>
-          <p>This is a song rabbit hole: an interactive map that puts a song in its context. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Porch Listeners get more rabbit holes like this one as we trace new tunes together.</p>
+          <p class="eyebrow">Free sample · Song Bubble Map 01</p>
+          <h3 id="songmap-title">Explore the Wellerman, <em>bubble by bubble.</em></h3>
+          <p>This is a song bubble map: an interactive map that puts a song in its context. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Porch Listeners get more song bubble maps like this one as we trace new tunes together.</p>
         </div>
         <figure class="songmap">
           <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
         </figure>
         <div class="song-links">
-          <a class="btn btn-poppy" href="#porch-tier">Get more song rabbit holes</a>
+          <a class="btn btn-poppy" href="#porch-tier">Get more song bubble maps</a>
           <a class="btn btn-line" href="https://www.youtube.com/shorts/Ml6kulACPmQ" target="_blank" rel="noopener">Watch me play it</a>
           <a class="btn btn-line" href="https://www.youtube.com/watch?v=10OMLL_pG2Q" target="_blank" rel="noopener">Learn it with Trent Porter</a>
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
@@ -711,9 +711,9 @@ p{margin:0}
           <p class="eyebrow">Fall soft launch · October to December 2026</p>
           <h3>The Porch Listener</h3>
           <p class="price">$5 <small>per month</small></p>
-          <p>Liked the Wellerman map? Joining keeps the song rabbit holes coming and funds archival research and fieldwork. Each month this fall you'll receive:</p>
+          <p>Liked the Wellerman bubble map? Joining keeps the song bubble maps coming and funds archival research and fieldwork. Each month this fall you'll receive:</p>
           <ul class="gets">
-            <li><span><b>Song Rabbit Holes.</b> Interactive maps like the Wellerman that put each song in context: its people, places, versions and sources.</span></li>
+            <li><span><b>Song Bubble Maps.</b> Interactive maps like the Wellerman that put each song in context: its people, places, versions and sources.</span></li>
             <li><span><b>Field Dispatches.</b> Curated historical deep dives, primary source recordings, and research on the instrument's origins and cross-cultural lineages.</span></li>
             <li><span><b>Community Polls.</b> Direct input on which historical tunes and regional styles we investigate next.</span></li>
             <li><span><b>Behind-the-Scenes Dev Logs.</b> Early previews and audio tests of what we are building on the Virtual Porch.</span></li>
