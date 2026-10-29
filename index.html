@@ -194,6 +194,11 @@ p{margin:0}
 .songmap{margin:0 14px 0 0;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px var(--ink),14px 14px 0 3px var(--marigold)}
 .songmap iframe{display:block;width:100%;aspect-ratio:16/10;min-height:420px;border:0;background:#fff}
 .songmap figcaption{padding:14px 20px;background:var(--ink);color:var(--undyed);font-size:.95rem}
+.sample{margin-top:clamp(36px,5vw,64px)}
+.sample-head h3{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.15;margin:.2em 0 .5em}
+.sample-head h3 em{color:var(--marigold)}
+.dyed .songmap{box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--marigold)}
+.song-links .btn-line{color:var(--on-vat)}
 .song-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,4vw,40px)}
 .song-links .btn{text-decoration:none}
 @media (max-width:700px){.songmap{margin-right:8px;box-shadow:0 0 0 3px var(--ink),8px 8px 0 3px var(--marigold)}.songmap iframe{aspect-ratio:3/4;min-height:480px}}
@@ -400,7 +405,7 @@ p{margin:0}
       <a class="navlink" href="#path">My path</a>
       <a class="navlink" href="#roots">Roots</a>
       <a class="navlink" href="#porch">The porch</a>
-      <a class="navlink" href="#songmap">Song map</a>
+      <a class="navlink" href="#songmap">Bubble study</a>
       <a class="navlink" href="#contact">Contact</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
     </nav>
@@ -654,47 +659,46 @@ p{margin:0}
         </article>
       </div>
 
-      <figure class="immersive">
-        <img src="img/immersive-porch.jpg" width="1942" height="809" loading="lazy" alt="Concept view of an immersive archive room: visitors in headphones walk among glowing translucent panels showing scenes of people in a forest, under an arch lined with handwritten pages, with a river town at sunset beyond.">
-        <figcaption><span class="eyebrow">Coming January 2027 · Concept preview</span><span>The immersive porch: archive scenes, sound and handwritten records you can walk through, built from the research we gather together.</span></figcaption>
-      </figure>
+      <div class="sample" id="songmap">
+        <div class="head sample-head">
+          <p class="eyebrow">Free sample · Bubble study 01</p>
+          <h3 id="songmap-title">The Wellerman, <em>bubble by bubble.</em></h3>
+          <p>This is what a bubble study looks like. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Porch Listeners get more studies like this one as we trace new tunes together.</p>
+        </div>
+        <figure class="songmap">
+          <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
+        </figure>
+        <div class="song-links">
+          <a class="btn btn-poppy" href="#porch-tier">Get more bubble studies</a>
+          <a class="btn btn-line" href="https://www.youtube.com/shorts/Ml6kulACPmQ" target="_blank" rel="noopener">Watch me play it</a>
+          <a class="btn btn-line" href="https://www.youtube.com/watch?v=10OMLL_pG2Q" target="_blank" rel="noopener">Learn it with Trent Porter</a>
+          <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
+        </div>
+      </div>
 
-      <div class="tier">
+      <div class="tier" id="porch-tier">
         <div class="art"><img src="img/porch-listener.jpg" width="1536" height="1024" alt="Porch Listener cover: a rocking chair, a woven blanket and a banjo on a porch under a full moon."></div>
         <div class="info">
           <p class="eyebrow">Fall soft launch · October to December 2026</p>
           <h3>The Porch Listener</h3>
           <p class="price">$5 <small>per month</small></p>
-          <p>Joining now funds archival research, fieldwork, and immersive prototyping. Each month this fall you'll receive:</p>
+          <p>Liked the Wellerman map? Joining keeps the bubble studies coming and funds archival research, fieldwork, and immersive prototyping. Each month this fall you'll receive:</p>
           <ul class="gets">
+            <li><span><b>Bubble Studies.</b> Interactive song maps like the Wellerman, tracing each tune's people, places, versions and sources.</span></li>
             <li><span><b>Field Dispatches.</b> Curated historical deep dives, primary source recordings, and research on the instrument's origins and cross-cultural lineages.</span></li>
             <li><span><b>Community Polls.</b> Direct input on which historical tunes and regional styles we investigate next.</span></li>
-            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early design previews and audio tests of the porch environments and immersive sound spaces coming in January.</span></li>
+            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early design previews and audio tests of the porch environments and immersive sound spaces in development.</span></li>
           </ul>
           <p class="season">Instructional tiers and participatory clinics open in January 2027.</p>
           <div><a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join as a Porch Listener</a></div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="band undyed" id="songmap" aria-labelledby="songmap-title">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Free from the porch · Song map 01</p>
-        <h2 id="songmap-title">The Wellerman, <em>bubble by bubble.</em></h2>
-        <p>A free taste of how we trace a tune on the porch. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources.</p>
-      </div>
-      <figure class="songmap">
-        <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
+      <figure class="immersive">
+        <img src="img/immersive-porch.jpg" width="1942" height="809" loading="lazy" alt="Concept view of an immersive archive room: visitors in headphones walk among glowing translucent panels showing scenes of people in a forest, under an arch lined with handwritten pages, with a river town at sunset beyond.">
+        <figcaption><span class="eyebrow">In development · Date to be announced · Concept preview</span><span>The immersive porch: archive scenes, sound and handwritten records you can walk through, built from the research we gather together. Porch Listeners see it take shape first.</span></figcaption>
       </figure>
-      <div class="song-links">
-        <a class="btn btn-ink" href="https://www.youtube.com/shorts/Ml6kulACPmQ" target="_blank" rel="noopener">Watch me play it</a>
-        <a class="btn btn-ink" href="https://www.youtube.com/watch?v=10OMLL_pG2Q" target="_blank" rel="noopener">Learn it with Trent Porter</a>
-        <a class="btn btn-ink" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
-        <a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">More songs on the porch</a>
-      </div>
     </div>
   </section>
 
