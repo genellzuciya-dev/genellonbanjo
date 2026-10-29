@@ -293,7 +293,7 @@ p{margin:0}
 .mt-yr{font-family:var(--display);font-size:1.05rem;font-weight:600;line-height:1.15}
 .mt-pl{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
 .mt-stop:hover .mt-dot{transform:scale(1.12)}
-.mt-stop[aria-selected="true"] .mt-dot{background:var(--poppy);border-color:var(--ink);box-shadow:0 0 0 5px rgba(228,83,44,.2)}
+
 .mt-stop[aria-selected="true"] .mt-yr{color:var(--poppy)}
 .mt-stop:focus-visible .mt-dot{outline:3px solid var(--marigold);outline-offset:3px}
 .mt-body{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;margin-top:18px}
@@ -380,6 +380,36 @@ p{margin:0}
 /* map pins bolder */
 .places .pin{background:var(--poppy);color:var(--undyed)}
 .credits .org{font-weight:600}
+@media (min-width:861px){.story:has(.poster.photo){grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(28px,4vw,56px)}.poster.photo{margin-right:calc(-1*max(0px,(100vw - 1180px)/2) - var(--gutter-r) + 24px)!important;margin-top:8px!important}}
+
+/* timeline: material swatches on a woven band */
+.mt-trackwrap{scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);padding-top:8px;padding-bottom:6px}
+.mt-trackwrap::-webkit-scrollbar{display:none}
+.mt-track{grid-auto-columns:minmax(132px,1fr)}
+.mt-track::before{top:23px;height:12px;border-radius:6px;opacity:.28;background:repeating-linear-gradient(135deg,var(--marigold) 0 9px,var(--poppy) 9px 18px,var(--ink) 18px 27px)}
+.mt-track::after{content:"";position:absolute;left:0;top:23px;height:12px;border-radius:6px;width:var(--p,22px);background:repeating-linear-gradient(135deg,var(--marigold) 0 9px,var(--poppy) 9px 18px,var(--ink) 18px 27px);transition:width .45s ease;pointer-events:none}
+.mt-dot{width:58px;height:58px;border:3px solid var(--ink);background-color:#d8a45a;box-shadow:3px 3px 0 var(--ink);z-index:2}
+.mt-stop[aria-selected="true"] .mt-dot{border-color:var(--ink);box-shadow:0 0 0 4px var(--undyed),0 0 0 8px var(--poppy);transform:scale(1.08)}
+.mt-stop:hover .mt-dot{transform:scale(1.08) rotate(-6deg)}
+.mt-stop{gap:8px}
+.sw-gourd,.sw-return{background:radial-gradient(circle at 35% 30%,rgba(255,240,210,.55) 0 18%,transparent 40%),repeating-conic-gradient(from 8deg,#d9963f 0 15deg,#b9772d 15deg 30deg)}
+.sw-skin{background:radial-gradient(circle,#efe2c4 0 52%,#cfb98d 53% 57%,transparent 58%),repeating-conic-gradient(from 8deg,#d9963f 0 15deg,#b9772d 15deg 30deg)}
+.sw-calabash{background:radial-gradient(circle,#ead9b5 0 50%,#8a5a2b 51% 56%,transparent 57%),repeating-conic-gradient(#8f5a26 0 12deg,#6f421b 12deg 24deg)}
+.sw-fiber{background:repeating-linear-gradient(80deg,rgba(120,140,80,.55) 0 2px,transparent 2px 6px),radial-gradient(circle,#e9dcbc 0 100%)}
+.sw-wood{background:radial-gradient(circle,#efe2c4 0 46%,transparent 47%),repeating-radial-gradient(circle at 30% 120%,#c08a52 0 4px,#a46e3b 4px 7px)}
+.sw-brackets{background:radial-gradient(circle,#efe2c4 0 44%,transparent 45%),repeating-conic-gradient(#b8bcc2 0 5deg,transparent 5deg 24deg),repeating-radial-gradient(circle at 30% 120%,#c08a52 0 4px,#a46e3b 4px 7px)}
+.sw-frets{background:radial-gradient(circle,#f3ead6 0 42%,#9aa0a8 43% 47%,transparent 48%),repeating-conic-gradient(#c7cbd0 0 4deg,transparent 4deg 18deg),repeating-radial-gradient(circle at 70% 120%,#a9733f 0 4px,#8a5a2e 4px 7px)}
+.sw-resonator{background:repeating-radial-gradient(circle,#8a5a2e 0 3px,#a8723e 3px 7px,#d9a35d 7px 8px)}
+.sw-mylar{background:linear-gradient(135deg,rgba(255,255,255,.9) 0 18%,transparent 34% 60%,rgba(255,255,255,.7) 72%,transparent 86%),radial-gradient(circle,#f7f8fa 0 60%,#c9ced6 61% 100%)}
+.sw-return{box-shadow:3px 3px 0 var(--ink),0 0 0 0 var(--marigold)}
+@media (prefers-reduced-motion:reduce){.mt-track::after{transition:none}}
+.porch-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:end;max-width:none}
+.porch-head h2{font-weight:600}
+.porch-sub{margin:0 0 .4em;font-family:var(--display);font-size:clamp(1.15rem,1rem + .7vw,1.55rem);line-height:1.3;color:var(--on-vat);font-variation-settings:"SOFT" 100,"WONK" 1}
+.porch-sub em{color:var(--marigold)}
+@media (max-width:860px){.porch-head{grid-template-columns:1fr}}
+#concepts .immersive{box-shadow:0 0 0 3px var(--ink),14px 14px 0 3px var(--marigold)}
+@media (max-width:700px){#concepts .immersive{box-shadow:0 0 0 3px var(--ink),8px 8px 0 3px var(--marigold)}}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
@@ -406,7 +436,7 @@ p{margin:0}
       <a class="navlink" href="#path">My path</a>
       <a class="navlink" href="#roots">Roots</a>
       <a class="navlink" href="#porch">The porch</a>
-      <a class="navlink" href="#songmap">Bubble study</a>
+      <a class="navlink" href="#songmap">Rabbit holes</a>
       <a class="navlink" href="#contact">Contact</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
     </nav>
@@ -437,12 +467,11 @@ p{margin:0}
   <section class="band undyed" id="story" aria-labelledby="story-title">
     <div class="wrap">
       <div class="head">
-        <p class="eyebrow">The banjo's story</p>
-        <h2 id="story-title">Built on porches, <em>passed hand to hand.</em></h2>
+        <h2 id="story-title">The banjo's <em>story</em></h2>
       </div>
       <div class="story">
         <div class="storytext">
-        <p class="big">The banjo is fundamentally <strong>an African diasporic creation of the Americas</strong>, forged by enslaved people across the Caribbean and colonial North America from ancestral West African gourd lute traditions. It served as the rhythmic engine of early American folk and dance music.</p>
+        <p class="big">The banjo is <strong>an African diasporic creation of the Americas</strong>, forged by enslaved people across the Caribbean and colonial North America from ancestral West African gourd lute traditions. It served as the rhythmic engine of early American folk and dance music.</p>
         <div class="side">
           <p>That early musical landscape was actively cross-collaborative. Long before the modern folk revivals, and before commercial record labels divided music into segregated categories, dance and string-band traditions were shaped through direct, porch-to-porch exchanges.</p>
           <p>On cabin steps, river landings, and front porches, Black songsters, Indigenous players, Anglo-Celtic fiddlers, and regional immigrant communities influenced, challenged, and learned from one another. My porch exists to trace that lineage with care and in community.</p>
@@ -459,7 +488,7 @@ p{margin:0}
         </div>
         <div class="mt-trackwrap">
           <ol class="mt-track" role="tablist" aria-label="Eras of banjo materials">
-            <li role="presentation"><button type="button" role="tab" id="mt-0" aria-controls="mp-0" aria-selected="true" tabindex="0" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Roots</span><span class="mt-pl">West Africa</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-1" aria-controls="mp-1" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1687</span><span class="mt-pl">Jamaica</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-2" aria-controls="mp-2" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1770s</span><span class="mt-pl">Suriname</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-3" aria-controls="mp-3" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1785 to 1795</span><span class="mt-pl">South Carolina</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-4" aria-controls="mp-4" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1810 to 1841</span><span class="mt-pl">Haiti</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-5" aria-controls="mp-5" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1845</span><span class="mt-pl">Baltimore, Maryland</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-6" aria-controls="mp-6" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Late 1800s</span><span class="mt-pl">Parlors and factories</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-7" aria-controls="mp-7" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Early 1900s</span><span class="mt-pl">Jazz to bluegrass</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-8" aria-controls="mp-8" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1952</span><span class="mt-pl">The plastic head</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-9" aria-controls="mp-9" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">2005 to now</span><span class="mt-pl">Reclaiming the roots</span></button></li>
+            <li role="presentation"><button type="button" role="tab" id="mt-0" aria-controls="mp-0" aria-selected="true" tabindex="0" class="mt-stop"><span class="mt-dot sw-gourd" aria-hidden="true"></span><span class="mt-yr">Roots</span><span class="mt-pl">West Africa</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-1" aria-controls="mp-1" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-skin" aria-hidden="true"></span><span class="mt-yr">1687</span><span class="mt-pl">Jamaica</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-2" aria-controls="mp-2" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-calabash" aria-hidden="true"></span><span class="mt-yr">1770s</span><span class="mt-pl">Suriname</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-3" aria-controls="mp-3" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-skin" aria-hidden="true"></span><span class="mt-yr">1785 to 1795</span><span class="mt-pl">South Carolina</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-4" aria-controls="mp-4" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-fiber" aria-hidden="true"></span><span class="mt-yr">1810 to 1841</span><span class="mt-pl">Haiti</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-5" aria-controls="mp-5" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-wood" aria-hidden="true"></span><span class="mt-yr">1845</span><span class="mt-pl">Baltimore, Maryland</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-6" aria-controls="mp-6" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-brackets" aria-hidden="true"></span><span class="mt-yr">Late 1800s</span><span class="mt-pl">Parlors and factories</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-7" aria-controls="mp-7" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-frets" aria-hidden="true"></span><span class="mt-yr">Early 1900s</span><span class="mt-pl">Jazz to bluegrass</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-8" aria-controls="mp-8" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-resonator" aria-hidden="true"></span><span class="mt-yr">1952</span><span class="mt-pl">The plastic head</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-9" aria-controls="mp-9" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot sw-return" aria-hidden="true"></span><span class="mt-yr">2005 to now</span><span class="mt-pl">Reclaiming the roots</span></button></li>
           </ol>
         </div>
         <div class="mt-body">
@@ -560,7 +589,7 @@ p{margin:0}
           <li><span class="when">2006 · Crete, Greece</span><h3>Tzouras</h3><p>Studying abroad, I started diving into folk instrumentation.</p></li>
           <li><span class="when">2007 · Film thesis · Guinea, West Africa</span><h3>Dunun</h3><p>As a film student, I spent my senior thesis filming a djembe orchestra: djembe, kora, dunun and more. Filming them started my own journey with the dunun set (dundunba, sangban and kenkeni).</p>
             <figure class="still wide" style="margin-top:12px;max-width:560px"><img src="img/guinea-2007.jpg" width="1400" height="931" loading="lazy" alt="On a beach in Guinea, dancers in tie-dyed dresses and drummers with djembe and dunun perform as a film camera in the foreground records them." style="width:100%;height:auto;border-radius:8px;border:2px solid rgba(242,232,210,.35)"><figcaption>On set in Guinea, 2007</figcaption></figure>
-            <figure class="still wide" style="margin-top:12px;max-width:560px"><video controls playsinline preload="none" poster="img/tv-sculpture.jpg" width="720" height="398" aria-label="Footage from Guinea: a kora player against a turquoise wall, street scenes and a tailor's shop." style="width:100%;height:auto;aspect-ratio:720/398;border-radius:8px;border:2px solid rgba(242,232,210,.35);background:#000;display:block"><source src="img/tv-sculpture.mp4" type="video/mp4"></video><figcaption>Kora and street scenes, Guinea 2007 · from my TV sculpture video</figcaption></figure></li>
+            <figure class="still wide" style="margin-top:12px;max-width:560px"><video controls playsinline preload="none" poster="img/tv-sculpture.jpg" width="720" height="398" aria-label="Footage from Guinea: Amadou Kouyate playing kora against a turquoise wall, street scenes and a tailor's shop." style="width:100%;height:auto;aspect-ratio:720/398;border-radius:8px;border:2px solid rgba(242,232,210,.35);background:#000;display:block"><source src="img/tv-sculpture.mp4" type="video/mp4"></video><figcaption><a href="https://www.decolonizingthemusicroom.org/community-artist-visiting-educator-program" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Amadou Kouyate</a> playing kora, with street scenes, Guinea 2007 · from my TV sculpture video</figcaption></figure></li>
           <li><span class="when">November 2015 to March 2016 · Shanghai</span><h3>Erhu</h3><p>I took erhu lessons in my free time while working abroad as a Disney Imagineer building Shanghai Disneyland.</p>
             <div class="camp">
               <figure class="still"><img src="img/erhu-chair.jpg" width="1200" height="797" loading="lazy" alt="Genell's erhu and bow resting on a cream armchair against warm wood panelling in Shanghai."><figcaption>My erhu, Shanghai</figcaption></figure>
@@ -636,40 +665,40 @@ p{margin:0}
   <div class="patch" aria-hidden="true"></div>
   <section class="band dyed" id="porch" aria-labelledby="porch-title">
     <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">The virtual porch on Patreon</p>
-        <h2 id="porch-title">Pull up a chair. Sit on the stoop. <em>We're tracing musical history together.</em></h2>
+      <div class="head porch-head">
+        <h2 id="porch-title">Join the <em>Virtual Porch</em> on Patreon</h2>
+        <p class="porch-sub">Pull up a chair. Sit on the stoop. <em>We're tracing musical history together.</em></p>
       </div>
       <div class="pillars">
         <article class="pillar">
           <svg viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="22" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="27" cy="27" r="14" fill="none" stroke="#f2e8d2" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="27" cy="27" r="5" fill="#f2a531"/><path d="M27 5v-3M27 52v-3M5 27H2M52 27h-3" stroke="#f2e8d2" stroke-width="2"/></svg>
           <h3>The Craft &amp; Mechanics</h3>
-          <p>Clawhammer down-stroke mechanics, historical tunings, and acoustic physics.</p>
+          <p>Clawhammer down-stroke playing and historical tunings.</p>
         </article>
         <article class="pillar">
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M27 8c9 6 13 15 13 24 0 8-6 14-13 14s-13-6-13-14c0-9 4-18 13-24z" fill="none" stroke="#f2e8d2" stroke-width="2"/><path d="M27 6v-3" stroke="#f2e8d2" stroke-width="2"/><g fill="#f2e8d2"><circle cx="22" cy="28" r="1.8"/><circle cx="32" cy="28" r="1.8"/><circle cx="27" cy="35" r="1.8"/><circle cx="22" cy="40" r="1.8"/><circle cx="32" cy="40" r="1.8"/></g></svg>
           <h3>The Material Ecology</h3>
-          <p>How traditional gourd and open-back banjos work as vernacular technologies, attuned to biological materials, seasonal humidity, and animal hides.</p>
+          <p>How traditional gourd and open-back banjos work, and their history and materials.</p>
         </article>
         <article class="pillar">
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
           <h3>Immersive Reimagining</h3>
-          <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive.</p>
+          <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive, like the interactive <a href="#songmap" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song rabbit holes</a> below.</p>
         </article>
       </div>
 
       <div class="sample" id="songmap">
         <div class="head sample-head">
-          <p class="eyebrow">Free sample · Bubble study 01</p>
-          <h3 id="songmap-title">The Wellerman, <em>bubble by bubble.</em></h3>
-          <p>This is what a bubble study looks like. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Porch Listeners get more studies like this one as we trace new tunes together.</p>
+          <p class="eyebrow">Free sample · Song rabbit hole 01</p>
+          <h3 id="songmap-title">The Wellerman, <em>down the rabbit hole.</em></h3>
+          <p>This is a song rabbit hole: an interactive map that puts a song in its context. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Porch Listeners get more rabbit holes like this one as we trace new tunes together.</p>
         </div>
         <figure class="songmap">
           <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
         </figure>
         <div class="song-links">
-          <a class="btn btn-poppy" href="#porch-tier">Get more bubble studies</a>
+          <a class="btn btn-poppy" href="#porch-tier">Get more song rabbit holes</a>
           <a class="btn btn-line" href="https://www.youtube.com/shorts/Ml6kulACPmQ" target="_blank" rel="noopener">Watch me play it</a>
           <a class="btn btn-line" href="https://www.youtube.com/watch?v=10OMLL_pG2Q" target="_blank" rel="noopener">Learn it with Trent Porter</a>
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
@@ -682,21 +711,30 @@ p{margin:0}
           <p class="eyebrow">Fall soft launch · October to December 2026</p>
           <h3>The Porch Listener</h3>
           <p class="price">$5 <small>per month</small></p>
-          <p>Liked the Wellerman map? Joining keeps the bubble studies coming and funds archival research, fieldwork, and immersive prototyping. Each month this fall you'll receive:</p>
+          <p>Liked the Wellerman map? Joining keeps the song rabbit holes coming and funds archival research and fieldwork. Each month this fall you'll receive:</p>
           <ul class="gets">
-            <li><span><b>Bubble Studies.</b> Interactive song maps like the Wellerman, tracing each tune's people, places, versions and sources.</span></li>
+            <li><span><b>Song Rabbit Holes.</b> Interactive maps like the Wellerman that put each song in context: its people, places, versions and sources.</span></li>
             <li><span><b>Field Dispatches.</b> Curated historical deep dives, primary source recordings, and research on the instrument's origins and cross-cultural lineages.</span></li>
             <li><span><b>Community Polls.</b> Direct input on which historical tunes and regional styles we investigate next.</span></li>
-            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early design previews and audio tests of the porch environments and immersive sound spaces in development.</span></li>
+            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early previews and audio tests of what we are building on the Virtual Porch.</span></li>
           </ul>
           <p class="season">Instructional tiers and participatory clinics open in January 2027.</p>
           <div><a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join as a Porch Listener</a></div>
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <section class="band undyed" id="concepts" aria-labelledby="concepts-title">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="concepts-title">Conceptual <em>projects</em></h2>
+        <p>Larger ideas in development. These are separate projects and are not part of the Patreon membership.</p>
+      </div>
       <figure class="immersive">
         <img src="img/immersive-porch.jpg" width="1942" height="809" loading="lazy" alt="Concept view of an immersive archive room: visitors in headphones walk among glowing translucent panels showing scenes of people in a forest, under an arch lined with handwritten pages, with a river town at sunset beyond.">
-        <figcaption><span class="eyebrow">In development · Date to be announced · Concept preview</span><span>The immersive porch: archive scenes, sound and handwritten records you can walk through, built from the research we gather together. Porch Listeners see it take shape first.</span></figcaption>
+        <figcaption><span class="eyebrow">In development · Date to be announced · Concept preview</span><span>An immersive touring experience: archive scenes, sound and handwritten records you can walk through.</span></figcaption>
       </figure>
     </div>
   </section>
@@ -916,6 +954,7 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelecto
     tabs.forEach(function(t,k){var on=k===i;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
     prev.disabled=i===0;next.disabled=i===tabs.length-1;
     if(focus)tabs[i].focus();
+    var tr=tabs[i].closest('.mt-track');if(tr)tr.style.setProperty('--p',(tabs[i].offsetLeft+29)+'px');
     tabs[i].scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }
   function cur(){return tabs.findIndex(function(t){return t.getAttribute('aria-selected')==='true';});}
@@ -928,6 +967,7 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelecto
   prev.addEventListener('click',function(){show(Math.max(cur()-1,0));});
   next.addEventListener('click',function(){show(Math.min(cur()+1,tabs.length-1));});
   prev.disabled=true;
+  var tr0=tabs[0].closest('.mt-track');if(tr0)tr0.style.setProperty('--p',(tabs[0].offsetLeft+29)+'px');
 })();
 </script>
 
