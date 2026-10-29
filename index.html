@@ -244,6 +244,20 @@ p{margin:0}
 .bbff{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;max-width:560px}
 .bbff img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:2px solid rgba(242,232,210,.35)}
 @media (max-width:520px){.bbff{grid-template-columns:1fr}}
+.bookgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:start}
+.booklede{color:var(--on-vat-soft);max-width:38ch}
+.bookform{background:var(--undyed);color:var(--ink);border-radius:14px;padding:clamp(20px,3.5vw,36px);display:grid;gap:16px;box-shadow:12px 12px 0 var(--marigold)}
+.bookform label{display:grid;gap:6px;font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--clay)}
+.bookform input,.bookform select,.bookform textarea{font:inherit;font-family:var(--body);font-size:1rem;letter-spacing:0;text-transform:none;color:var(--ink);background:#fbf6ea;border:1.5px solid rgba(18,28,63,.35);border-radius:8px;padding:.7em .8em;width:100%;min-width:0;color-scheme:light}
+.bookform textarea{resize:vertical}
+.bookform input:focus,.bookform select:focus,.bookform textarea:focus{outline:2px solid var(--poppy);outline-offset:1px;border-color:var(--poppy)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.formfoot{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.formstatus{font-size:.95rem}
+.formstatus.ok{color:#1d6b45}.formstatus.err{color:#a3301a}
+@media (max-width:860px){.bookgrid{grid-template-columns:1fr}.bookform{box-shadow:8px 8px 0 var(--marigold);margin-right:8px}}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
 /* ---------- footer ---------- */
 .foot{padding-block:clamp(64px,9vw,110px) 48px}
 .foot .wrap{display:grid;gap:36px}
@@ -329,6 +343,7 @@ p{margin:0}
       <a class="navlink" href="#path">My path</a>
       <a class="navlink" href="#roots">Roots</a>
       <a class="navlink" href="#porch">The porch</a>
+      <a class="navlink" href="#book">Book</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
     </nav>
   </div>
@@ -400,7 +415,7 @@ p{margin:0}
           <li><span class="when">November 2015 to March 2016 · Shanghai</span><h3>Erhu</h3><p>I took erhu lessons in my free time while working abroad as a Disney Imagineer building Shanghai Disneyland.</p>
             <div class="camp">
               <figure class="still"><img src="img/erhu-chair.jpg" width="1200" height="797" loading="lazy" alt="Genell's erhu and bow resting on a cream armchair against warm wood panelling in Shanghai."><figcaption>My erhu, Shanghai</figcaption></figure>
-              <figure class="still wide"><video controls playsinline preload="none" poster="img/erhu-rehearsal.jpg" width="960" height="540" aria-label="Genell playing erhu in rehearsal in Shanghai"><source src="img/erhu-rehearsal.mp4" type="video/mp4"></video><figcaption>Erhu rehearsal, Shanghai 2016</figcaption></figure>
+              <figure class="still wide"><video controls playsinline preload="none" poster="img/erhu-rehearsal.jpg" width="960" height="540" aria-label="Genell playing erhu in rehearsal in Shanghai, four months into lessons"><source src="img/erhu-rehearsal.mp4" type="video/mp4"></video><figcaption>Erhu rehearsal, four months in, Shanghai 2016</figcaption></figure>
             </div>
           </li>
           <li><span class="when">2017 to 2019 · Los Angeles</span><h3>West African dance</h3><p>While I was learning the banjo's true history, I was dancing in Los Angeles and going to camps to deepen my craft, like Camp Fareta.</p>
@@ -549,6 +564,43 @@ p{margin:0}
       </ul>
     </div>
   </section>
+
+  <section class="band dyed" id="book" aria-labelledby="book-title">
+    <div class="wrap">
+      <div class="bookgrid">
+        <div class="head">
+          <p class="eyebrow">Bookings and inquiries</p>
+          <h2 id="book-title">Bring the porch <em>to you.</em></h2>
+          <p class="booklede">Performances, talks, workshops, festivals, collaborations and press. Tell me what you have in mind and I'll get back to you.</p>
+        </div>
+        <form class="bookform" id="bookform" action="https://formspree.io/f/FORM_ID" method="POST" novalidate>
+          <div class="row2">
+            <label for="bf-name">Name<input id="bf-name" name="name" type="text" autocomplete="name" required></label>
+            <label for="bf-email">Email<input id="bf-email" name="email" type="email" autocomplete="email" required></label>
+          </div>
+          <label for="bf-type">What's this about?
+            <select id="bf-type" name="inquiry_type" required>
+              <option value="">Choose one</option>
+              <option>Performance booking</option>
+              <option>Talk or workshop</option>
+              <option>Festival or event</option>
+              <option>Collaboration or Patreon</option>
+              <option>Press or media</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <div class="row2">
+            <label for="bf-date">Date, if you have one<input id="bf-date" name="event_date" type="text" placeholder="e.g. March 14, 2027"></label>
+            <label for="bf-place">Where<input id="bf-place" name="location" type="text" placeholder="City or venue"></label>
+          </div>
+          <label for="bf-msg">Message<textarea id="bf-msg" name="message" rows="5" required></textarea></label>
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <input type="hidden" name="_subject" value="New inquiry from genellonbanjo.com">
+          <div class="formfoot"><button class="btn btn-poppy" type="submit" id="bf-send">Send message</button><p class="formstatus" id="bf-status" role="status" aria-live="polite"></p></div>
+        </form>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer class="foot dyed">
@@ -673,6 +725,24 @@ void main(){
 </script>
 <script>
 if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('video.loop').forEach(function(v){v.removeAttribute('autoplay');v.pause();v.controls=true;});}
+</script>
+
+<script>
+(function(){
+  var f=document.getElementById('bookform'); if(!f) return;
+  var st=document.getElementById('bf-status'), btn=document.getElementById('bf-send');
+  function say(t,c){st.textContent=t;st.className='formstatus '+(c||'');}
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){say('Please fill in your name, a valid email, the topic and a message.','err');f.reportValidity&&f.reportValidity();return;}
+    if(f.action.indexOf('FORM_ID')>-1){say('The form is not connected yet. Please reach out on Instagram @genellonbanjo for now.','err');return;}
+    btn.disabled=true;say('Sending...');
+    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
+      .then(function(r){if(r.ok){f.reset();say('Thank you. Your message is on its way, and I will be in touch soon.','ok');}else{return r.json().then(function(d){throw new Error((d&&d.errors&&d.errors.map(function(x){return x.message}).join(', '))||'Something went wrong.');});}})
+      .catch(function(err){say((err&&err.message?err.message+' ':'')+'Your message did not send. Please try again, or message me on Instagram @genellonbanjo.','err');})
+      .finally(function(){btn.disabled=false;});
+  });
+})();
 </script>
 
 </body>
