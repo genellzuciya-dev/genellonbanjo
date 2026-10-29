@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genell on Banjo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Genell Zuciya plays clawhammer banjo in the Black old-time tradition and traces the instrument's lineages on her virtual porch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: the page is a length of cloth. Indigo-dyed bands show the living vat behind them;
+   undyed cream bands sit on top with resist-dot selvedges. One look, deliberately dark-first. */
+:root{
+  --vat-deep:#0b1430;      /* bottom of the dye vat */
+  --vat:#16285e;           /* indigo */
+  --vat-mid:#2a4691;       /* lighter dip */
+  --sky:#a3d5d8;           /* haint blue */
+  --undyed:#f2e8d2;        /* resist cream, undyed cloth */
+  --undyed-2:#e6d8b8;
+  --ink:#121c3f;           /* text on cream */
+  --poppy:#e4532c;
+  --marigold:#f2a531;
+  --clay:#a9482a;
+  --on-vat:#f2e8d2;
+  --on-vat-soft:#c9d3ea;
+  --display:"Fraunces", "Iowan Old Style", Georgia, serif;
+  --body:"Work Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1:clamp(.82rem,.8rem + .1vw,.88rem);
+  --step-0:clamp(1rem,.96rem + .2vw,1.1rem);
+  --step-1:clamp(1.25rem,1.15rem + .5vw,1.5rem);
+  --step-2:clamp(1.6rem,1.35rem + 1.2vw,2.25rem);
+  --step-3:clamp(2.2rem,1.7rem + 2.6vw,3.8rem);
+  --step-4:clamp(2.8rem,1.9rem + 4.6vw,6rem);
+  --gutter:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+  --depth:0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--vat-deep);color:var(--on-vat);font-family:var(--body);font-size:var(--step-0);line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--vat-deep)}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--marigold);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:500;line-height:1.05;text-wrap:balance;margin:0;font-variation-settings:"SOFT" 100,"WONK" 1}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter-r)}
+.eyebrow{font-family:var(--mono);font-size:var(--step--1);letter-spacing:.14em;text-transform:uppercase}
+
+/* ---------- the living vat ---------- */
+.vat{position:fixed;inset:0;z-index:-2;overflow:hidden;background:var(--vat-deep)}
+.vat i{position:absolute;inset:-30%;display:block;background:
+  radial-gradient(38% 30% at 22% 28%, var(--vat-mid) 0%, transparent 70%),
+  radial-gradient(30% 34% at 78% 22%, #23408a 0%, transparent 72%),
+  radial-gradient(44% 36% at 60% 78%, var(--vat) 0%, transparent 74%),
+  radial-gradient(26% 22% at 30% 70%, #3a5aa8 0%, transparent 70%),
+  radial-gradient(20% 18% at 86% 64%, #1e3478 0%, transparent 70%);
+  filter:blur(10px);animation:steep 46s ease-in-out infinite alternate;will-change:transform}
+.vat i + i{background:
+  radial-gradient(34% 26% at 70% 40%, rgba(157,183,228,.18) 0%, transparent 70%),
+  radial-gradient(28% 30% at 18% 82%, rgba(42,70,145,.7) 0%, transparent 72%),
+  radial-gradient(22% 20% at 48% 12%, rgba(58,90,168,.6) 0%, transparent 70%);
+  animation:steep2 61s ease-in-out infinite alternate;mix-blend-mode:screen}
+.vat::after{content:"";position:absolute;inset:0;opacity:.32;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9 .045' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .95  0 0 0 0 .92  0 0 0 0 .85  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+.vat::before{content:"";position:absolute;inset:0;z-index:1;background:#050a1d;opacity:calc(var(--depth) * .62);transition:opacity .4s linear}
+@keyframes steep{0%{transform:translate3d(-4%,-3%,0) rotate(0deg) scale(1)}50%{transform:translate3d(3%,2%,0) rotate(4deg) scale(1.08)}100%{transform:translate3d(-2%,4%,0) rotate(-3deg) scale(1.03)}}
+@keyframes steep2{0%{transform:translate3d(3%,2%,0) scale(1.05)}100%{transform:translate3d(-4%,-3%,0) scale(.97) rotate(5deg)}}
+@media (prefers-reduced-motion:reduce){.vat i{animation:none}}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(11,20,48,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(242,232,210,.12)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-size:1.2rem;font-weight:600;font-variation-settings:"SOFT" 100,"WONK" 1}
+.mark svg{flex:none}
+.top nav{display:flex;align-items:center;gap:22px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.top nav a{text-decoration:none;color:var(--on-vat-soft)}
+.top nav a:hover{color:var(--on-vat)}
+.btn{display:inline-flex;align-items:center;gap:.55em;padding:.8em 1.25em;border-radius:999px;font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1.5px solid transparent;transition:transform .2s ease, background .2s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-poppy{background:var(--poppy);color:#fff8ec}
+.btn-poppy:hover{background:#f0643b}
+.btn-line{border-color:rgba(242,232,210,.55);color:var(--on-vat)}
+.btn-line:hover{background:rgba(242,232,210,.1)}
+.btn-ink{background:var(--ink);color:var(--undyed)}
+@media (max-width:760px){.top nav .navlink{display:none}}
+
+/* ---------- hero ---------- */
+.hero{overflow-x:clip;padding-block:clamp(40px,7vw,96px) clamp(56px,8vw,110px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,5vw,72px);align-items:center}
+.hero h1{font-size:var(--step-4);font-weight:400;letter-spacing:-.02em;margin-top:18px}
+.hero h1 em{font-style:italic;color:var(--marigold);font-weight:400}
+.hero .lede{margin-top:24px;max-width:34ch;font-size:var(--step-1);line-height:1.45;color:var(--on-vat-soft)}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero .eyebrow{color:var(--sky)}
+.frame{position:relative}
+.frame img{width:100%;height:auto;aspect-ratio:1442/805;object-fit:cover;border-radius:6px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.frame figcaption{text-align:right;margin-top:12px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--on-vat-soft);text-transform:uppercase}
+.moon{position:absolute;width:86px;height:86px;right:-18px;top:-26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffd88a,var(--marigold) 60%,#d9861c);box-shadow:0 0 50px rgba(242,165,49,.5)}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.moon{width:60px;height:60px;right:-6px;top:-18px}}
+
+/* ---------- cloth bands ---------- */
+.band{position:relative;padding-block:clamp(64px,9vw,120px)}
+.undyed{background:var(--undyed);color:var(--ink)}
+.undyed::before,.undyed::after{content:"";position:absolute;left:0;right:0;height:14px;
+  background:radial-gradient(circle at 7px 7px,var(--undyed) 4.2px,transparent 4.8px) 0 0/22px 14px repeat-x}
+.undyed::before{top:-20px}
+.undyed::after{bottom:-20px}
+.undyed .eyebrow{color:var(--clay)}
+.dyed{color:var(--on-vat)}
+.dyed .eyebrow{color:var(--sky)}
+.band h2{font-size:var(--step-3);letter-spacing:-.015em;font-weight:400}
+.band h2 em{font-style:italic}
+.undyed h2 em{color:var(--poppy)}
+.dyed h2 em{color:var(--marigold)}
+.head{display:grid;gap:14px;margin-bottom:clamp(32px,5vw,56px);max-width:760px}
+
+/* stitched rule */
+.stitch{height:2px;background:repeating-linear-gradient(90deg,currentColor 0 10px,transparent 10px 18px);opacity:.45;border:0;margin:0}
+
+/* ---------- the banjo's story ---------- */
+.story{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,6vw,90px);align-items:start}
+.story .big{font-family:var(--display);font-size:var(--step-2);line-height:1.22;font-weight:400;font-variation-settings:"SOFT" 100,"WONK" 0}
+.story .big strong{font-weight:600;color:var(--vat)}
+.story .side{display:grid;gap:18px;font-size:var(--step-0);max-width:52ch}
+.materials{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.materials span{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;padding:.45em .8em;border:1.5px dashed rgba(18,28,63,.45);border-radius:999px}
+@media (max-width:860px){.story{grid-template-columns:1fr}}
+
+/* ---------- path ---------- */
+.path{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,6vw,90px);align-items:start}
+.roots{display:grid;gap:22px}
+.roots p{color:var(--on-vat-soft);max-width:48ch}
+.roots p strong{color:var(--on-vat);font-weight:600}
+.holler{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;padding:18px 20px;border-radius:10px;background:rgba(242,232,210,.07);border:1px dashed rgba(242,232,210,.35)}
+.holler p{color:var(--on-vat);font-family:var(--display);font-style:italic;font-size:1.12rem;line-height:1.4}
+.timeline{list-style:none;margin:0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:2px;background:repeating-linear-gradient(180deg,var(--undyed) 0 9px,transparent 9px 16px);opacity:.55}
+.timeline li{position:relative;padding:0 0 26px 44px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{content:"";position:absolute;left:3px;top:6px;width:18px;height:18px;border-radius:50%;background:var(--vat-deep);border:2px solid var(--undyed)}
+.timeline li.now::before{background:var(--marigold);border-color:var(--marigold);box-shadow:0 0 0 6px rgba(242,165,49,.2)}
+.timeline .when{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}
+.timeline h3{font-size:var(--step-1);font-weight:500;margin-top:2px}
+.timeline p{color:var(--on-vat-soft);font-size:.96rem;margin-top:4px;max-width:46ch}
+@media (max-width:860px){.path{grid-template-columns:1fr}}
+
+/* ---------- map ---------- */
+.mapgrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.9fr);gap:clamp(24px,4vw,48px);align-items:center}
+.mapbox{background:var(--vat);border-radius:10px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(18,28,63,.2)}
+.mapbox svg{display:block;width:100%;height:auto}
+.places{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:28px}
+.places li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.places .pin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--undyed);font-family:var(--mono);font-size:.8rem;font-weight:700}
+.places h3{font-size:1.25rem;font-weight:600}
+.places p{font-size:.95rem;margin-top:2px}
+.mapnote{margin-top:22px;font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;opacity:.75;max-width:70ch}
+@media (max-width:900px){.mapgrid{grid-template-columns:1fr}}
+
+/* ---------- porch / patreon ---------- */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.pillar{padding:26px 24px 28px;border-radius:12px;background:rgba(11,20,48,.55);border:1px solid rgba(242,232,210,.16);display:grid;gap:12px;align-content:start}
+.pillar svg{width:54px;height:54px}
+.pillar h3{font-size:1.45rem;font-weight:500}
+.pillar p{color:var(--on-vat-soft);font-size:.97rem}
+@media (max-width:860px){.pillars{grid-template-columns:1fr}}
+.tier{margin-top:clamp(36px,5vw,64px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);border-radius:14px;overflow:hidden;background:var(--undyed);color:var(--ink)}
+.tier .art{display:grid;place-items:center;padding:clamp(20px,3vw,36px);background:var(--vat-deep)}
+.tier .art img{width:100%;height:auto;border-radius:8px;box-shadow:0 18px 40px -16px rgba(0,0,0,.7)}
+.tier .info{padding:clamp(24px,4vw,44px);display:grid;gap:16px;align-content:start}
+.tier .eyebrow{color:var(--clay)}
+.tier h3{font-size:var(--step-2);font-weight:500}
+.price{font-family:var(--display);font-size:var(--step-2);font-weight:600;color:var(--vat)}
+.price small{font-family:var(--mono);font-size:.8rem;font-weight:400;letter-spacing:.06em;color:var(--ink);opacity:.7}
+.gets{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.gets li{display:grid;grid-template-columns:18px 1fr;gap:12px;align-items:start}
+.gets li::before{content:"";width:12px;height:12px;margin-top:6px;border-radius:50%;background:var(--undyed);box-shadow:0 0 0 3px var(--vat)}
+.gets b{font-weight:600}
+.season{font-size:.95rem;padding-top:14px;border-top:2px dashed rgba(18,28,63,.25)}
+@media (max-width:860px){.tier{grid-template-columns:1fr}}
+
+.immersive{margin:clamp(36px,5vw,64px) 14px 0 0;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--marigold)}
+.immersive img{width:100%;height:auto;aspect-ratio:1942/809;object-fit:cover}
+.immersive figcaption{display:grid;gap:6px;padding:18px 22px;background:var(--ink);color:var(--on-vat-soft);font-size:.98rem}
+.immersive figcaption .eyebrow{color:var(--marigold)}
+@media (max-width:700px){.immersive{box-shadow:0 0 0 3px var(--undyed),8px 8px 0 3px var(--marigold);margin-right:10px}.immersive img{aspect-ratio:4/3}}
+/* ---------- credits ---------- */
+.credits{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 40px}
+.credits li{padding:20px 0;border-top:2px dashed rgba(18,28,63,.25);display:grid;gap:4px}
+.credits .role{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay)}
+.credits .org{font-family:var(--display);font-size:1.35rem;font-weight:500;line-height:1.2}
+
+.film{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);margin-bottom:clamp(32px,5vw,56px);border-radius:14px;overflow:hidden;background:var(--ink);color:var(--undyed);text-decoration:none;box-shadow:12px 12px 0 var(--marigold);transition:transform .2s ease}
+.film:hover{transform:translate(-2px,-2px)}
+.film-art svg{display:block;width:100%;height:100%;min-height:200px}
+.film-info{display:grid;gap:10px;align-content:center;padding:clamp(22px,4vw,40px)}
+.film-info .eyebrow{color:var(--marigold)}
+.film-title{font-family:var(--display);font-size:var(--step-3);font-weight:500;line-height:1;font-variation-settings:"SOFT" 100,"WONK" 1}
+.film-sub{color:var(--on-vat-soft)}
+@media (max-width:760px){.film{grid-template-columns:1fr;box-shadow:8px 8px 0 var(--marigold);margin-right:8px}.film-art svg{min-height:0;aspect-ratio:16/9}}
+.clips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px;max-width:560px}
+.clips video.loop{aspect-ratio:1/1}
+.clips video{width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;background:var(--vat-deep);border:2px solid rgba(242,232,210,.35);display:block}
+@media (max-width:520px){.clips{grid-template-columns:1fr}}
+.camp{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:10px;margin-top:12px;max-width:560px;align-items:start}
+.camp .still{margin:0;max-width:none}
+.still.wide video{width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:2px solid rgba(242,232,210,.35);display:block;background:var(--vat-deep)}
+@media (max-width:520px){.camp{grid-template-columns:1fr}}
+.still{margin:12px 0 0;max-width:260px}
+.still img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:8px;border:2px solid rgba(242,232,210,.35)}
+.still figcaption{margin-top:6px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}
+.greats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;max-width:560px}
+.great{margin:0;display:grid;gap:4px}
+.great figcaption{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--on-vat)}
+.greats img{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:50% 20%;border-radius:8px;border:2px solid rgba(242,232,210,.35)}
+.greats-cap{margin-top:6px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}
+.watch{display:inline-grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-top:12px;padding:10px 18px 10px 10px;border-radius:999px;background:var(--undyed);color:var(--ink);text-decoration:none;box-shadow:5px 5px 0 var(--marigold);transition:transform .2s ease}
+.watch:hover{transform:translate(-2px,-2px)}
+.watch .play{display:block;line-height:0}
+.watch-k{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay)}
+.watch-t{display:block;font-family:var(--display);font-size:1.05rem;font-weight:600}
+.timeline p.thanks{margin-top:8px;font-family:var(--display);font-style:italic;font-size:1rem;color:var(--on-vat)}
+.timeline p.thanks a{color:var(--marigold);text-decoration-thickness:1px;text-underline-offset:3px}
+.bcamp{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:8px;margin-top:12px;max-width:560px}
+.bcamp img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;border-radius:8px;border:2px solid rgba(242,232,210,.35)}
+.tiktok{display:grid;margin-top:14px;max-width:560px;border-radius:12px;overflow:hidden;background:#111;color:var(--undyed);text-decoration:none;box-shadow:8px 8px 0 var(--poppy);transition:transform .2s ease}
+.tiktok:hover{transform:translate(-2px,-2px)}
+.tiktok img{width:100%;height:auto;display:block}
+.tk-info{display:grid;gap:2px;padding:12px 16px}
+.tk-info .watch-k{color:var(--marigold)}
+.tk-stats{font-family:var(--mono);font-size:.74rem;color:var(--on-vat-soft)}
+.bbff{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;max-width:560px}
+.bbff img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:2px solid rgba(242,232,210,.35)}
+@media (max-width:520px){.bbff{grid-template-columns:1fr}}
+/* ---------- footer ---------- */
+.foot{padding-block:clamp(64px,9vw,110px) 48px}
+.foot .wrap{display:grid;gap:36px}
+.foot h2{font-size:var(--step-3);font-weight:400;max-width:16ch}
+.foot h2 em{font-style:italic;color:var(--marigold)}
+.socials{display:flex;flex-wrap:wrap;gap:12px}
+.fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--on-vat-soft);padding-top:20px;border-top:1px solid rgba(242,232,210,.14)}
+
+/* ---------- living tie-dye canvas ---------- */
+#dye{position:fixed;inset:0;width:100%;height:100%;z-index:-1;display:block}
+.vat b{display:none}
+/* ---------- bold folk-print layer ---------- */
+:root{--leaf:#2f6b4f;--teal:#3b9c97;--patch:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='960' height='120'%3E%3Cdefs%3E%3CclipPath id='c'%3E%3Crect width='120' height='120'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg transform='translate(0 0)'%3E%3Crect width='120' height='120' fill='%2316285e'/%3E%3Cg clip-path='url(%23c)'%3E%3Crect x='8' y='8' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='8' y='49' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='8' y='90' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='49' y='8' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='49' y='49' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='49' y='90' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='90' y='8' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='90' y='49' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Crect x='90' y='90' width='22' height='22' fill='none' stroke='%23f2e8d2' stroke-width='3' opacity='.9'/%3E%3Cline x1='40' y1='0' x2='40' y2='120' stroke='%23f2e8d2' stroke-width='2' opacity='.5'/%3E%3Cline x1='0' y1='40' x2='120' y2='40' stroke='%23f2e8d2' stroke-width='2' opacity='.5'/%3E%3Cline x1='80' y1='0' x2='80' y2='120' stroke='%23f2e8d2' stroke-width='2' opacity='.5'/%3E%3Cline x1='0' y1='80' x2='120' y2='80' stroke='%23f2e8d2' stroke-width='2' opacity='.5'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(120 0)'%3E%3Crect width='120' height='120' fill='%231d3277'/%3E%3Cg clip-path='url(%23c)'%3E%3Ccircle cx='10' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='10' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='10' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(240 0)'%3E%3Crect width='120' height='120' fill='%230f1b44'/%3E%3Cg clip-path='url(%23c)'%3E%3Ccircle cx='60' cy='60' r='50' fill='none' stroke='%23f2e8d2' stroke-width='5'/%3E%3Ccircle cx='60' cy='60' r='38' fill='none' stroke='%23f2e8d2' stroke-width='5'/%3E%3Ccircle cx='60' cy='60' r='26' fill='none' stroke='%23f2e8d2' stroke-width='5'/%3E%3Ccircle cx='60' cy='60' r='14' fill='none' stroke='%23f2e8d2' stroke-width='5'/%3E%3Ccircle cx='60' cy='60' r='5' fill='%23f2e8d2'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(360 0)'%3E%3Crect width='120' height='120' fill='%2321397f'/%3E%3Cg clip-path='url(%23c)'%3E%3Cline x1='0' y1='-10' x2='-130' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='14' y1='-10' x2='-116' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='28' y1='-10' x2='-102' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='42' y1='-10' x2='-88' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='56' y1='-10' x2='-74' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='70' y1='-10' x2='-60' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='84' y1='-10' x2='-46' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='98' y1='-10' x2='-32' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='112' y1='-10' x2='-18' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='126' y1='-10' x2='-4' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='140' y1='-10' x2='10' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='154' y1='-10' x2='24' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='168' y1='-10' x2='38' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='182' y1='-10' x2='52' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='196' y1='-10' x2='66' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='210' y1='-10' x2='80' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='224' y1='-10' x2='94' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='238' y1='-10' x2='108' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3Cline x1='252' y1='-10' x2='122' y2='130' stroke='%23f2e8d2' stroke-width='4' opacity='.85'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(480 0)'%3E%3Crect width='120' height='120' fill='%2313235a'/%3E%3Cg clip-path='url(%23c)'%3E%3Cpolyline points='0,24 15,10 30,24 45,10 60,24 75,10 90,24 105,10 120,24' fill='none' stroke='%23f2e8d2' stroke-width='4'/%3E%3Cpolyline points='0,54 15,40 30,54 45,40 60,54 75,40 90,54 105,40 120,54' fill='none' stroke='%23f2e8d2' stroke-width='4'/%3E%3Cpolyline points='0,84 15,70 30,84 45,70 60,84 75,70 90,84 105,70 120,84' fill='none' stroke='%23f2e8d2' stroke-width='4'/%3E%3Cpolyline points='0,114 15,100 30,114 45,100 60,114 75,100 90,114 105,100 120,114' fill='none' stroke='%23f2e8d2' stroke-width='4'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(600 0)'%3E%3Crect width='120' height='120' fill='%231a2f6c'/%3E%3Cg clip-path='url(%23c)'%3E%3Ccircle cx='32' cy='32' r='18' fill='%23f2e8d2'/%3E%3Ccircle cx='32' cy='88' r='18' fill='%23f2e8d2'/%3E%3Ccircle cx='88' cy='32' r='18' fill='%23f2e8d2'/%3E%3Ccircle cx='88' cy='88' r='18' fill='%23f2e8d2'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(720 0)'%3E%3Crect width='120' height='120' fill='%230f1b44'/%3E%3Cg clip-path='url(%23c)'%3E%3Cline x1='6' y1='12' x2='114' y2='12' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='28' x2='114' y2='28' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='44' x2='114' y2='44' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='60' x2='114' y2='60' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='76' x2='114' y2='76' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='92' x2='114' y2='92' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3Cline x1='6' y1='108' x2='114' y2='108' stroke='%23f2e8d2' stroke-width='3' stroke-dasharray='9 6'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(840 0)'%3E%3Crect width='120' height='120' fill='%231d3277'/%3E%3Cg clip-path='url(%23c)'%3E%3Cellipse cx='20' cy='20' rx='12' ry='6' transform='rotate(-35 20 20)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='20' cy='60' rx='12' ry='6' transform='rotate(-35 20 60)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='20' cy='100' rx='12' ry='6' transform='rotate(-35 20 100)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='60' cy='20' rx='12' ry='6' transform='rotate(-35 60 20)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='60' cy='60' rx='12' ry='6' transform='rotate(-35 60 60)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='60' cy='100' rx='12' ry='6' transform='rotate(-35 60 100)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='100' cy='20' rx='12' ry='6' transform='rotate(-35 100 20)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='100' cy='60' rx='12' ry='6' transform='rotate(-35 100 60)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3Cellipse cx='100' cy='100' rx='12' ry='6' transform='rotate(-35 100 100)' fill='none' stroke='%23f2e8d2' stroke-width='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--vatres:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%23f2e8d2' stroke-width='3'%3E%3Ccircle cx='60' cy='60' r='44'/%3E%3Ccircle cx='60' cy='60' r='32'/%3E%3Ccircle cx='60' cy='60' r='20'/%3E%3Cline x1='130' y1='20' x2='230' y2='20' stroke-dasharray='8 6'/%3E%3Cline x1='130' y1='38' x2='230' y2='38' stroke-dasharray='8 6'/%3E%3Cline x1='130' y1='56' x2='230' y2='56' stroke-dasharray='8 6'/%3E%3Cline x1='130' y1='74' x2='230' y2='74' stroke-dasharray='8 6'/%3E%3Cline x1='130' y1='92' x2='230' y2='92' stroke-dasharray='8 6'/%3E%3Crect x='134' y='134' width='26' height='26'/%3E%3Crect x='134' y='186' width='26' height='26'/%3E%3Crect x='186' y='134' width='26' height='26'/%3E%3Crect x='186' y='186' width='26' height='26'/%3E%3C/g%3E%3Cg fill='%23f2e8d2'%3E%3Ccircle cx='14' cy='140' r='4'/%3E%3Ccircle cx='14' cy='158' r='4'/%3E%3Ccircle cx='14' cy='176' r='4'/%3E%3Ccircle cx='14' cy='194' r='4'/%3E%3Ccircle cx='14' cy='212' r='4'/%3E%3Ccircle cx='14' cy='230' r='4'/%3E%3Ccircle cx='32' cy='140' r='4'/%3E%3Ccircle cx='32' cy='158' r='4'/%3E%3Ccircle cx='32' cy='176' r='4'/%3E%3Ccircle cx='32' cy='194' r='4'/%3E%3Ccircle cx='32' cy='212' r='4'/%3E%3Ccircle cx='32' cy='230' r='4'/%3E%3Ccircle cx='50' cy='140' r='4'/%3E%3Ccircle cx='50' cy='158' r='4'/%3E%3Ccircle cx='50' cy='176' r='4'/%3E%3Ccircle cx='50' cy='194' r='4'/%3E%3Ccircle cx='50' cy='212' r='4'/%3E%3Ccircle cx='50' cy='230' r='4'/%3E%3Ccircle cx='68' cy='140' r='4'/%3E%3Ccircle cx='68' cy='158' r='4'/%3E%3Ccircle cx='68' cy='176' r='4'/%3E%3Ccircle cx='68' cy='194' r='4'/%3E%3Ccircle cx='68' cy='212' r='4'/%3E%3Ccircle cx='68' cy='230' r='4'/%3E%3Ccircle cx='86' cy='140' r='4'/%3E%3Ccircle cx='86' cy='158' r='4'/%3E%3Ccircle cx='86' cy='176' r='4'/%3E%3Ccircle cx='86' cy='194' r='4'/%3E%3Ccircle cx='86' cy='212' r='4'/%3E%3Ccircle cx='86' cy='230' r='4'/%3E%3Ccircle cx='104' cy='140' r='4'/%3E%3Ccircle cx='104' cy='158' r='4'/%3E%3Ccircle cx='104' cy='176' r='4'/%3E%3Ccircle cx='104' cy='194' r='4'/%3E%3Ccircle cx='104' cy='212' r='4'/%3E%3Ccircle cx='104' cy='230' r='4'/%3E%3C/g%3E%3C/svg%3E");--adire:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%2316285e'/%3E%3Ccircle cx='10' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='10' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='10' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='20' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='30' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='40' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='50' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='60' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='70' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='80' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='90' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='100' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='10' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='30' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='50' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='70' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='110' cy='90' r='4.5' fill='%23f2e8d2'/%3E%3Ccircle cx='120' cy='110' r='4.5' fill='%23f2e8d2'/%3E%3C/svg%3E")}
+.vat b{position:absolute;inset:-12%;display:block;background:var(--vatres) 0 0/240px 240px;opacity:.2;
+  -webkit-mask-image:radial-gradient(60% 45% at 30% 30%,#000 20%,transparent 70%),radial-gradient(50% 40% at 75% 70%,#000 15%,transparent 70%);
+  mask-image:radial-gradient(60% 45% at 30% 30%,#000 20%,transparent 70%),radial-gradient(50% 40% at 75% 70%,#000 15%,transparent 70%);
+  animation:soak 70s ease-in-out infinite alternate}
+@keyframes soak{0%{transform:translate3d(-3%,-2%,0)}100%{transform:translate3d(3%,3%,0)}}
+.patch{height:120px;background:var(--patch) 0 0/960px 120px repeat-x;animation:cloth 90s linear infinite;border-block:3px solid var(--undyed)}
+@keyframes cloth{to{background-position:-960px 0}}
+@media (max-width:700px){.patch{height:80px;background-size:640px 80px}@keyframes cloth{to{background-position:-640px 0}}}
+@media (prefers-reduced-motion:reduce){.patch,.vat b{animation:none}}
+.patch + .undyed::before{display:none}
+.undyed:has(+ .patch)::after{display:none}
+.strip{height:22px;background:repeating-linear-gradient(90deg,var(--poppy) 0 22px,var(--ink) 22px 28px,var(--marigold) 28px 48px,var(--undyed) 48px 54px,var(--vat) 54px 80px,var(--undyed) 80px 86px,var(--teal) 86px 100px,var(--ink) 100px 106px)}
+/* hero graphics */
+.frame{isolation:isolate}
+.sun{position:absolute;z-index:-1;width:70%;right:-16%;top:-30%;pointer-events:none}
+.sun svg{width:100%;height:auto;animation:turn 120s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.sun svg{animation:none}}
+.bloom{position:absolute;left:-9%;bottom:-16%;width:38%;z-index:2;pointer-events:none}
+.bloom svg{width:100%;height:auto}
+.moon{display:none}
+.hero h1{font-weight:500}
+.hero h1 em{background:linear-gradient(transparent 62%,rgba(228,83,44,.55) 62%);padding:0 .08em;color:var(--undyed)}
+@media (max-width:860px){.sun{top:-22%;right:-10%}.bloom{left:-4%;bottom:-14%;width:34%}}
+/* story poster */
+.story{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
+.storytext{display:grid;gap:22px}
+.poster{position:relative;border-radius:6px;overflow:hidden;background:var(--adire) 0 0/60px 60px;box-shadow:12px 12px 0 var(--poppy)}
+.poster svg{display:block;width:100%;height:auto}
+.poster figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:var(--poppy);color:var(--undyed);font-family:var(--display);font-size:clamp(1.1rem,1rem + .8vw,1.6rem);font-weight:600;font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:.01em}
+@media (max-width:860px){.poster{box-shadow:8px 8px 0 var(--poppy);margin-right:8px}}
+/* bold pillars */
+.pillar{border:0;color:var(--ink)}
+.pillar:nth-child(1){background:var(--marigold)}
+.pillar:nth-child(2){background:var(--poppy);color:var(--undyed)}
+.pillar:nth-child(3){background:var(--undyed)}
+.pillar p{color:inherit;opacity:.88}
+.pillar svg *{stroke:currentColor}
+.pillar svg [fill="#f2e8d2"]{fill:currentColor}
+.pillar svg [fill="#f2a531"]{fill:var(--vat)}
+.pillar:nth-child(2) svg [fill="#f2a531"]{fill:var(--marigold)}
+.pillar h3{font-weight:600}
+/* timeline dots as poppies */
+.timeline li.now::before{background:var(--poppy);border-color:var(--marigold)}
+/* map pins bolder */
+.places .pin{background:var(--poppy);color:var(--undyed)}
+.credits .org{font-weight:600}
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="poppy" viewBox="-50 -50 100 100"><g fill="#e4532c"><ellipse cx="0" cy="-20" rx="21" ry="27" transform="rotate(0)"/><ellipse cx="0" cy="-20" rx="21" ry="27" transform="rotate(72)"/><ellipse cx="0" cy="-20" rx="21" ry="27" transform="rotate(144)"/><ellipse cx="0" cy="-20" rx="21" ry="27" transform="rotate(216)"/><ellipse cx="0" cy="-20" rx="21" ry="27" transform="rotate(288)"/></g><g fill="#c23b1c"><ellipse cx="0" cy="-12" rx="11" ry="15" transform="rotate(36)"/><ellipse cx="0" cy="-12" rx="11" ry="15" transform="rotate(108)"/><ellipse cx="0" cy="-12" rx="11" ry="15" transform="rotate(180)"/><ellipse cx="0" cy="-12" rx="11" ry="15" transform="rotate(252)"/><ellipse cx="0" cy="-12" rx="11" ry="15" transform="rotate(324)"/></g><circle r="10" fill="#121c3f"/><g fill="#f2e8d2"><circle cx="14.0" cy="0.0" r="2.3"/><circle cx="11.3" cy="8.2" r="2.3"/><circle cx="4.3" cy="13.3" r="2.3"/><circle cx="-4.3" cy="13.3" r="2.3"/><circle cx="-11.3" cy="8.2" r="2.3"/><circle cx="-14.0" cy="0.0" r="2.3"/><circle cx="-11.3" cy="-8.2" r="2.3"/><circle cx="-4.3" cy="-13.3" r="2.3"/><circle cx="4.3" cy="-13.3" r="2.3"/><circle cx="11.3" cy="-8.2" r="2.3"/></g></symbol>
+<symbol id="marigold" viewBox="-40 -40 80 80"><g fill="#f2a531"><circle cx="26.0" cy="0.0" r="9"/><circle cx="23.4" cy="11.3" r="9"/><circle cx="16.2" cy="20.3" r="9"/><circle cx="5.8" cy="25.3" r="9"/><circle cx="-5.8" cy="25.3" r="9"/><circle cx="-16.2" cy="20.3" r="9"/><circle cx="-23.4" cy="11.3" r="9"/><circle cx="-26.0" cy="-0.0" r="9"/><circle cx="-23.4" cy="-11.3" r="9"/><circle cx="-16.2" cy="-20.3" r="9"/><circle cx="-5.8" cy="-25.3" r="9"/><circle cx="5.8" cy="-25.3" r="9"/><circle cx="16.2" cy="-20.3" r="9"/><circle cx="23.4" cy="-11.3" r="9"/></g><g fill="#e0861a"><circle cx="14.3" cy="4.4" r="7"/><circle cx="9.0" cy="12.0" r="7"/><circle cx="0.2" cy="15.0" r="7"/><circle cx="-8.6" cy="12.3" r="7"/><circle cx="-14.2" cy="4.8" r="7"/><circle cx="-14.3" cy="-4.4" r="7"/><circle cx="-9.0" cy="-12.0" r="7"/><circle cx="-0.2" cy="-15.0" r="7"/><circle cx="8.6" cy="-12.3" r="7"/><circle cx="14.2" cy="-4.8" r="7"/></g><circle r="7" fill="#a9482a"/></symbol>
+<symbol id="leaf" viewBox="0 0 40 80"><path d="M20 78C2 56 2 22 20 2c18 20 18 54 0 76z" fill="#2f6b4f"/><path d="M20 76V8" stroke="#1f4a36" stroke-width="2.5"/></symbol>
+</defs></svg>
+<div class="vat" aria-hidden="true"><i></i><i></i><b></b></div>
+<canvas id="dye" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Genell on Banjo, back to top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="15" cy="15" r="7.5" fill="none" stroke="#f2e8d2" stroke-width="1.4" stroke-dasharray="2.2 2.2"/><circle cx="15" cy="15" r="2.4" fill="#f2a531"/></svg>
+      Genell on Banjo
+    </a>
+    <nav aria-label="Sections">
+      <a class="navlink" href="#story">Story</a>
+      <a class="navlink" href="#path">My path</a>
+      <a class="navlink" href="#roots">Roots</a>
+      <a class="navlink" href="#porch">The porch</a>
+      <a class="btn btn-poppy" href="https://www.patreon.com/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Clawhammer banjo · Black old-time tradition</p>
+        <h1 id="hero-title">Welcome to my <em>virtual porch.</em></h1>
+        <p class="lede">I'm Genell Zuciya. This is where I share my ongoing learnings, archival discoveries, and musical lineages with you in real time.</p>
+        <div class="ctas">
+          <a class="btn btn-poppy" href="https://www.patreon.com/genellonbanjo" target="_blank" rel="noopener">Pull up a chair on Patreon</a>
+          <a class="btn btn-line" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">Watch on TikTok</a>
+        </div>
+      </div>
+      <figure class="frame" style="margin:0">
+        <span class="moon" aria-hidden="true"></span><span class="sun" aria-hidden="true"><svg viewBox="-104 -104 208 208"><g fill="#f2a531"><polygon points="-4,-50 4,-50 0,-102" transform="rotate(0)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(10)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(20)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(30)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(40)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(50)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(60)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(70)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(80)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(90)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(100)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(110)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(120)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(130)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(140)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(150)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(160)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(170)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(180)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(190)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(200)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(210)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(220)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(230)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(240)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(250)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(260)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(270)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(280)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(290)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(300)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(310)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(320)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(330)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(340)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(350)"/></g><circle r="46" fill="#f2a531"/><circle r="36" fill="none" stroke="#e4532c" stroke-width="3" stroke-dasharray="6 5"/><circle r="22" fill="#e4532c"/></svg></span><span class="bloom" aria-hidden="true"><svg viewBox="0 0 220 200"><path d="M70 200C72 150 66 120 60 96M150 200c-2-44 6-70 18-92M110 200c0-30-2-52-6-70" stroke="#2f6b4f" stroke-width="5" fill="none" stroke-linecap="round"/><use href="#leaf" x="20" y="110" width="34" height="68" transform="rotate(-28 37 144)"/><use href="#leaf" x="160" y="118" width="32" height="64" transform="rotate(30 176 150)"/><use href="#poppy" x="8" y="20" width="104" height="104"/><use href="#poppy" x="118" y="34" width="92" height="92"/><use href="#marigold" x="76" y="96" width="62" height="62"/></svg></span>
+        <img src="img/porch-hero.jpg" width="1442" height="805" alt="Genell smiling on a wooden porch with her open-back banjo, a gourd and a fiddle beside her, marigolds and agave in front, mountains and a full moon behind.">
+        <figcaption>Roots, lineages and the front porch</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="patch" aria-hidden="true"></div>
+  <section class="band undyed" id="story" aria-labelledby="story-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">The banjo's story</p>
+        <h2 id="story-title">Built on porches, <em>passed hand to hand.</em></h2>
+      </div>
+      <div class="story">
+        <div class="storytext">
+        <p class="big">The banjo is fundamentally <strong>an African diasporic creation of the Americas</strong>, forged by enslaved people across the Caribbean and colonial North America from ancestral West African gourd lute traditions. It served as the rhythmic engine of early American folk and dance music.</p>
+        <div class="side">
+          <p>That early musical landscape was actively cross-collaborative. Long before the modern folk revivals, and before commercial record labels divided music into segregated categories, dance and string-band traditions were shaped through direct, porch-to-porch exchanges.</p>
+          <p>On cabin steps, river landings, and front porches, Black songsters, Indigenous players, Anglo-Celtic fiddlers, and regional immigrant communities influenced, challenged, and learned from one another. My porch exists to trace that lineage with care and in community.</p>
+          <hr class="stitch">
+          <p class="eyebrow" style="color:var(--ink);opacity:.7">What a banjo is made of</p>
+          <div class="materials" aria-label="Traditional banjo materials"><span>Gourd</span><span>Animal hide</span><span>Gut strings</span><span>Horsehair</span><span>Yucca fiber</span><span>Seasonal humidity</span></div>
+        </div>
+        </div>
+        <figure class="poster" style="margin:0"><svg viewBox="0 0 400 500" role="img" aria-label="Screen-print style poster of an open-back banjo under a marigold sun, with poppies and marigolds at its base."><g transform="translate(300 120)"><g fill="#f2a531"><polygon points="-5,-60 5,-60 0,-120" transform="rotate(0)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(12)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(24)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(36)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(48)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(60)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(72)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(84)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(96)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(108)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(120)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(132)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(144)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(156)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(168)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(180)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(192)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(204)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(216)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(228)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(240)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(252)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(264)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(276)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(288)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(300)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(312)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(324)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(336)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(348)"/></g><circle r="58" fill="#f2a531"/><circle r="44" fill="none" stroke="#e4532c" stroke-width="4" stroke-dasharray="7 6"/></g>
+<g transform="translate(190 300) rotate(-24)"><rect x="-11" y="-270" width="22" height="230" rx="4" fill="#8a4a2a"/><g fill="#f2e8d2"><circle cx="0" cy="-60" r="3"/><circle cx="0" cy="-96" r="3"/><circle cx="0" cy="-132" r="3"/><circle cx="0" cy="-168" r="3"/><circle cx="0" cy="-204" r="3"/><circle cx="0" cy="-240" r="3"/></g><path d="M-16 -268 L16 -268 L20 -310 L-20 -310 Z" fill="#6b3a20"/><g fill="#f2e8d2"><circle cx="-24" cy="-296" r="5"/><circle cx="24" cy="-296" r="5"/><circle cx="-23" cy="-278" r="5"/><circle cx="23" cy="-278" r="5"/></g><circle r="92" fill="#121c3f"/><circle r="80" fill="#f2e8d2"/><g fill="#121c3f"><circle cx="86.0" cy="0.0" r="3.4"/><circle cx="79.5" cy="32.9" r="3.4"/><circle cx="60.8" cy="60.8" r="3.4"/><circle cx="32.9" cy="79.5" r="3.4"/><circle cx="-0.0" cy="86.0" r="3.4"/><circle cx="-32.9" cy="79.5" r="3.4"/><circle cx="-60.8" cy="60.8" r="3.4"/><circle cx="-79.5" cy="32.9" r="3.4"/><circle cx="-86.0" cy="-0.0" r="3.4"/><circle cx="-79.5" cy="-32.9" r="3.4"/><circle cx="-60.8" cy="-60.8" r="3.4"/><circle cx="-32.9" cy="-79.5" r="3.4"/><circle cx="0.0" cy="-86.0" r="3.4"/><circle cx="32.9" cy="-79.5" r="3.4"/><circle cx="60.8" cy="-60.8" r="3.4"/><circle cx="79.5" cy="-32.9" r="3.4"/></g><g stroke="#121c3f" stroke-width="1.6"><line x1="-8" y1="-300" x2="-8" y2="62"/><line x1="-4" y1="-300" x2="-4" y2="62"/><line x1="0" y1="-300" x2="0" y2="62"/><line x1="4" y1="-300" x2="4" y2="62"/><line x1="8" y1="-300" x2="8" y2="62"/></g><rect x="-22" y="20" width="44" height="7" rx="2" fill="#8a4a2a"/><rect x="-14" y="60" width="28" height="14" rx="3" fill="#6b3a20"/></g>
+<g><use href="#leaf" x="34" y="352" width="40" height="80" transform="rotate(-24 54 392)"/><use href="#leaf" x="318" y="356" width="40" height="80" transform="rotate(26 338 396)"/><use href="#poppy" x="-6" y="360" width="130" height="130"/><use href="#marigold" x="110" y="400" width="80" height="80"/><use href="#poppy" x="270" y="366" width="124" height="124"/><use href="#marigold" x="200" y="410" width="70" height="70"/></g></svg><figcaption>Gourd · Hide · Gut · Horsehair</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band dyed" id="path" aria-labelledby="path-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">My path to the porch</p>
+        <h2 id="path-title">A lifetime of folk instruments, <em>then home.</em></h2>
+      </div>
+      <div class="path">
+        <div class="roots">
+          <p>I'm African-American, raised in <strong>Freetown, on Harriet Tubman Lane, in Columbia, Maryland</strong>. My great-grandmother was a recycler. My family has a junkyard, and my grandfather ran a hauling business, bringing mulch to people and hauling away what they no longer wanted. It was a grounded upbringing, and it still anchors me.</p>
+          <div class="holler">
+            <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M9 34c0-9 4-15 13-15s13 6 13 15" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linecap="round"/><path d="M13 21l-2-9 7 5M31 21l2-9-7 5" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linejoin="round"/><circle cx="18" cy="27" r="1.6" fill="#f2e8d2"/><circle cx="26" cy="27" r="1.6" fill="#f2e8d2"/></svg>
+            <p>We always had about ten cats around, and my grandfather raised me to have a holler to call them home.</p>
+          </div>
+          <p>I was raised on <strong>gospel choir and church</strong>, and I sang in choir from elementary school all the way through college, with guitar and piano along the way.</p>
+        </div>
+        <ol class="timeline" aria-label="Folk instruments through my life">
+          <li><span class="when">2006 · Crete, Greece</span><h3>Tzouras</h3><p>Studying abroad, I started diving into folk instrumentation.</p></li>
+          <li><span class="when">2007 · Film thesis · Guinea, West Africa</span><h3>Dunun</h3><p>As a film student, I spent my senior thesis filming a djembe orchestra: djembe, kora, dunun and more. Filming them started my own journey with the dunun set (dundunba, sangban and kenkeni).</p></li>
+          <li><span class="when">November 2015 to March 2016 · Shanghai</span><h3>Erhu</h3><p>I took erhu lessons in my free time while working abroad as a Disney Imagineer building Shanghai Disneyland.</p>
+            <div class="camp">
+              <figure class="still"><img src="img/erhu-chair.jpg" width="1200" height="797" loading="lazy" alt="Genell's erhu and bow resting on a cream armchair against warm wood panelling in Shanghai."><figcaption>My erhu, Shanghai</figcaption></figure>
+              <figure class="still wide"><video controls playsinline preload="none" poster="img/erhu-rehearsal.jpg" width="960" height="540" aria-label="Genell playing erhu in rehearsal in Shanghai"><source src="img/erhu-rehearsal.mp4" type="video/mp4"></video><figcaption>Erhu rehearsal, Shanghai 2016</figcaption></figure>
+            </div>
+          </li>
+          <li><span class="when">2017 to 2019 · Los Angeles</span><h3>West African dance</h3><p>While I was learning the banjo's true history, I was dancing in Los Angeles and going to camps to deepen my craft, like Camp Fareta.</p>
+            <div class="camp">
+              <figure class="still"><img src="img/camp-fareta.jpg" width="900" height="900" loading="lazy" alt="Genell smiling at Camp Fareta in a yellow and blue wax-print skirt, one foot on a bench, beside a river-stone pavilion among pines."><figcaption>Camp Fareta</figcaption></figure>
+              <figure class="still wide"><video controls playsinline preload="none" poster="img/dunun-dance.jpg" width="848" height="480" aria-label="Dancers at Camp Fareta playing dunun strapped on while dancing under an open pavilion"><source src="img/dunun-dance.mp4" type="video/mp4"></video><figcaption>Dunun dance: playing while dancing</figcaption></figure>
+            </div>
+            <div class="greats" aria-label="With West African dance teachers at Camp Fareta">
+              <figure class="great"><img src="img/fareta-1.jpg" width="825" height="1100" loading="lazy" alt="Genell smiling cheek to cheek with Congolese dance master Mabiba Baegne at Camp Fareta."><figcaption>With Mabiba Baegne</figcaption></figure>
+              <figure class="great"><img src="img/fareta-2.jpg" width="825" height="1100" loading="lazy" alt="Genell in a green wax-print wrap beside a West African dance teacher in yellow on the Camp Fareta dance floor."></figure>
+              <figure class="great"><img src="img/fareta-3.jpg" width="825" height="1100" loading="lazy" alt="Genell beside a West African dance teacher in star-print pants on the Camp Fareta dance floor, drummers behind them."></figure>
+            </div>
+            <p class="greats-cap">With West African dance greats at Camp Fareta.</p>
+          </li>
+          <li><span class="when">2019 · New Mexico</span><h3>The banjo's true history</h3><p>Looking for my music community, I learned where the banjo really comes from. It reframed everything I knew about American roots music.</p><p class="thanks">Gratitude to <a href="https://www.decolonizingthemusicroom.org/community-artist-visiting-educator-program" target="_blank" rel="noopener">Brandi Waller-Pace and Amadou Kouyate</a> for opening my eyes to the banjo's history.</p></li>
+          <li><span class="when">2020</span><h3>Dunun set</h3><p>The dunun journey that started in Guinea kept going. Here I am on the full dunun set on my own.</p>
+            <div class="clips">
+              <video class="loop" autoplay muted loop playsinline poster="img/dunun-1.jpg" width="720" height="720" aria-label="Genell playing the dunun set outdoors under a blue sky"><source src="img/dunun-1.mp4" type="video/mp4"></video>
+              <video class="loop" autoplay muted loop playsinline poster="img/dunun-2.jpg" width="720" height="720" aria-label="Genell playing the dunun set on a grassy lot beside a purple car"><source src="img/dunun-2.mp4" type="video/mp4"></video>
+            </div>
+          </li>
+          <li><span class="when">April 2024</span><h3>Clawhammer banjo</h3><p>I picked up the instrument and found New Mexico's old-time community.</p>
+            <div class="bcamp">
+              <img src="img/banjo-camp-1.jpg" width="900" height="900" loading="lazy" alt="Genell laughing with her green banjo beside a fellow banjo player in overalls at banjo camp.">
+              <img src="img/banjo-camp-2.jpg" width="1200" height="900" loading="lazy" alt="Group photo of the whole banjo camp, dozens of players holding banjos in front of an outdoor stage.">
+            </div>
+            <p class="greats-cap">Banjo camp, New Mexico</p>
+            <a class="tiktok" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">
+              <img src="img/tiktok-grid.jpg" width="1200" height="523" loading="lazy" alt="A grid of Genell's TikTok banjo videos: practice clips, a Maryland meditation, Berkeley Old Time Music Convention and Santa Fe TradFest.">
+              <span class="tk-info"><span class="watch-k">Follow the journey on TikTok</span><span class="watch-t">@genellonbanjo</span><span class="tk-stats">4,472 followers · 22.8K likes</span></span>
+            </a>
+          </li>
+          <li><span class="when">2024</span><h3>Sangban in the circle</h3><p>I started playing sangban in the drum circle, while also still studying and performing banjo.</p>
+            <div class="clips">
+              <video controls playsinline preload="none" poster="img/sangban-1.jpg" width="960" height="540" aria-label="Genell playing sangban with a dunun and djembe group"><source src="img/sangban-1.mp4" type="video/mp4"></video>
+              <video controls playsinline preload="none" poster="img/sangban-2.jpg" width="960" height="540" aria-label="Genell playing sangban in a drum circle"><source src="img/sangban-2.mp4" type="video/mp4"></video>
+            </div>
+          </li>
+          <li class="now"><span class="when">November 2025</span><h3>Black Banjo &amp; Fiddle Fellowship</h3><p>The fellowship deepened the journey, and the porch opened to share it.</p>
+            <div class="bbff">
+              <figure class="great"><img src="img/bbff-1.jpg" width="1100" height="825" loading="lazy" alt="Genell smiling into the camera on stage at the Berkeley Old Time Music Convention, with fellow players on guitar and fiddle behind her."><figcaption>On stage, Berkeley Old Time Music Convention</figcaption></figure>
+              <figure class="great"><img src="img/bbff-2.jpg" width="1100" height="825" loading="lazy" alt="Genell with three fellow musicians in a room lined with framed photos and green light."><figcaption>With fellow musicians</figcaption></figure>
+            </div>
+            <a class="watch" href="https://www.youtube.com/watch?v=itwAhXprt-k" target="_blank" rel="noopener"><span class="play" aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="19" fill="#e4532c"/><path d="M16 12 L28 20 L16 28 Z" fill="#f2e8d2"/></svg></span><span><span class="watch-k">Watch on YouTube</span><span class="watch-t">Patteroller, our BBFF arrangement</span></span></a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band undyed" id="roots" aria-labelledby="roots-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Where my roots reach</p>
+        <h2 id="roots-title">Four places, <em>one thread.</em></h2>
+      </div>
+      <ol class="places">
+          <li><span class="pin">1</span><div><h3>Cameroon</h3><p>Hausa and Tikar roots, in present-day Cameroon.</p></div></li>
+          <li><span class="pin">2</span><div><h3>Martinique</h3><p>Ancestry through Martinique, in the Caribbean.</p></div></li>
+          <li><span class="pin">3</span><div><h3>South Carolina Lowcountry</h3><p>Gullah Geechee heritage, and the indigo that runs through this site.</p></div></li>
+          <li><span class="pin">4</span><div><h3>Columbia, Maryland</h3><p>Home. Freetown, Howard County, near the Chesapeake Bay.</p></div></li>
+        </ol>
+    </div>
+  </section>
+
+  <div class="patch" aria-hidden="true"></div>
+  <section class="band dyed" id="porch" aria-labelledby="porch-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">The virtual porch on Patreon</p>
+        <h2 id="porch-title">Pull up a chair. <em>We're tracing it together.</em></h2>
+      </div>
+      <div class="pillars">
+        <article class="pillar">
+          <svg viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="22" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="27" cy="27" r="14" fill="none" stroke="#f2e8d2" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="27" cy="27" r="5" fill="#f2a531"/><path d="M27 5v-3M27 52v-3M5 27H2M52 27h-3" stroke="#f2e8d2" stroke-width="2"/></svg>
+          <h3>The Craft &amp; Mechanics</h3>
+          <p>Clawhammer down-stroke mechanics, historical tunings, and acoustic physics.</p>
+        </article>
+        <article class="pillar">
+          <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M27 8c9 6 13 15 13 24 0 8-6 14-13 14s-13-6-13-14c0-9 4-18 13-24z" fill="none" stroke="#f2e8d2" stroke-width="2"/><path d="M27 6v-3" stroke="#f2e8d2" stroke-width="2"/><g fill="#f2e8d2"><circle cx="22" cy="28" r="1.8"/><circle cx="32" cy="28" r="1.8"/><circle cx="27" cy="35" r="1.8"/><circle cx="22" cy="40" r="1.8"/><circle cx="32" cy="40" r="1.8"/></g></svg>
+          <h3>The Material Ecology</h3>
+          <p>How traditional gourd and open-back banjos work as vernacular technologies, attuned to biological materials, seasonal humidity, and animal hides.</p>
+        </article>
+        <article class="pillar">
+          <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
+          <h3>Immersive Reimagining</h3>
+          <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive.</p>
+        </article>
+      </div>
+
+      <figure class="immersive">
+        <img src="img/immersive-porch.jpg" width="1942" height="809" loading="lazy" alt="Concept view of an immersive archive room: visitors in headphones walk among glowing translucent panels showing scenes of people in a forest, under an arch lined with handwritten pages, with a river town at sunset beyond.">
+        <figcaption><span class="eyebrow">Coming January 2027 · Concept preview</span><span>The immersive porch: archive scenes, sound and handwritten records you can walk through, built from the research we gather together.</span></figcaption>
+      </figure>
+
+      <div class="tier">
+        <div class="art"><img src="img/porch-listener.jpg" width="1536" height="1024" alt="Porch Listener cover: a rocking chair, a woven blanket and a banjo on a porch under a full moon."></div>
+        <div class="info">
+          <p class="eyebrow">Fall soft launch · October to December 2026</p>
+          <h3>The Porch Listener</h3>
+          <p class="price">$5 <small>per month</small></p>
+          <p>Joining now funds archival research, fieldwork, and immersive prototyping. Each month this fall you'll receive:</p>
+          <ul class="gets">
+            <li><span><b>Field Dispatches.</b> Curated historical deep dives, primary source recordings, and research on the instrument's origins and cross-cultural lineages.</span></li>
+            <li><span><b>Community Polls.</b> Direct input on which historical tunes and regional styles we investigate next.</span></li>
+            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early design previews and audio tests of the porch environments and immersive sound spaces coming in January.</span></li>
+          </ul>
+          <p class="season">Instructional tiers and participatory clinics open in January 2027.</p>
+          <div><a class="btn btn-ink" href="https://www.patreon.com/genellonbanjo" target="_blank" rel="noopener">Join as a Porch Listener</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="band undyed" id="community" aria-labelledby="community-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">On stage and in the community</p>
+        <h2 id="community-title">Where you'll <em>find me.</em></h2>
+      </div>
+      <a class="film" href="https://www.youtube.com/watch?v=1jt8qzHyNu4" target="_blank" rel="noopener" aria-label="Watch the Nankama music video on YouTube">
+        <span class="film-art" aria-hidden="true">
+          <svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice"><rect width="400" height="225" fill="#16285e"/>
+            <g fill="#f2e8d2" opacity=".22"><circle cx="9" cy="9" r="3"/><circle cx="18" cy="27" r="3"/><circle cx="9" cy="45" r="3"/><circle cx="18" cy="63" r="3"/><circle cx="9" cy="81" r="3"/><circle cx="18" cy="99" r="3"/><circle cx="9" cy="117" r="3"/><circle cx="18" cy="135" r="3"/><circle cx="9" cy="153" r="3"/><circle cx="18" cy="171" r="3"/><circle cx="9" cy="189" r="3"/><circle cx="18" cy="207" r="3"/><circle cx="27" cy="9" r="3"/><circle cx="36" cy="27" r="3"/><circle cx="27" cy="45" r="3"/><circle cx="36" cy="63" r="3"/><circle cx="27" cy="81" r="3"/><circle cx="36" cy="99" r="3"/><circle cx="27" cy="117" r="3"/><circle cx="36" cy="135" r="3"/><circle cx="27" cy="153" r="3"/><circle cx="36" cy="171" r="3"/><circle cx="27" cy="189" r="3"/><circle cx="36" cy="207" r="3"/><circle cx="45" cy="9" r="3"/><circle cx="54" cy="27" r="3"/><circle cx="45" cy="45" r="3"/><circle cx="54" cy="63" r="3"/><circle cx="45" cy="81" r="3"/><circle cx="54" cy="99" r="3"/><circle cx="45" cy="117" r="3"/><circle cx="54" cy="135" r="3"/><circle cx="45" cy="153" r="3"/><circle cx="54" cy="171" r="3"/><circle cx="45" cy="189" r="3"/><circle cx="54" cy="207" r="3"/><circle cx="63" cy="9" r="3"/><circle cx="72" cy="27" r="3"/><circle cx="63" cy="45" r="3"/><circle cx="72" cy="63" r="3"/><circle cx="63" cy="81" r="3"/><circle cx="72" cy="99" r="3"/><circle cx="63" cy="117" r="3"/><circle cx="72" cy="135" r="3"/><circle cx="63" cy="153" r="3"/><circle cx="72" cy="171" r="3"/><circle cx="63" cy="189" r="3"/><circle cx="72" cy="207" r="3"/><circle cx="81" cy="9" r="3"/><circle cx="90" cy="27" r="3"/><circle cx="81" cy="45" r="3"/><circle cx="90" cy="63" r="3"/><circle cx="81" cy="81" r="3"/><circle cx="90" cy="99" r="3"/><circle cx="81" cy="117" r="3"/><circle cx="90" cy="135" r="3"/><circle cx="81" cy="153" r="3"/><circle cx="90" cy="171" r="3"/><circle cx="81" cy="189" r="3"/><circle cx="90" cy="207" r="3"/><circle cx="99" cy="9" r="3"/><circle cx="108" cy="27" r="3"/><circle cx="99" cy="45" r="3"/><circle cx="108" cy="63" r="3"/><circle cx="99" cy="81" r="3"/><circle cx="108" cy="99" r="3"/><circle cx="99" cy="117" r="3"/><circle cx="108" cy="135" r="3"/><circle cx="99" cy="153" r="3"/><circle cx="108" cy="171" r="3"/><circle cx="99" cy="189" r="3"/><circle cx="108" cy="207" r="3"/><circle cx="117" cy="9" r="3"/><circle cx="126" cy="27" r="3"/><circle cx="117" cy="45" r="3"/><circle cx="126" cy="63" r="3"/><circle cx="117" cy="81" r="3"/><circle cx="126" cy="99" r="3"/><circle cx="117" cy="117" r="3"/><circle cx="126" cy="135" r="3"/><circle cx="117" cy="153" r="3"/><circle cx="126" cy="171" r="3"/><circle cx="117" cy="189" r="3"/><circle cx="126" cy="207" r="3"/><circle cx="135" cy="9" r="3"/><circle cx="144" cy="27" r="3"/><circle cx="135" cy="45" r="3"/><circle cx="144" cy="63" r="3"/><circle cx="135" cy="81" r="3"/><circle cx="144" cy="99" r="3"/><circle cx="135" cy="117" r="3"/><circle cx="144" cy="135" r="3"/><circle cx="135" cy="153" r="3"/><circle cx="144" cy="171" r="3"/><circle cx="135" cy="189" r="3"/><circle cx="144" cy="207" r="3"/><circle cx="153" cy="9" r="3"/><circle cx="162" cy="27" r="3"/><circle cx="153" cy="45" r="3"/><circle cx="162" cy="63" r="3"/><circle cx="153" cy="81" r="3"/><circle cx="162" cy="99" r="3"/><circle cx="153" cy="117" r="3"/><circle cx="162" cy="135" r="3"/><circle cx="153" cy="153" r="3"/><circle cx="162" cy="171" r="3"/><circle cx="153" cy="189" r="3"/><circle cx="162" cy="207" r="3"/><circle cx="171" cy="9" r="3"/><circle cx="180" cy="27" r="3"/><circle cx="171" cy="45" r="3"/><circle cx="180" cy="63" r="3"/><circle cx="171" cy="81" r="3"/><circle cx="180" cy="99" r="3"/><circle cx="171" cy="117" r="3"/><circle cx="180" cy="135" r="3"/><circle cx="171" cy="153" r="3"/><circle cx="180" cy="171" r="3"/><circle cx="171" cy="189" r="3"/><circle cx="180" cy="207" r="3"/><circle cx="189" cy="9" r="3"/><circle cx="198" cy="27" r="3"/><circle cx="189" cy="45" r="3"/><circle cx="198" cy="63" r="3"/><circle cx="189" cy="81" r="3"/><circle cx="198" cy="99" r="3"/><circle cx="189" cy="117" r="3"/><circle cx="198" cy="135" r="3"/><circle cx="189" cy="153" r="3"/><circle cx="198" cy="171" r="3"/><circle cx="189" cy="189" r="3"/><circle cx="198" cy="207" r="3"/><circle cx="207" cy="9" r="3"/><circle cx="216" cy="27" r="3"/><circle cx="207" cy="45" r="3"/><circle cx="216" cy="63" r="3"/><circle cx="207" cy="81" r="3"/><circle cx="216" cy="99" r="3"/><circle cx="207" cy="117" r="3"/><circle cx="216" cy="135" r="3"/><circle cx="207" cy="153" r="3"/><circle cx="216" cy="171" r="3"/><circle cx="207" cy="189" r="3"/><circle cx="216" cy="207" r="3"/><circle cx="225" cy="9" r="3"/><circle cx="234" cy="27" r="3"/><circle cx="225" cy="45" r="3"/><circle cx="234" cy="63" r="3"/><circle cx="225" cy="81" r="3"/><circle cx="234" cy="99" r="3"/><circle cx="225" cy="117" r="3"/><circle cx="234" cy="135" r="3"/><circle cx="225" cy="153" r="3"/><circle cx="234" cy="171" r="3"/><circle cx="225" cy="189" r="3"/><circle cx="234" cy="207" r="3"/><circle cx="243" cy="9" r="3"/><circle cx="252" cy="27" r="3"/><circle cx="243" cy="45" r="3"/><circle cx="252" cy="63" r="3"/><circle cx="243" cy="81" r="3"/><circle cx="252" cy="99" r="3"/><circle cx="243" cy="117" r="3"/><circle cx="252" cy="135" r="3"/><circle cx="243" cy="153" r="3"/><circle cx="252" cy="171" r="3"/><circle cx="243" cy="189" r="3"/><circle cx="252" cy="207" r="3"/><circle cx="261" cy="9" r="3"/><circle cx="270" cy="27" r="3"/><circle cx="261" cy="45" r="3"/><circle cx="270" cy="63" r="3"/><circle cx="261" cy="81" r="3"/><circle cx="270" cy="99" r="3"/><circle cx="261" cy="117" r="3"/><circle cx="270" cy="135" r="3"/><circle cx="261" cy="153" r="3"/><circle cx="270" cy="171" r="3"/><circle cx="261" cy="189" r="3"/><circle cx="270" cy="207" r="3"/><circle cx="279" cy="9" r="3"/><circle cx="288" cy="27" r="3"/><circle cx="279" cy="45" r="3"/><circle cx="288" cy="63" r="3"/><circle cx="279" cy="81" r="3"/><circle cx="288" cy="99" r="3"/><circle cx="279" cy="117" r="3"/><circle cx="288" cy="135" r="3"/><circle cx="279" cy="153" r="3"/><circle cx="288" cy="171" r="3"/><circle cx="279" cy="189" r="3"/><circle cx="288" cy="207" r="3"/><circle cx="297" cy="9" r="3"/><circle cx="306" cy="27" r="3"/><circle cx="297" cy="45" r="3"/><circle cx="306" cy="63" r="3"/><circle cx="297" cy="81" r="3"/><circle cx="306" cy="99" r="3"/><circle cx="297" cy="117" r="3"/><circle cx="306" cy="135" r="3"/><circle cx="297" cy="153" r="3"/><circle cx="306" cy="171" r="3"/><circle cx="297" cy="189" r="3"/><circle cx="306" cy="207" r="3"/><circle cx="315" cy="9" r="3"/><circle cx="324" cy="27" r="3"/><circle cx="315" cy="45" r="3"/><circle cx="324" cy="63" r="3"/><circle cx="315" cy="81" r="3"/><circle cx="324" cy="99" r="3"/><circle cx="315" cy="117" r="3"/><circle cx="324" cy="135" r="3"/><circle cx="315" cy="153" r="3"/><circle cx="324" cy="171" r="3"/><circle cx="315" cy="189" r="3"/><circle cx="324" cy="207" r="3"/><circle cx="333" cy="9" r="3"/><circle cx="342" cy="27" r="3"/><circle cx="333" cy="45" r="3"/><circle cx="342" cy="63" r="3"/><circle cx="333" cy="81" r="3"/><circle cx="342" cy="99" r="3"/><circle cx="333" cy="117" r="3"/><circle cx="342" cy="135" r="3"/><circle cx="333" cy="153" r="3"/><circle cx="342" cy="171" r="3"/><circle cx="333" cy="189" r="3"/><circle cx="342" cy="207" r="3"/><circle cx="351" cy="9" r="3"/><circle cx="360" cy="27" r="3"/><circle cx="351" cy="45" r="3"/><circle cx="360" cy="63" r="3"/><circle cx="351" cy="81" r="3"/><circle cx="360" cy="99" r="3"/><circle cx="351" cy="117" r="3"/><circle cx="360" cy="135" r="3"/><circle cx="351" cy="153" r="3"/><circle cx="360" cy="171" r="3"/><circle cx="351" cy="189" r="3"/><circle cx="360" cy="207" r="3"/><circle cx="369" cy="9" r="3"/><circle cx="378" cy="27" r="3"/><circle cx="369" cy="45" r="3"/><circle cx="378" cy="63" r="3"/><circle cx="369" cy="81" r="3"/><circle cx="378" cy="99" r="3"/><circle cx="369" cy="117" r="3"/><circle cx="378" cy="135" r="3"/><circle cx="369" cy="153" r="3"/><circle cx="378" cy="171" r="3"/><circle cx="369" cy="189" r="3"/><circle cx="378" cy="207" r="3"/><circle cx="387" cy="9" r="3"/><circle cx="396" cy="27" r="3"/><circle cx="387" cy="45" r="3"/><circle cx="396" cy="63" r="3"/><circle cx="387" cy="81" r="3"/><circle cx="396" cy="99" r="3"/><circle cx="387" cy="117" r="3"/><circle cx="396" cy="135" r="3"/><circle cx="387" cy="153" r="3"/><circle cx="396" cy="171" r="3"/><circle cx="387" cy="189" r="3"/><circle cx="396" cy="207" r="3"/></g>
+            <g transform="translate(200 112)"><g fill="#f2a531"><polygon points="-4,-48 4,-48 0,-92" transform="rotate(0)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(12)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(24)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(36)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(48)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(60)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(72)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(84)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(96)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(108)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(120)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(132)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(144)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(156)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(168)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(180)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(192)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(204)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(216)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(228)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(240)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(252)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(264)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(276)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(288)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(300)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(312)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(324)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(336)"/><polygon points="-4,-48 4,-48 0,-92" transform="rotate(348)"/></g><circle r="46" fill="#e4532c"/><path d="M-12 -20 L22 0 L-12 20 Z" fill="#f2e8d2"/></g>
+          </svg>
+        </span>
+        <span class="film-info">
+          <span class="eyebrow">Music video · Director and cinematographer</span>
+          <span class="film-title">Nankama</span>
+          <span class="film-sub">Directed and filmed by Genell Zuciya. Watch on YouTube.</span>
+        </span>
+      </a>
+      <ul class="credits">
+        <li><span class="role">Fellow</span><span class="org">Black Banjo &amp; Fiddle Fellowship</span></li>
+        <li><span class="role">Banjo Fellow</span><span class="org">Oakland Public Conservatory</span></li>
+        <li><span class="role">Board of Directors</span><span class="org">Santa Fe TradFest</span></li>
+        <li><span class="role">Emcee</span><span class="org">Albuquerque Folk Festival</span></li>
+        <li><span class="role">Performer</span><span class="org">Berkeley Old Time Music Convention</span></li>
+        <li><span class="role">Director and cinematographer</span><span class="org">Nankama music video</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="foot dyed">
+  <div class="wrap">
+    <h2>Come sit a while. <em>The porch is open.</em></h2>
+    <div class="socials">
+      <a class="btn btn-poppy" href="https://www.patreon.com/genellonbanjo" target="_blank" rel="noopener">Patreon</a>
+      <a class="btn btn-line" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">TikTok</a>
+      <a class="btn btn-line" href="https://www.instagram.com/genellonbanjo" target="_blank" rel="noopener">Instagram</a>
+      <a class="btn btn-line" href="https://www.youtube.com/@genellonbanjo" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <div class="fine"><span>Genell on Banjo · @genellonbanjo</span><span>Albuquerque, New Mexico</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, ticking=false;
+  function update(){
+    var max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    var d=Math.min(1,Math.max(0,window.scrollY/max));
+    root.style.setProperty('--depth',d.toFixed(3));
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update);}},{passive:true});
+  window.addEventListener('resize',update);
+  update();
+})();
+</script>
+
+<script>
+(function(){
+  var cv=document.getElementById('dye'); if(!cv) return;
+  var gl=cv.getContext('webgl',{antialias:false,premultipliedAlpha:false});
+  if(!gl){cv.remove();return;}
+  var vs='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+  var fs=`precision highp float;
+uniform vec2 R;uniform float T;uniform float D;uniform float S;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int k=0;k<4;k++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+const float PI=3.14159;
+float pat(float i,vec2 l,float bl){
+ float r=length(l),a=atan(l.y,l.x);
+ if(i<.5){ /* shibori sunburst (kumo) */
+  float sp=1.-smoothstep(.05,.32+bl,abs(sin(a*8.+r*2.)));
+  float ring=1.-smoothstep(.02,.07+bl,abs(r-.31));
+  float core=1.-smoothstep(.05,.1+bl,r);
+  return max(max(sp*smoothstep(.44,.08,r),ring*.9),core);}
+ if(i<1.5){ /* adire dot lattice */
+  vec2 g=l*8.;vec2 f=fract(g)-.5;float dot=1.-smoothstep(.13,.22+bl,length(f));
+  float dia=abs(l.x)+abs(l.y);float line=1.-smoothstep(.01,.03+bl,abs(fract(dia*4.)-.5)-.44);
+  return max(dot*.95,line*.8)*smoothstep(.5,.4,max(abs(l.x),abs(l.y)));}
+ if(i<2.5){ /* itajime squares */
+  vec2 f=abs(fract(l*3.+.5)-.5);float sq=1.-smoothstep(.16,.25+bl,max(f.x,f.y));
+  float seam=1.-smoothstep(.0,.04+bl,min(f.x,f.y));
+  return max(sq,seam*.5);}
+ if(i<3.5){ /* diamond rosette */
+  float d=abs(l.x)+abs(l.y);float rings=1.-smoothstep(.06,.24+bl,abs(sin(d*PI*6.)));
+  vec2 q=abs(l)-vec2(.21);float pet=1.-smoothstep(.05,.09+bl,abs(q.x)+abs(q.y));
+  return max(rings*smoothstep(.62,.3,d),pet);}
+ if(i<4.5){ /* bullseye moon */
+  float rr=1.-smoothstep(.1,.35+bl,abs(sin(r*PI*7.)));
+  return rr*smoothstep(.5,.2,r);}
+ /* arashi pole-wrap */
+ float st=1.-smoothstep(.15,.4+bl,abs(sin((l.x+l.y*.35)*PI*9.+sin(l.y*12.)*.6)));
+ return st*.85;
+}
+void main(){
+ vec2 p=(gl_FragCoord.xy-.5*R)/R.y;
+ float t=T;
+ vec2 w=vec2(fbm(p*1.4+t*.02),fbm(p*1.4-t*.02+3.1))-.5;
+ /* water ripple */
+ vec2 rc=vec2(.35*sin(t*.05),.2*cos(t*.04));
+ float rip=sin(length(p-rc)*26.-t*1.2)*.006;
+ vec2 q=p+w*.07+rip;
+ q.y+=S*.35;
+ float cs=.62;
+ vec2 g=q/cs;g.x+=step(1.,mod(floor(g.y),2.))*.5;
+ vec2 id=floor(g);vec2 l=fract(g)-.5;
+ l=mat2(cos(.15*(h(id)-.5)),-sin(.15*(h(id)-.5)),sin(.15*(h(id)-.5)),cos(.15*(h(id)-.5)))*l;
+ float bl=.06*fbm(q*9.+id);                     /* dye bleed at resist edges */
+ float cyc=h(id+3.)*6.+t*.018+h(id+7.)*.0;
+ float i0=mod(floor(cyc),6.),i1=mod(i0+1.,6.);
+ float k=smoothstep(.65,1.,fract(cyc));
+ vec2 lw=l+(vec2(n(q*14.),n(q*14.+5.))-.5)*.035;  /* fabric wobble */
+ float res=mix(pat(i0,lw,bl),pat(i1,lw,bl),k);
+ float panel=smoothstep(.5,.36,max(abs(l.x),abs(l.y)));
+ float strength=.55+.45*h(id+11.);
+ res*=panel*strength*(.7+.5*fbm(q*3.+id));
+ float mot=fbm(q*3.+w*2.);
+ vec3 deep=vec3(.043,.078,.19),ind=vec3(.09,.16,.38),haint=vec3(.62,.84,.85),cream=vec3(.95,.91,.82);
+ vec3 col=mix(deep,ind,smoothstep(.25,.85,mot));
+ vec3 resc=mix(mix(ind*1.4,haint,.6),cream,.25*smoothstep(.7,1.,res));
+ col=mix(col,resc,clamp(res,0.,1.)*.62);
+ col*=1.-D*.4;
+ col*=.84+.16*smoothstep(1.5,.2,length(p));
+ gl_FragColor=vec4(col,1.);
+}`;
+  function sh(t,src){var o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return gl.getShaderParameter(o,gl.COMPILE_STATUS)?o:null;}
+  var v=sh(gl.VERTEX_SHADER,vs),f=sh(gl.FRAGMENT_SHADER,fs);
+  if(!v||!f){cv.remove();return;}
+  var pr=gl.createProgram();gl.attachShader(pr,v);gl.attachShader(pr,f);gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){cv.remove();return;}
+  gl.useProgram(pr);
+  var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  var loc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  var uR=gl.getUniformLocation(pr,'R'),uT=gl.getUniformLocation(pr,'T'),uD=gl.getUniformLocation(pr,'D'),uS=gl.getUniformLocation(pr,'S');
+  var scale=Math.min(1,0.85*(window.devicePixelRatio||1)*0.75);
+  function size(){var w=Math.max(1,Math.round(innerWidth*scale)),h=Math.max(1,Math.round(innerHeight*scale));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h);}}
+  function depth(){var mx=Math.max(1,document.documentElement.scrollHeight-innerHeight);return Math.min(1,Math.max(0,scrollY/mx));}
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var t0=performance.now()-20000,last=0;
+  function draw(now){size();gl.uniform2f(uR,cv.width,cv.height);gl.uniform1f(uT,(now-t0)/1000);gl.uniform1f(uD,depth());gl.uniform1f(uS,scrollY/innerHeight);gl.drawArrays(gl.TRIANGLES,0,3);}
+  function loop(now){if(!document.hidden&&now-last>33){last=now;draw(now);}requestAnimationFrame(loop);}
+  if(reduce){draw(performance.now());addEventListener('resize',function(){draw(performance.now())});addEventListener('scroll',function(){draw(performance.now())},{passive:true});}
+  else requestAnimationFrame(loop);
+})();
+</script>
+<script>
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('video.loop').forEach(function(v){v.removeAttribute('autoplay');v.pause();v.controls=true;});}
+</script>
+
+</body>
+</html>
