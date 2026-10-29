@@ -191,6 +191,12 @@ p{margin:0}
 .season{font-size:.95rem;padding-top:14px;border-top:2px dashed rgba(18,28,63,.25)}
 @media (max-width:860px){.tier{grid-template-columns:1fr}}
 
+.songmap{margin:0 14px 0 0;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px var(--ink),14px 14px 0 3px var(--marigold)}
+.songmap iframe{display:block;width:100%;aspect-ratio:16/10;min-height:420px;border:0;background:#fff}
+.songmap figcaption{padding:14px 20px;background:var(--ink);color:var(--undyed);font-size:.95rem}
+.song-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,4vw,40px)}
+.song-links .btn{text-decoration:none}
+@media (max-width:700px){.songmap{margin-right:8px;box-shadow:0 0 0 3px var(--ink),8px 8px 0 3px var(--marigold)}.songmap iframe{aspect-ratio:3/4;min-height:480px}}
 .immersive{margin:clamp(36px,5vw,64px) 14px 0 0;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--marigold)}
 .immersive img{width:100%;height:auto;aspect-ratio:1942/809;object-fit:cover}
 .immersive figcaption{display:grid;gap:6px;padding:18px 22px;background:var(--ink);color:var(--on-vat-soft);font-size:.98rem}
@@ -394,6 +400,7 @@ p{margin:0}
       <a class="navlink" href="#path">My path</a>
       <a class="navlink" href="#roots">Roots</a>
       <a class="navlink" href="#porch">The porch</a>
+      <a class="navlink" href="#songmap">Song map</a>
       <a class="navlink" href="#contact">Contact</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join the porch</a>
     </nav>
@@ -667,6 +674,26 @@ p{margin:0}
           <p class="season">Instructional tiers and participatory clinics open in January 2027.</p>
           <div><a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">Join as a Porch Listener</a></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band undyed" id="songmap" aria-labelledby="songmap-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Free from the porch · Song map 01</p>
+        <h2 id="songmap-title">The Wellerman, <em>bubble by bubble.</em></h2>
+        <p>A free taste of how we trace a tune on the porch. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources.</p>
+      </div>
+      <figure class="songmap">
+        <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
+      </figure>
+      <div class="song-links">
+        <a class="btn btn-ink" href="https://www.youtube.com/shorts/Ml6kulACPmQ" target="_blank" rel="noopener">Watch me play it</a>
+        <a class="btn btn-ink" href="https://www.youtube.com/watch?v=10OMLL_pG2Q" target="_blank" rel="noopener">Learn it with Trent Porter</a>
+        <a class="btn btn-ink" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
+        <a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo" target="_blank" rel="noopener">More songs on the porch</a>
       </div>
     </div>
   </section>
