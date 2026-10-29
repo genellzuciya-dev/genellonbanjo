@@ -265,6 +265,42 @@ p{margin:0}
 .bloom img{transform:rotate(-8deg)}
 .perch{position:absolute;z-index:2;left:-20%;top:-34%;width:40%;pointer-events:none}
 @media (max-width:860px){.bloom{left:-4%;bottom:-14%;width:28%}.perch{left:-6%;top:-28%;width:38%}}
+.still.wide img{aspect-ratio:auto;object-fit:contain}
+.credits .org a{color:inherit;text-decoration-thickness:1px;text-underline-offset:4px}
+
+/* ---------- banjo materiality timeline ---------- */
+.mat{margin-top:clamp(48px,7vw,88px);padding-top:clamp(32px,4vw,48px);border-top:2px dashed rgba(18,28,63,.25)}
+.mat-head{display:grid;gap:10px;max-width:640px;margin-bottom:28px}
+.mat-head h3{font-size:var(--step-2);font-weight:400;letter-spacing:-.01em}
+.mat-head h3 em{font-style:italic;color:var(--poppy)}
+.mat-head p:last-child{opacity:.8}
+.mt-trackwrap{overflow-x:auto;scrollbar-width:thin;margin:0 calc(-1 * var(--gutter));padding:0 var(--gutter) 8px}
+.mt-track{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(118px,1fr);position:relative;min-width:max-content}
+.mt-track::before{content:"";position:absolute;left:0;right:0;top:15px;height:3px;background:repeating-linear-gradient(90deg,var(--ink) 0 10px,transparent 10px 17px);opacity:.35}
+.mt-stop{all:unset;box-sizing:border-box;cursor:pointer;display:grid;justify-items:start;gap:6px;padding:0 12px 10px 0;width:100%;position:relative}
+.mt-dot{width:32px;height:32px;border-radius:50%;background:var(--undyed);border:3px solid var(--ink);display:block;position:relative;z-index:1;transition:transform .2s ease,background .2s ease}
+.mt-yr{font-family:var(--display);font-size:1.05rem;font-weight:600;line-height:1.15}
+.mt-pl{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.mt-stop:hover .mt-dot{transform:scale(1.12)}
+.mt-stop[aria-selected="true"] .mt-dot{background:var(--poppy);border-color:var(--ink);box-shadow:0 0 0 5px rgba(228,83,44,.2)}
+.mt-stop[aria-selected="true"] .mt-yr{color:var(--poppy)}
+.mt-stop:focus-visible .mt-dot{outline:3px solid var(--marigold);outline-offset:3px}
+.mt-body{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;margin-top:18px}
+.mt-nav{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--undyed);font-size:1.2rem}
+.mt-nav:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
+.mt-nav[disabled]{opacity:.3;cursor:default}
+.mt-panel{background:#fbf6ea;border:2px solid var(--ink);border-radius:14px;padding:clamp(20px,3vw,32px);box-shadow:10px 10px 0 var(--marigold);display:grid;gap:10px;max-width:760px}
+.mt-panel[hidden]{display:none!important}
+.mt-panel h4{font-family:var(--display);font-size:var(--step-2);font-weight:500;margin:0;line-height:1.1}
+.mt-panel p{margin:0;max-width:62ch}
+.mt-k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay)}
+.mt-mats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mt-mats li{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;padding:.45em .85em;border-radius:999px;background:var(--vat);color:var(--undyed)}
+.mt-src{font-size:.85rem;opacity:.75}
+.mt-src a{color:inherit}
+@media (prefers-reduced-motion:no-preference){.mt-panel:not([hidden]){animation:mtin .35s ease}}
+@keyframes mtin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:620px){.mt-body{grid-template-columns:1fr 1fr}.mt-panels{grid-column:1 / -1;grid-row:1}.mt-nav{justify-self:start}#mt-next{justify-self:end}.mt-panel{box-shadow:6px 6px 0 var(--marigold);margin-right:6px}}
 /* ---------- footer ---------- */
 .foot{padding-block:clamp(64px,9vw,110px) 48px}
 .foot .wrap{display:grid;gap:36px}
@@ -347,6 +383,7 @@ p{margin:0}
     </a>
     <nav aria-label="Sections">
       <a class="navlink" href="#story">Story</a>
+      <a class="navlink" href="#materiality">Materiality</a>
       <a class="navlink" href="#path">My path</a>
       <a class="navlink" href="#roots">Roots</a>
       <a class="navlink" href="#porch">The porch</a>
@@ -389,14 +426,99 @@ p{margin:0}
         <div class="side">
           <p>That early musical landscape was actively cross-collaborative. Long before the modern folk revivals, and before commercial record labels divided music into segregated categories, dance and string-band traditions were shaped through direct, porch-to-porch exchanges.</p>
           <p>On cabin steps, river landings, and front porches, Black songsters, Indigenous players, Anglo-Celtic fiddlers, and regional immigrant communities influenced, challenged, and learned from one another. My porch exists to trace that lineage with care and in community.</p>
-          <hr class="stitch">
-          <p class="eyebrow" style="color:var(--ink);opacity:.7">What a banjo is made of</p>
-          <div class="materials" aria-label="Traditional banjo materials"><span>Gourd</span><span>Animal hide</span><span>Gut strings</span><span>Horsehair</span><span>Yucca fiber</span><span>Seasonal humidity</span></div>
         </div>
         </div>
         <figure class="poster" style="margin:0"><svg viewBox="0 0 400 500" role="img" aria-label="Screen-print style poster of an open-back banjo under a marigold sun, with poppies and marigolds at its base."><g transform="translate(300 120)"><g fill="#f2a531"><polygon points="-5,-60 5,-60 0,-120" transform="rotate(0)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(12)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(24)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(36)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(48)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(60)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(72)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(84)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(96)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(108)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(120)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(132)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(144)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(156)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(168)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(180)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(192)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(204)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(216)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(228)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(240)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(252)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(264)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(276)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(288)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(300)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(312)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(324)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(336)"/><polygon points="-5,-60 5,-60 0,-120" transform="rotate(348)"/></g><circle r="58" fill="#f2a531"/><circle r="44" fill="none" stroke="#e4532c" stroke-width="4" stroke-dasharray="7 6"/></g>
 <g transform="translate(190 300) rotate(-24)"><rect x="-11" y="-270" width="22" height="230" rx="4" fill="#8a4a2a"/><g fill="#f2e8d2"><circle cx="0" cy="-60" r="3"/><circle cx="0" cy="-96" r="3"/><circle cx="0" cy="-132" r="3"/><circle cx="0" cy="-168" r="3"/><circle cx="0" cy="-204" r="3"/><circle cx="0" cy="-240" r="3"/></g><path d="M-16 -268 L16 -268 L20 -310 L-20 -310 Z" fill="#6b3a20"/><g fill="#f2e8d2"><circle cx="-24" cy="-296" r="5"/><circle cx="24" cy="-296" r="5"/><circle cx="-23" cy="-278" r="5"/><circle cx="23" cy="-278" r="5"/></g><circle r="92" fill="#121c3f"/><circle r="80" fill="#f2e8d2"/><g fill="#121c3f"><circle cx="86.0" cy="0.0" r="3.4"/><circle cx="79.5" cy="32.9" r="3.4"/><circle cx="60.8" cy="60.8" r="3.4"/><circle cx="32.9" cy="79.5" r="3.4"/><circle cx="-0.0" cy="86.0" r="3.4"/><circle cx="-32.9" cy="79.5" r="3.4"/><circle cx="-60.8" cy="60.8" r="3.4"/><circle cx="-79.5" cy="32.9" r="3.4"/><circle cx="-86.0" cy="-0.0" r="3.4"/><circle cx="-79.5" cy="-32.9" r="3.4"/><circle cx="-60.8" cy="-60.8" r="3.4"/><circle cx="-32.9" cy="-79.5" r="3.4"/><circle cx="0.0" cy="-86.0" r="3.4"/><circle cx="32.9" cy="-79.5" r="3.4"/><circle cx="60.8" cy="-60.8" r="3.4"/><circle cx="79.5" cy="-32.9" r="3.4"/></g><g stroke="#121c3f" stroke-width="1.6"><line x1="-8" y1="-300" x2="-8" y2="62"/><line x1="-4" y1="-300" x2="-4" y2="62"/><line x1="0" y1="-300" x2="0" y2="62"/><line x1="4" y1="-300" x2="4" y2="62"/><line x1="8" y1="-300" x2="8" y2="62"/></g><rect x="-22" y="20" width="44" height="7" rx="2" fill="#8a4a2a"/><rect x="-14" y="60" width="28" height="14" rx="3" fill="#6b3a20"/></g>
 <g><use href="#leaf" x="34" y="352" width="40" height="80" transform="rotate(-24 54 392)"/><use href="#leaf" x="318" y="356" width="40" height="80" transform="rotate(26 338 396)"/><use href="#poppy" x="-6" y="360" width="130" height="130"/><use href="#marigold" x="110" y="400" width="80" height="80"/><use href="#poppy" x="270" y="366" width="124" height="124"/><use href="#marigold" x="200" y="410" width="70" height="70"/></g></svg><figcaption>Gourd · Hide · Gut · Horsehair</figcaption></figure>
+      </div>
+
+      <div class="mat" id="materiality">
+        <div class="mat-head">
+          <p class="eyebrow">Banjo materiality</p>
+          <h3>From gourd to <em>plastic head,</em> and back again.</h3>
+          <p>Tap through the eras to see what the banjo was made of, and why it changed.</p>
+        </div>
+        <div class="mt-trackwrap">
+          <ol class="mt-track" role="tablist" aria-label="Eras of banjo materials">
+            <li role="presentation"><button type="button" role="tab" id="mt-0" aria-controls="mp-0" aria-selected="true" tabindex="0" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Roots</span><span class="mt-pl">West Africa</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-1" aria-controls="mp-1" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1687</span><span class="mt-pl">Jamaica</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-2" aria-controls="mp-2" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1770s</span><span class="mt-pl">Suriname</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-3" aria-controls="mp-3" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1785 to 1795</span><span class="mt-pl">South Carolina</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-4" aria-controls="mp-4" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1810 to 1841</span><span class="mt-pl">Haiti</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-5" aria-controls="mp-5" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1845</span><span class="mt-pl">Baltimore, Maryland</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-6" aria-controls="mp-6" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Late 1800s</span><span class="mt-pl">Parlors and factories</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-7" aria-controls="mp-7" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">Early 1900s</span><span class="mt-pl">Jazz to bluegrass</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-8" aria-controls="mp-8" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">1952</span><span class="mt-pl">The plastic head</span></button></li><li role="presentation"><button type="button" role="tab" id="mt-9" aria-controls="mp-9" aria-selected="false" tabindex="-1" class="mt-stop"><span class="mt-dot" aria-hidden="true"></span><span class="mt-yr">2005 to now</span><span class="mt-pl">Reclaiming the roots</span></button></li>
+          </ol>
+        </div>
+        <div class="mt-body">
+          <button type="button" class="mt-nav" id="mt-prev" aria-label="Previous era">&larr;</button>
+          <div class="mt-panels"><article class="mt-panel" role="tabpanel" id="mp-0" aria-labelledby="mt-0" tabindex="0">
+  <p class="mt-k">Roots · West Africa</p>
+  <h4>Gourd lutes of West Africa</h4>
+  <p>Long before the banjo, West African musicians played gourd-bodied lutes such as the Jola akonting of Senegal, Gambia and Guinea-Bissau. A skin stretched over a gourd, strings of gut or plant fiber, and a short drone string that the thumb keeps sounding. Researchers point to these lutes as the banjo's closest ancestors.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Animal skin</li><li>Gut</li><li>Plant fiber</li></ul>
+  <p class="mt-src">Source: <a href="https://en.wikipedia.org/wiki/Akonting" target="_blank" rel="noopener">Akonting</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-1" aria-labelledby="mt-1" tabindex="0" hidden>
+  <p class="mt-k">1687 · Jamaica</p>
+  <h4>The strum strump</h4>
+  <p>Visiting Jamaica in 1687, Hans Sloane described an instrument he called the strum strump, played by enslaved Africans. His drawing, published in 1707, shows a gourd body, a flat fingerboard and friction tuning pegs. It is one of the earliest records of the banjo in the Americas.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Animal skin</li><li>Wood</li></ul>
+  <p class="mt-src">Source: <a href="https://afropop.org/articles/black-history-of-banjo-playlist-and-pictures" target="_blank" rel="noopener">Afropop Worldwide</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-2" aria-labelledby="mt-2" tabindex="0" hidden>
+  <p class="mt-k">1770s · Suriname</p>
+  <h4>The Creole Bania</h4>
+  <p>Made by an enslaved maker in Suriname before 1777, the Creole Bania is the oldest surviving banjo. A calabash body, an animal skin held with wooden pins, a slim carved wooden neck, three long strings and one short one. It is now in the Netherlands, on display in an exhibit on slavery in the Dutch colonies.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Animal skin</li><li>Wood</li></ul>
+  <p class="mt-src">Source: <a href="https://birthplaceofcountrymusic.org/instrument-interview-the-creole-bania-the-oldest-existing-banjo/" target="_blank" rel="noopener">Birthplace of Country Music</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-3" aria-labelledby="mt-3" tabindex="0" hidden>
+  <p class="mt-k">1785 to 1795 · South Carolina</p>
+  <h4>The Old Plantation</h4>
+  <p>The earliest known painting of a banjo, likely made on a South Carolina plantation by slaveholder John Rose. An enslaved musician plays a gourd banjo for a gathering of dancers. The gourd body and short thumb string match the African and Caribbean instruments that came before it.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Animal skin</li><li>Wood</li></ul>
+  <p class="mt-src">Source: <a href="https://en.wikipedia.org/wiki/The_Old_Plantation" target="_blank" rel="noopener">The Old Plantation</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-4" aria-labelledby="mt-4" tabindex="0" hidden>
+  <p class="mt-k">1810 to 1841 · Haiti</p>
+  <h4>The banza</h4>
+  <p>In Haiti the instrument was the banza: a gourd covered in goat skin, with three strings made of pitre, a fiber from the agave plant. In 1841 abolitionist Victor Schoelcher collected one that survives today at the Musée de la Musique in Paris.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Goat skin</li><li>Agave fiber</li><li>Wood</li></ul>
+  <p class="mt-src">Source: <a href="https://sites.duke.edu/banjology/the-banjo-in-haiti/the-haitian-banza/" target="_blank" rel="noopener">Banjology, Duke University</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-5" aria-labelledby="mt-5" tabindex="0" hidden>
+  <p class="mt-k">1845 · Baltimore, Maryland</p>
+  <h4>Wood replaces gourd</h4>
+  <p>William Boucher Jr., a Baltimore drum maker, became the first commercial banjo maker. He kept the skin head, fretless neck and short thumb string of the African American banjo, but swapped the gourd for a bentwood rim with drum-style screw brackets, so players could retighten a skin that sagged in humid weather. The minstrel stage spread this banjo widely while caricaturing the Black people who created it.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Bentwood rim</li><li>Animal skin</li><li>Metal brackets</li><li>Gut</li></ul>
+  <p class="mt-src">Source: <a href="https://music.si.edu/object-day/boucher-five-string-fretless-banjo" target="_blank" rel="noopener">Smithsonian</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-6" aria-labelledby="mt-6" tabindex="0" hidden>
+  <p class="mt-k">Late 1800s · Parlors and factories</p>
+  <h4>Frets arrive</h4>
+  <p>By the late nineteenth century, frets became standard on factory banjos and the instrument moved into parlors across the United States and England. Fretless banjos never disappeared, and old-time players still choose them for their sliding, voice-like tone.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Wood rim</li><li>Calfskin</li><li>Gut</li><li>Metal frets</li></ul>
+  <p class="mt-src">Source: <a href="https://en.wikipedia.org/wiki/Banjo" target="_blank" rel="noopener">Banjo, Wikipedia</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-7" aria-labelledby="mt-7" tabindex="0" hidden>
+  <p class="mt-k">Early 1900s · Jazz to bluegrass</p>
+  <h4>Steel and resonators</h4>
+  <p>After the First World War, banjos moved from gut and fiber strings to steel, which cut through brass bands. Many gained a resonator, a wooden back that throws the sound forward, the setup most associated with bluegrass.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Steel strings</li><li>Calfskin</li><li>Wood resonator</li></ul>
+  <p class="mt-src">Source: <a href="https://en.wikipedia.org/wiki/Banjo" target="_blank" rel="noopener">Banjo, Wikipedia</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-8" aria-labelledby="mt-8" tabindex="0" hidden>
+  <p class="mt-k">1952 · The plastic head</p>
+  <h4>Weather King</h4>
+  <p>Calfskin heads loosened on wet days and could split on dry ones. In 1952 Remo began making Mylar banjo heads sold as Weather King, built to shrug off humidity. Most banjos today use a plastic head, while many old-time players still prefer skin.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Mylar</li><li>Steel strings</li><li>Wood rim</li></ul>
+  <p class="mt-src">Source: <a href="https://mail.frets.com/FretsPages/Musician/Banjo/BanjoHeads/banjoheads.html" target="_blank" rel="noopener">Frets.com</a></p>
+</article><article class="mt-panel" role="tabpanel" id="mp-9" aria-labelledby="mt-9" tabindex="0" hidden>
+  <p class="mt-k">2005 to now · Reclaiming the roots</p>
+  <h4>Back to the gourd</h4>
+  <p>The first Black Banjo Gathering met in Boone, North Carolina, in April 2005, and the Carolina Chocolate Drops formed later that year. Black musicians, makers and fellowships, the Black Banjo &amp; Fiddle Fellowship among them, are reviving gourd banjos, fretless necks and gut strings. On my porch I bring gourd, horsehair and yucca fiber into the conversation.</p>
+  <p class="mt-k">Made from</p>
+  <ul class="mt-mats"><li>Gourd</li><li>Animal skin</li><li>Gut</li><li>Horsehair</li><li>Yucca fiber</li></ul>
+  <p class="mt-src">Source: <a href="https://en.wikipedia.org/wiki/Carolina_Chocolate_Drops" target="_blank" rel="noopener">Carolina Chocolate Drops</a></p>
+</article></div>
+          <button type="button" class="mt-nav" id="mt-next" aria-label="Next era">&rarr;</button>
+        </div>
       </div>
     </div>
   </section>
@@ -564,7 +686,7 @@ p{margin:0}
         <li><span class="role">Chair, inaugural youth band showcase</span><span class="org">Santa Fe TradFest 2025</span></li>
         <li><span class="role">Emcee</span><span class="org">Albuquerque Folk Festival</span></li>
         <li><span class="role">Performer</span><span class="org">Berkeley Old Time Music Convention</span></li>
-        <li><span class="role">Director and cinematographer</span><span class="org">Nankama music video</span></li>
+        <li><span class="role">Director and cinematographer</span><span class="org"><a href="https://www.youtube.com/watch?v=BHGLmjjBUpg" target="_blank" rel="noopener">Nankama music video</a></span></li>
       </ul>
     </div>
   </section>
@@ -746,6 +868,29 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelecto
       .catch(function(err){say((err&&err.message?err.message+' ':'')+'Your message did not send. Please try again, or message me on Instagram @genellonbanjo.','err');})
       .finally(function(){btn.disabled=false;});
   });
+})();
+</script>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.mt-stop'));if(!tabs.length)return;
+  var prev=document.getElementById('mt-prev'),next=document.getElementById('mt-next');
+  function show(i,focus){
+    tabs.forEach(function(t,k){var on=k===i;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
+    prev.disabled=i===0;next.disabled=i===tabs.length-1;
+    if(focus)tabs[i].focus();
+    tabs[i].scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  }
+  function cur(){return tabs.findIndex(function(t){return t.getAttribute('aria-selected')==='true';});}
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){show(i,false);});
+    t.addEventListener('keydown',function(e){var c=cur(),n=null;
+      if(e.key==='ArrowRight')n=Math.min(c+1,tabs.length-1);else if(e.key==='ArrowLeft')n=Math.max(c-1,0);else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;
+      if(n!==null){e.preventDefault();show(n,true);}});
+  });
+  prev.addEventListener('click',function(){show(Math.max(cur()-1,0));});
+  next.addEventListener('click',function(){show(Math.min(cur()+1,tabs.length-1));});
+  prev.disabled=true;
 })();
 </script>
 
