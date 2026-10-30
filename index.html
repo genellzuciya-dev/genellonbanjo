@@ -375,6 +375,14 @@ p{margin:0}
 .pillar svg [fill="#f2a531"]{fill:var(--vat)}
 .pillar:nth-child(2) svg [fill="#f2a531"]{fill:var(--marigold)}
 .pillar h3{font-weight:600}
+.pillar.nature{grid-column:1/-1;grid-template-columns:minmax(0,.38fr) minmax(0,1fr);gap:0;padding:0;overflow:hidden;background:var(--leaf);color:var(--undyed)}
+.pillar.nature figure{margin:0;position:relative;min-height:100%}
+.pillar.nature img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block;aspect-ratio:3/4}
+.pillar.nature figcaption{position:absolute;left:12px;bottom:12px;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;background:rgba(11,20,48,.7);color:var(--undyed);padding:5px 9px;border-radius:6px}
+.pillar.nature .txt{padding:clamp(24px,4vw,48px);display:grid;gap:14px;align-content:center}
+.pillar.nature h3{font-size:clamp(1.45rem,1.2rem + 1vw,2rem)}
+.pillar.nature p{font-size:1.02rem;max-width:58ch}
+@media (max-width:860px){.pillar.nature{grid-template-columns:1fr}.pillar.nature img{aspect-ratio:4/5;max-height:520px}}
 /* timeline dots as poppies */
 .timeline li.now::before{background:var(--poppy);border-color:var(--marigold)}
 /* map pins bolder */
@@ -688,6 +696,14 @@ p{margin:0}
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
           <h3>Immersive Reimagining</h3>
           <p>New digital spaces, AI acoustic environments, and virtual tools that connect people to this archive, like the interactive <a href="#songmap" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song bubble maps</a> below.</p>
+        </article>
+        <article class="pillar nature">
+          <figure><img src="img/sunflower-garden.jpg" width="1200" height="1600" loading="lazy" alt="Genell smiling in her garden in front of tall sunflowers at sunset."><figcaption>In my garden with the sunflowers</figcaption></figure>
+          <div class="txt">
+            <h3>The Natural World</h3>
+            <p>Nature is where I find my joy, and I hold a master's degree in biomimicry, the practice of learning from how living things solve problems. Old-time songs are full of animals, plants, rivers and weather, so wherever I can, I'll connect the music to the living world inside it.</p>
+            <p>In the Wellerman, that means the whales at the heart of the song: how they live, how they communicate across the ocean, and what designers have learned from them. Each song becomes a small doorway into how nature works.</p>
+          </div>
         </article>
       </div>
 
