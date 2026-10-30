@@ -86,12 +86,12 @@ p{margin:0}
 .mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-size:1.2rem;font-weight:600;font-variation-settings:"SOFT" 100,"WONK" 1}
 .mark svg{flex:none}
 .mark{flex:none;position:relative}
-.mark .logo{height:92px;width:auto;display:block;animation:logoGlow 7s ease-in-out infinite}
-@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(122,108,242,.6)) drop-shadow(0 0 24px rgba(122,108,242,.3))}25%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(242,112,156,.5)) drop-shadow(0 0 24px rgba(122,108,242,.25))}50%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(143,214,196,.5)) drop-shadow(0 0 24px rgba(59,156,151,.3))}75%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(163,213,216,.5)) drop-shadow(0 0 24px rgba(122,108,242,.35))}}
-.mark::before,.mark::after{content:"";position:absolute;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 0C21 13 27 19 40 20C27 21 21 27 20 40C19 27 13 21 0 20C13 19 19 13 20 0Z' fill='%23fff6dc'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none;transform:translate(-50%,-50%) scale(0);filter:drop-shadow(0 0 4px #fff3c4) drop-shadow(0 0 10px rgba(247,201,72,.95)) drop-shadow(0 0 18px rgba(247,201,72,.6));animation:glint 4.5s ease-in-out infinite}
+.mark .logo{height:92px;width:auto;display:block;animation:logoGlow 18s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(122,108,242,.38))}25%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(242,112,156,.3))}50%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(143,214,196,.3))}75%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(163,213,216,.32))}}
+.mark::before,.mark::after{content:"";position:absolute;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 0C21 13 27 19 40 20C27 21 21 27 20 40C19 27 13 21 0 20C13 19 19 13 20 0Z' fill='%23fff6dc'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none;transform:translate(-50%,-50%) scale(0);filter:drop-shadow(0 0 4px #fff3c4) drop-shadow(0 0 10px rgba(247,201,72,.8)) drop-shadow(0 0 16px rgba(247,201,72,.45));animation:glint 14s ease-in-out infinite}
 .mark::after{left:69%;top:10%}
-.mark::before{left:36%;top:52%;width:16px;height:16px;animation-delay:2.3s}
-@keyframes glint{0%,52%,100%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:0}66%{transform:translate(-50%,-50%) scale(1) rotate(45deg);opacity:1}74%{transform:translate(-50%,-50%) scale(.85) rotate(60deg);opacity:.9}88%{transform:translate(-50%,-50%) scale(.1) rotate(90deg);opacity:0}}
+.mark::before{left:36%;top:52%;width:14px;height:14px;animation-delay:7s;opacity:0}
+@keyframes glint{0%,30%,100%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:0}50%{transform:translate(-50%,-50%) scale(.9) rotate(20deg);opacity:.85}60%{transform:translate(-50%,-50%) scale(.9) rotate(28deg);opacity:.85}82%{transform:translate(-50%,-50%) scale(0) rotate(45deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){.mark .logo{animation:none;filter:drop-shadow(0 0 8px rgba(242,165,49,.45))}.mark::before,.mark::after{animation:none;display:none}}
 @media (max-width:860px){.mark .logo{height:68px}}
 .top nav{display:flex;align-items:center;gap:22px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
@@ -553,7 +553,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 
       <div class="mat" id="materiality">
         <div class="mat-head">
-          <h3>Banjo <em>materiality</em></h3>
+          <h3>Banjo <em>timeline</em></h3>
           <p>Tap through the eras to see what the banjo was made of, and why it changed.</p>
         </div>
         <div class="mt-trackwrap">
