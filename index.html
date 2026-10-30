@@ -85,8 +85,14 @@ p{margin:0}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:8px}
 .mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-size:1.2rem;font-weight:600;font-variation-settings:"SOFT" 100,"WONK" 1}
 .mark svg{flex:none}
-.mark{flex:none}
-.mark .logo{height:92px;width:auto;display:block}
+.mark{flex:none;position:relative}
+.mark .logo{height:92px;width:auto;display:block;animation:logoGlow 7s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(122,108,242,.6)) drop-shadow(0 0 24px rgba(122,108,242,.3))}25%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(242,112,156,.5)) drop-shadow(0 0 24px rgba(122,108,242,.25))}50%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(143,214,196,.5)) drop-shadow(0 0 24px rgba(59,156,151,.3))}75%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.95)) drop-shadow(0 0 12px rgba(163,213,216,.5)) drop-shadow(0 0 24px rgba(122,108,242,.35))}}
+.mark::before,.mark::after{content:"";position:absolute;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 0C21 13 27 19 40 20C27 21 21 27 20 40C19 27 13 21 0 20C13 19 19 13 20 0Z' fill='%23fff6dc'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none;transform:translate(-50%,-50%) scale(0);filter:drop-shadow(0 0 4px #fff3c4) drop-shadow(0 0 10px rgba(247,201,72,.95)) drop-shadow(0 0 18px rgba(247,201,72,.6));animation:glint 4.5s ease-in-out infinite}
+.mark::after{left:69%;top:10%}
+.mark::before{left:36%;top:52%;width:16px;height:16px;animation-delay:2.3s}
+@keyframes glint{0%,52%,100%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:0}66%{transform:translate(-50%,-50%) scale(1) rotate(45deg);opacity:1}74%{transform:translate(-50%,-50%) scale(.85) rotate(60deg);opacity:.9}88%{transform:translate(-50%,-50%) scale(.1) rotate(90deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.mark .logo{animation:none;filter:drop-shadow(0 0 8px rgba(242,165,49,.45))}.mark::before,.mark::after{animation:none;display:none}}
 @media (max-width:860px){.mark .logo{height:68px}}
 .top nav{display:flex;align-items:center;gap:22px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
 .top nav a{text-decoration:none;color:var(--on-vat-soft)}
@@ -426,6 +432,58 @@ p{margin:0}
 @media (max-width:1060px){.top nav{gap:13px;font-size:.68rem;letter-spacing:.06em}}@media (max-width:930px){.top nav .navlink{display:none}}
 @media (min-width:861px){.hero{padding-top:clamp(110px,11vw,170px)}.hero .wrap{max-width:1380px;grid-template-columns:minmax(0,.72fr) minmax(0,1.4fr)}.hero .frame .bloom{transform:scale(1.3);transform-origin:0 100%}.hero .frame .perch{left:auto;right:-20.5%;top:-85%;width:50%;transform:none}}
 @media (min-width:861px) and (max-width:1700px){.hero .frame .perch{right:-14%}}
+
+/* ================= retro-futurist riso layer ================= */
+:root{--riso-pink:#f2709c;--violet:#7a6cf2;--sunshine:#f7c948;--mint:#8fd6c4;
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;background:var(--grain) 0 0/240px 240px;mix-blend-mode:overlay;opacity:.16}
+/* misregistered ink on big type */
+.hero h1,.band h2,.foot h2{text-shadow:.045em .035em 0 rgba(242,112,156,.42),-.03em -.02em 0 rgba(143,214,196,.32)}
+.undyed h2{text-shadow:.04em .03em 0 rgba(242,112,156,.38),-.025em -.02em 0 rgba(122,108,242,.22)}
+/* halftone vignettes on the cream paper sections */
+.undyed{background-color:var(--undyed);background-image:radial-gradient(ellipse 75% 70% at 50% 50%,var(--undyed) 45%,rgba(242,232,210,0) 100%),radial-gradient(rgba(122,108,242,.28) 1.3px,transparent 1.9px);background-size:auto,10px 10px}
+#community.undyed,#concepts.undyed{background-image:radial-gradient(ellipse 75% 70% at 50% 50%,var(--undyed) 45%,rgba(242,232,210,0) 100%),radial-gradient(rgba(242,112,156,.3) 1.3px,transparent 1.9px)}
+/* celestial sparkle on eyebrows */
+.eyebrow::before{content:"\2726";display:inline-block;margin-right:.6em;color:var(--sunshine);text-shadow:0 0 8px rgba(247,201,72,.7);animation:twinkle 3.8s ease-in-out infinite}
+.undyed .eyebrow::before{color:var(--riso-pink);text-shadow:none}
+.hero .eyebrow::before,.tier .eyebrow::before,.sample-head .eyebrow::before,.film-info .eyebrow::before{content:none}
+@keyframes twinkle{0%,100%{opacity:.55;transform:scale(.85) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(45deg)}}
+/* offset ink shadows, like a second colour pass */
+.hero .frame>img{box-shadow:12px 12px 0 var(--violet),0 30px 60px -20px rgba(0,0,0,.6)}
+.btn-poppy{box-shadow:3px 3px 0 var(--violet);transition:transform .18s,box-shadow .18s,background .18s}
+.btn-poppy:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--violet)}
+.btn-ink{box-shadow:3px 3px 0 var(--riso-pink)}
+.pillar{box-shadow:7px 7px 0 var(--c,var(--violet))}
+.pillar:nth-child(1){--c:var(--riso-pink)}
+.pillar:nth-child(2){--c:var(--violet)}
+.pillar:nth-child(3){background:var(--violet);color:var(--undyed);--c:var(--sunshine)}
+.pillar:nth-child(3) svg [fill="#f2a531"]{fill:var(--sunshine)}
+.pillar.nature{--c:var(--sunshine)}
+.tier{box-shadow:12px 12px 0 var(--riso-pink)}
+.dyed .songmap{box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--violet)}
+@media (max-width:760px){.hero .frame>img{box-shadow:7px 7px 0 var(--violet),0 20px 40px -16px rgba(0,0,0,.6)}.tier{box-shadow:7px 7px 0 var(--riso-pink)}}
+/* hero headline highlight goes two-tone */
+.hero h1 em{background:linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
+/* riso texture printed onto photos */
+.frame,.tier .art,.pillar.nature figure,.film-art{position:relative}
+.tier .art::after,.pillar.nature figure::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--grain) 0 0/200px 200px;mix-blend-mode:overlay;opacity:.22}
+@media (prefers-reduced-motion:reduce){.eyebrow::before{animation:none}}
+
+/* collapsible music timeline */
+.tl-more>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:14px;padding:14px 24px 14px 14px;border-radius:999px;border:1.5px solid rgba(242,232,210,.55);background:rgba(11,20,48,.55);color:var(--on-vat);font-family:var(--mono);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:4px 4px 0 var(--violet);transition:transform .18s,box-shadow .18s}
+.tl-more>summary::-webkit-details-marker{display:none}
+.tl-more>summary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--violet)}
+.tl-more>summary:focus-visible{outline:2px solid var(--sunshine);outline-offset:4px}
+.tl-ico{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--poppy);color:#fff8ec;transition:transform .3s}
+.tl-more[open] .tl-ico{transform:rotate(180deg)}
+.tl-close{display:none}
+.tl-more[open] .tl-open{display:none}
+.tl-more[open] .tl-close{display:inline}
+.tl-tease{margin:16px 0 0;color:var(--on-vat-soft);max-width:46ch}
+.tl-wrap:has(.tl-more[open]) .tl-tease{display:none}
+.tl-more[open]>.timeline{margin-top:32px;animation:tlIn .45s ease-out}
+@keyframes tlIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (max-width:860px){.tl-more>summary{font-size:.74rem;padding:12px 18px 12px 12px}}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
@@ -487,7 +545,7 @@ p{margin:0}
         <p class="big">The banjo was <strong>created in the Americas by enslaved Africans</strong> who held on to the music of home. With materials found in the Caribbean and North America, they built new instruments similar to the gourd lutes of West Africa, and kept their traditions alive through unimaginable hardship. The banjo became the heartbeat of early American folk and dance music.</p>
         <div class="side">
           <p>That early musical landscape was actively cross-collaborative. Long before the modern folk revivals, and before commercial record labels divided music into segregated categories, dance and string-band traditions were shaped through direct, porch-to-porch exchanges.</p>
-          <p>On cabin steps, river landings, and front porches, Black songsters, Indigenous players, Anglo-Celtic fiddlers, and regional immigrant communities influenced, challenged, and learned from one another. My porch exists to trace that lineage with care and in community.</p>
+          <p>My porch exists to trace that lineage with care and in community.</p>
         </div>
         </div>
         <figure class="poster photo" style="margin:0"><img src="img/porch-earl-white.jpg" width="1600" height="905" loading="lazy" alt="An outdoor jam under a timber pavilion: Genell plays an open-back banjo alongside fiddler Earl White, with another banjo player, a guitarist and a second guitarist, beside a table with watermelon and a jar of black-eyed Susans."><figcaption>On the porch with Earl White</figcaption></figure>
@@ -599,6 +657,9 @@ p{margin:0}
           </div>
           <p>I was raised singing <strong>alto</strong> in both the <strong>gospel choir at church</strong> and the <strong>school choir</strong>, from elementary school all the way through college. I dabbled with guitar and piano along the way.</p>
         </div>
+        <div class="tl-wrap">
+        <details class="tl-more">
+          <summary><span class="tl-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="tl-open">Click to expand my timeline in music</span><span class="tl-close">Collapse my timeline</span></summary>
         <ol class="timeline" aria-label="Folk instruments through my life">
           <li><span class="when">1990s · Columbia, Maryland</span><h3>Square dance and line dance</h3><p>In elementary school, a band came in with a washboard, a jaw harp and maybe even a jug, and the school hosted square dancing after school. I had never heard sounds like that before. They sounded wild and cool to me, and that is how roots music first caught my ear. I loved hearing it the way it was meant to be heard: with square dancing, in community. In middle school I joined the country line dancing team.</p><p>I loved how the dance floor seemed to erase the lines of the school day. Bullies, popular kids, everyone else: once we were all out there dancing, that all went away.</p></li>
           <li><span class="when">2006 · Crete, Greece</span><h3>Tzouras</h3><p>Studying abroad, I started diving into folk instrumentation.</p></li>
@@ -658,6 +719,9 @@ p{margin:0}
             <a class="watch" href="https://www.youtube.com/watch?v=itwAhXprt-k" target="_blank" rel="noopener"><span class="play" aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="19" fill="#e4532c"/><path d="M16 12 L28 20 L16 28 Z" fill="#f2e8d2"/></svg></span><span><span class="watch-k">Watch on YouTube</span><span class="watch-t">Patteroller, our BBFF arrangement</span></span></a>
           </li>
         </ol>
+        </details>
+        <p class="tl-tease">Guinea, Shanghai, Camp Fareta, banjo camp and the Black Banjo &amp; Fiddle Fellowship: the instruments, teachers and places along the way.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -916,11 +980,35 @@ void main(){
  res*=panel*strength*(.7+.5*fbm(q*3.+id));
  float mot=fbm(q*3.+w*2.);
  vec3 deep=vec3(.043,.078,.19),ind=vec3(.09,.16,.38),haint=vec3(.62,.84,.85),cream=vec3(.95,.91,.82);
+ vec3 pink=vec3(.95,.45,.62),sunc=vec3(.97,.78,.29),viol=vec3(.48,.42,.95),orng=vec3(.89,.44,.17);
+ float pick=h(id+19.);
+ vec3 tint=pick<.5?haint:(pick<.64?pink:(pick<.78?sunc:(pick<.9?viol:orng)));
  vec3 col=mix(deep,ind,smoothstep(.25,.85,mot));
- vec3 resc=mix(mix(ind*1.4,haint,.6),cream,.25*smoothstep(.7,1.,res));
+ col=mix(col,viol*.62,.22*smoothstep(.55,.95,fbm(q*1.3-t*.01+7.)));   /* violet ink wash */
+ vec3 resc=mix(mix(ind*1.4,tint,.62),cream,.25*smoothstep(.7,1.,res));
  col=mix(col,resc,clamp(res,0.,1.)*.62);
+ /* risograph halftone screen */
+ vec2 hp=mat2(.966,-.259,.259,.966)*gl_FragCoord.xy/7.;
+ vec2 hc=fract(hp)-.5;
+ float lum=dot(col,vec3(.3,.59,.11));
+ float dr=.22+.3*smoothstep(.1,.5,lum);
+ float ht=1.-smoothstep(dr-.08,dr,length(hc));
+ col=mix(col,col*1.18+vec3(.02,.02,.06),ht*.35);
+ col=mix(col,col*.78,(1.-ht)*.18);
+ /* stars */
+ vec2 sg=(gl_FragCoord.xy+vec2(0.,S*R.y*.15))/(R.y/26.);
+ vec2 sid=floor(sg),sf=fract(sg)-.5;
+ float sr=h(sid+.37);
+ if(sr>.93){
+  vec2 sp=(vec2(h(sid+1.3),h(sid+2.9))-.5)*.6;vec2 dd=sf-sp;
+  float tw=.35+.65*pow(.5+.5*sin(T*(.6+1.8*h(sid+4.1))+h(sid)*6.28),3.);
+  float st=smoothstep(.07,0.,length(dd))*tw;
+  if(sr>.985){st+=(smoothstep(.018,0.,abs(dd.x))*smoothstep(.32,0.,abs(dd.y))+smoothstep(.018,0.,abs(dd.y))*smoothstep(.32,0.,abs(dd.x)))*.8*tw;}
+  vec3 sc=h(sid+8.)<.75?vec3(1.,.94,.8):vec3(.85,.8,1.);
+  col+=sc*st*.9;}
  col*=1.-D*.4;
  col*=.84+.16*smoothstep(1.5,.2,length(p));
+ col+=(h(gl_FragCoord.xy*.71)-.5)*.06;                 /* paper grain */
  gl_FragColor=vec4(col,1.);
 }`;
   function sh(t,src){var o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return gl.getShaderParameter(o,gl.COMPILE_STATUS)?o:null;}
