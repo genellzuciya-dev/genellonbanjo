@@ -563,6 +563,12 @@ body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none
 .film.in-tl .film-art video{min-height:0;aspect-ratio:16/9}
 .film.in-tl .film-info{padding:18px 22px 22px}
 .film.in-tl .film-title{font-size:var(--step-2)}
+.pillar.nature{position:relative}
+@media (min-width:861px){.pillar.nature .txt{padding-bottom:calc(clamp(24px,4vw,48px) + 112px)}}
+.pillar.nature .txt img.hens{position:absolute;right:clamp(16px,2.5vw,32px);bottom:0;width:min(250px,26%);height:auto;aspect-ratio:auto;object-fit:contain;filter:drop-shadow(3px 2px 0 rgba(242,112,156,.5));pointer-events:none}
+@media (max-width:860px){.pillar.nature .txt img.hens{position:static;justify-self:end;width:min(260px,72%);margin:4px 0 calc(-1 * clamp(24px,4vw,48px)) 0}}
+.pillar.nature .txt img.hens{filter:drop-shadow(3px 2px 0 rgba(242,112,156,.5)) drop-shadow(-2px -1px 0 rgba(100,221,255,.45))}
+html,body{overflow-x:clip}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
@@ -858,6 +864,7 @@ body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none
             <h3>The Natural World</h3>
             <p>Nature is where I find deep joy and restoration. I hold an MS degree in biomimicry, the practice of learning from how the natural world has solved problems.</p>
             <p>Many old-time songs are inspired by the natural world: "The Cuckoo," "Shady Grove," "Cluck Old Hen." Wherever I can, I'll tie in lessons from nature.</p>
+            <img class="hens" src="img/cluck-hens.png" width="760" height="355" loading="lazy" alt="Three chickens in riso print colors: a crowing rooster and two hens.">
           </div>
         </article>
       </div>
