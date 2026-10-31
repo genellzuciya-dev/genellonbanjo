@@ -486,6 +486,44 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 .tl-more[open]>.timeline{margin-top:32px;animation:tlIn .45s ease-out}
 @keyframes tlIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (max-width:860px){.tl-more>summary{font-size:.74rem;padding:12px 18px 12px 12px}}
+
+/* ================= oil slick / iridescent pass ================= */
+:root{--holo:linear-gradient(115deg,#ff6ec7 0%,#7a6cf2 18%,#4fd1ff 34%,#8fffd2 48%,#f7f36b 62%,#ff9e5e 76%,#ff6ec7 92%)}
+/* a slow-moving oil film over the whole page */
+body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none;mix-blend-mode:soft-light;opacity:.38;
+ background:radial-gradient(40% 30% at 20% 30%,#ff6ec7 0,transparent 60%),radial-gradient(35% 28% at 75% 25%,#4fd1ff 0,transparent 60%),radial-gradient(45% 35% at 60% 75%,#8fffd2 0,transparent 62%),radial-gradient(30% 30% at 25% 80%,#f7f36b 0,transparent 60%),radial-gradient(38% 30% at 90% 70%,#7a6cf2 0,transparent 60%);
+ filter:blur(30px) saturate(1.3);animation:slick 38s ease-in-out infinite alternate}
+@keyframes slick{0%{transform:translate(0,0) rotate(0) scale(1)}50%{transform:translate(4%,-3%) rotate(8deg) scale(1.08)}100%{transform:translate(-3%,4%) rotate(-6deg) scale(1.02)}}
+/* iridescent accent words */
+.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{background:var(--holo);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:holoText 14s linear infinite;text-shadow:none}
+.hero h1 em{background-image:var(--holo),linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
+@keyframes holoText{to{background-position:300% 0}}
+/* holographic foil sweep over cards and photos */
+.pillar,.tier,.film,.hero .frame,.songmap,.pillar.nature figure{position:relative;overflow:hidden}
+.hero .frame{overflow:visible}
+.pillar::after,.tier::after,.film::after,.songmap::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;mix-blend-mode:overlay;opacity:.45;
+ background:linear-gradient(115deg,transparent 20%,rgba(255,110,199,.55) 35%,rgba(79,209,255,.55) 45%,rgba(143,255,210,.5) 55%,rgba(247,243,107,.5) 65%,transparent 80%);background-size:250% 250%;animation:foil 11s ease-in-out infinite alternate}
+@keyframes foil{0%{background-position:100% 0}100%{background-position:0 100%}}
+.songmap::after{opacity:.18}
+/* oil-slick rims instead of flat offset shadows */
+.hero .frame>img{box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.hero .frame::after{content:"";position:absolute;z-index:-1;left:12px;top:12px;right:-12px;bottom:-12px;border-radius:8px;background:var(--holo);background-size:300% 300%;animation:holoText 16s linear infinite;filter:saturate(1.2)}
+.btn-poppy{box-shadow:3px 3px 0 transparent;position:relative;isolation:isolate}
+.btn-poppy::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;transform:translate(4px,4px);background:var(--holo);background-size:300% 100%;animation:holoText 9s linear infinite}
+.btn-poppy:hover::before{transform:translate(6px,6px)}
+.btn-poppy,.btn-poppy:hover{background:transparent}
+.btn-poppy::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--poppy);transition:background .18s}
+.btn-poppy:hover::after{background:#f0643b}
+.btn-line{border-image:none;position:relative}
+.btn-line:hover{background:linear-gradient(115deg,rgba(255,110,199,.18),rgba(79,209,255,.18),rgba(143,255,210,.18))}
+/* metallic sheen on the logo glow */
+.mark .logo{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(79,209,255,.35)) drop-shadow(0 0 18px rgba(255,110,199,.25))}
+/* cream sections get a faint pearlescent wash */
+.undyed{position:relative}
+.undyed>.wrap{position:relative;z-index:1}
+.undyed .wrap::before{content:"";position:absolute;inset:-60px -40px;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
+ background:radial-gradient(45% 40% at 15% 20%,#ffd1ec 0,transparent 70%),radial-gradient(40% 40% at 85% 30%,#c9f3ff 0,transparent 70%),radial-gradient(50% 45% at 50% 90%,#e6ffd6 0,transparent 70%);animation:slick 44s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){body::before,.pillar::after,.tier::after,.film::after,.songmap::after,.hero .frame::after,.btn-poppy::before,.undyed .wrap::before,.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{animation:none}}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
@@ -1048,6 +1086,14 @@ void main(){
   col+=sc*st*.9;}
  col*=1.-D*.4;
  col*=.84+.16*smoothstep(1.5,.2,length(p));
+ /* oil slick: thin-film rainbow drifting over the indigo */
+ vec2 oq=p*1.1+vec2(t*.012,-t*.009);
+ float film=fbm(oq*1.6+vec2(fbm(oq*2.3+t*.02),fbm(oq*2.3-t*.017))*1.8);
+ float band=smoothstep(.38,.62,fbm(oq*.9+7.3+t*.006));
+ vec3 rainbow=.5+.5*cos(6.2832*(film*2.6+vec3(0.,.33,.67)+t*.01));
+ float sheen=band*(.55+.45*sin(film*18.+t*.4))*.5+.5*band;
+ col=mix(col,col+rainbow*.42,sheen*.55);
+ col+=pow(max(0.,sin(film*22.-t*.3)),24.)*band*vec3(.9,.95,1.)*.25;   /* metallic glints */
  col+=(h(gl_FragCoord.xy*.71)-.5)*.06;                 /* paper grain */
  gl_FragColor=vec4(col,1.);
 }`;
