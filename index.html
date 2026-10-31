@@ -89,10 +89,12 @@ p{margin:0}
 .mark .logo{height:92px;width:auto;display:block;animation:logoGlow 18s ease-in-out infinite}
 @keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(122,108,242,.38))}25%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(242,112,156,.3))}50%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(143,214,196,.3))}75%{filter:drop-shadow(0 0 1.2px rgba(8,14,36,.9)) drop-shadow(0 0 10px rgba(163,213,216,.32))}}
 .mark::before,.mark::after{content:"";position:absolute;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 0C21 13 27 19 40 20C27 21 21 27 20 40C19 27 13 21 0 20C13 19 19 13 20 0Z' fill='%23fff6dc'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none;transform:translate(-50%,-50%) scale(0);filter:drop-shadow(0 0 4px #fff3c4) drop-shadow(0 0 10px rgba(247,201,72,.8)) drop-shadow(0 0 16px rgba(247,201,72,.45));animation:glint 14s ease-in-out infinite}
-.mark::after{left:69%;top:10%}
+.mark::after{left:69%;top:10%;animation:starSpin 40s linear infinite,starPulse 9s ease-in-out infinite}
+@keyframes starSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes starPulse{0%,100%{width:13px;height:13px;opacity:.4}50%{width:26px;height:26px;opacity:.95}}
 .mark::before{left:36%;top:52%;width:14px;height:14px;animation-delay:7s;opacity:0}
 @keyframes glint{0%,30%,100%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:0}50%{transform:translate(-50%,-50%) scale(.9) rotate(20deg);opacity:.85}60%{transform:translate(-50%,-50%) scale(.9) rotate(28deg);opacity:.85}82%{transform:translate(-50%,-50%) scale(0) rotate(45deg);opacity:0}}
-@media (prefers-reduced-motion:reduce){.mark .logo{animation:none;filter:drop-shadow(0 0 8px rgba(242,165,49,.45))}.mark::before,.mark::after{animation:none;display:none}}
+@media (prefers-reduced-motion:reduce){.mark .logo{animation:none;filter:drop-shadow(0 0 8px rgba(242,165,49,.45))}.mark::before{animation:none;display:none}.mark::after{animation:none;transform:translate(-50%,-50%);width:20px;height:20px;opacity:.85}}
 @media (max-width:860px){.mark .logo{height:68px}}
 .top nav{display:flex;align-items:center;gap:22px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
 .top nav a{text-decoration:none;color:var(--on-vat-soft)}
@@ -780,7 +782,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
           <p>This is a song bubble map: an interactive map that puts a song in its context. Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources. Rocking Chair Regulars get more song bubble maps like this one as we trace new tunes together.</p>
         </div>
         <figure class="songmap">
-          <iframe src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <iframe data-src="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed" title="Interactive history map of the Wellerman" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
         </figure>
         <div class="song-links">
@@ -797,7 +799,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
           <p>A murder ballad I play in G modal tuning (gDGCD). Start in the middle, then follow the threads to the song's earliest written traces, the 1930s field and prison recordings, the first records of 1929, the Cocaine Blues branch, and the revival players who carried it on. Click any bubble to read more and see its sources.</p>
         </div>
         <figure class="songmap">
-          <iframe src="https://www.7vortex.com/ecosystems/0615eac1-12e6-49df-805c-dae6b3ea26f3/embed" title="Interactive history map of Little Sadie" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <iframe data-src="https://www.7vortex.com/ecosystems/0615eac1-12e6-49df-805c-dae6b3ea26f3/embed" title="Interactive history map of Little Sadie" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <figcaption>Interactive map built on 7VORTEX. Drag to explore, scroll or pinch to zoom.</figcaption>
         </figure>
         <div class="song-links">
@@ -1099,5 +1101,13 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelecto
 })();
 </script>
 
+<script>
+/* start each bubble map only once it is on screen, so the map centres itself in view */
+(function(){var f=[].slice.call(document.querySelectorAll('.songmap iframe[data-src]'));
+ function go(el){if(!el.src||el.src==='about:blank'){el.src=el.getAttribute('data-src');}}
+ if(!('IntersectionObserver' in window)){f.forEach(go);return;}
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){go(e.target);io.unobserve(e.target);}});},{threshold:0.4});
+ f.forEach(function(el){io.observe(el);});})();
+</script>
 </body>
 </html>
