@@ -524,6 +524,14 @@ body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none
 .undyed .wrap::before{content:"";position:absolute;inset:-60px -40px;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
  background:radial-gradient(45% 40% at 15% 20%,#ffd1ec 0,transparent 70%),radial-gradient(40% 40% at 85% 30%,#c9f3ff 0,transparent 70%),radial-gradient(50% 45% at 50% 90%,#e6ffd6 0,transparent 70%);animation:slick 44s ease-in-out infinite alternate}
 @media (prefers-reduced-motion:reduce){body::before,.pillar::after,.tier::after,.film::after,.songmap::after,.hero .frame::after,.btn-poppy::before,.undyed .wrap::before,.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{animation:none}}
+
+/* fix: give italic letters room so the shimmer isn't clipped */
+.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{padding:0 .16em 0 .06em;margin:0 -.1em 0 -.06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* fix: on cream sections use deeper jewel-tone shimmer with an ink edge so it never disappears */
+.undyed h2 em,.undyed h3 em{background-image:linear-gradient(115deg,#c2185b 0%,#5b3fd6 20%,#0b7fa6 38%,#1b8a5a 54%,#b0700a 70%,#d1451b 85%,#c2185b 100%);background-size:300% 100%;
+ filter:drop-shadow(0 1px 0 rgba(18,28,63,.45)) drop-shadow(0 0 1px rgba(18,28,63,.35))}
+/* a soft dark edge on the dark sections too, for crispness */
+.hero h1 em,.dyed h2 em,.foot h2 em,.dyed .sample-head h3 em{filter:drop-shadow(0 2px 0 rgba(8,14,36,.55))}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13' fill='%2316285e' stroke='%23f2e8d2' stroke-width='2'/%3E%3Ccircle cx='15' cy='15' r='3' fill='%23f2a531'/%3E%3C/svg%3E">
 </head>
