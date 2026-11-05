@@ -224,6 +224,60 @@ p{margin:0}
 .credits .role{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay)}
 .credits .org{font-family:var(--display);font-size:1.35rem;font-weight:500;line-height:1.2}
 
+/* ---------- logo wall ---------- */
+.logowall{list-style:none;margin:0 0 clamp(34px,5vw,54px);padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(22px,4vw,54px)}
+.logowall li{display:flex;align-items:center;justify-content:center;min-height:96px}
+.logowall a,.logowall span{display:flex;align-items:center;justify-content:center;padding:4px;border-radius:10px;transition:transform .18s ease,filter .18s ease}
+.logowall a:hover,.logowall a:focus-visible{transform:translateY(-3px);filter:saturate(1.08)}
+.logowall img{display:block;width:auto;height:auto;max-width:min(260px,52vw);object-fit:contain}
+.logowall img.lg-bbff{max-height:108px}
+.logowall img.lg-tradfest{max-height:86px}
+.logowall img.lg-abqff{max-height:114px}
+.logowall img.lg-queenbee{max-height:92px}
+.logowall img.lg-opc{max-height:96px}
+.band.dyed .logowall img{filter:drop-shadow(0 0 0 transparent)}
+.band.dyed .logowall li{background:#fff;border-radius:14px;padding:16px 22px;min-height:0;box-shadow:5px 5px 0 var(--marigold)}
+.logonote{font-size:var(--step--1);opacity:.78;margin:-10px 0 0}
+/* artwork entries sit as their own card, no cream mat behind them */
+.band.dyed .logowall li.art{background:transparent;padding:0;border-radius:14px;box-shadow:7px 7px 0 var(--poppy);overflow:hidden}
+.logowall li.art a,.logowall li.art span{padding:0;border-radius:14px}
+.logowall img.lg-art{max-height:172px;max-width:min(172px,46vw);border-radius:14px}
+@media (max-width:700px){.logowall img.lg-art{max-height:132px!important;max-width:132px}}
+@media (max-width:700px){.logowall{gap:26px}.logowall li{min-height:0}.logowall img{max-height:62px!important}}
+
+/* ---------- past events ---------- */
+.events{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:clamp(26px,4vw,40px)}
+.events li{display:grid;gap:14px}
+.events figure{margin:0;border-radius:12px;overflow:hidden;background:var(--ink);box-shadow:10px 10px 0 var(--poppy);transition:transform .2s ease}
+.events li:hover figure{transform:translate(-2px,-2px)}
+.events img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:contain;background:var(--ink)}
+.events .when{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay)}
+.events .what{font-family:var(--display);font-size:1.2rem;font-weight:500;line-height:1.25}
+.events .where{font-size:var(--step--1);opacity:.8}
+.events .what a{color:inherit;text-decoration-thickness:1px;text-underline-offset:4px}
+
+/* ---------- folded bubble maps ---------- */
+.songfold{margin-top:clamp(36px,5vw,64px)}
+.songfold>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;padding:22px 26px;border-radius:14px;border:2px dashed rgba(242,232,210,.4);background:rgba(11,20,48,.35);transition:transform .18s,box-shadow .18s,background .18s}
+.songfold>summary::-webkit-details-marker{display:none}
+.songfold>summary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--marigold);background:rgba(11,20,48,.5)}
+.songfold>summary:focus-visible{outline:2px solid var(--marigold);outline-offset:4px}
+.songfold summary .eyebrow{margin:0;opacity:.75;flex-basis:100%}
+.songfold summary h3{font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.15;margin:0;flex:1 1 320px}
+.songfold summary h3 em{color:var(--marigold)}
+.songfold .foldcue{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;opacity:.85;display:inline-flex;align-items:center;gap:8px}
+.songfold .foldcue::after{content:"▾";font-size:.9rem;transition:transform .2s}
+.songfold[open] .foldcue::after{transform:rotate(180deg)}
+.songfold[open] .foldcue .cue-open{display:none}
+.songfold .foldcue .cue-close{display:none}
+.songfold[open] .foldcue .cue-close{display:inline}
+.songfold[open]>summary{border-style:solid;margin-bottom:clamp(24px,3vw,36px)}
+.songfold .foldbody{animation:foldIn .4s ease-out}
+@keyframes foldIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (max-width:700px){.songfold>summary{padding:18px}.songfold .foldcue{flex-basis:100%}}
+.events li.noflyer figure{background:transparent;box-shadow:none;border:2px dashed rgba(18,28,63,.3);border-radius:12px;display:grid;place-items:center;aspect-ratio:4/5;padding:20px}
+.events li.noflyer figure span{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;text-align:center;line-height:1.7}
+
 .film{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);margin-bottom:clamp(32px,5vw,56px);border-radius:14px;overflow:hidden;background:var(--ink);color:var(--undyed);text-decoration:none;box-shadow:12px 12px 0 var(--marigold);transition:transform .2s ease}
 .film:hover{transform:translate(-2px,-2px)}
 .film-art{position:relative;display:block;background:#000}
@@ -890,10 +944,14 @@ html,body{overflow-x:clip}
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
         </div>
       </div>
-      <div class="sample" id="songmap2">
-        <div class="head sample-head">
+      <details class="sample songfold" id="songmap2">
+        <summary>
           <p class="eyebrow">Song Bubble Map 02</p>
           <h3 id="songmap2-title">Trace Little Sadie, <em>bubble by bubble.</em></h3>
+          <span class="foldcue"><span class="cue-open">Open this map</span><span class="cue-close">Close</span></span>
+        </summary>
+        <div class="foldbody">
+        <div class="head sample-head">
           <p>A murder ballad I play in G modal tuning (gDGCD). Start in the middle, then follow the threads to the song's earliest written traces, the 1930s field and prison recordings, the first records of 1929, the version retitled 'Cocaine Blues', and the revival players who carried it on. Click any bubble to read more and see its sources.</p>
         </div>
         <figure class="songmap">
@@ -907,11 +965,16 @@ html,body{overflow-x:clip}
           <a class="btn btn-line" href="https://www.youtube.com/watch?v=Wf3N20vu19I" target="_blank" rel="noopener">Learn it: bluegrass</a>
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/0615eac1-12e6-49df-805c-dae6b3ea26f3/view" target="_blank" rel="noopener">Open the full map</a>
         </div>
-      </div>
-      <div class="sample" id="songmap3">
-        <div class="head sample-head">
+        </div>
+      </details>
+      <details class="sample songfold" id="songmap3">
+        <summary>
           <p class="eyebrow">Song Bubble Map 03</p>
           <h3 id="songmap3-title">Wander into Shady Grove, <em>bubble by bubble.</em></h3>
+          <span class="foldcue"><span class="cue-open">Open this map</span><span class="cue-close">Close</span></span>
+        </summary>
+        <div class="foldbody">
+        <div class="head sample-head">
           <p>A courting song I play through both its A and B parts. Start in the middle, then follow the threads to its earliest printed traces, the verses and tune it shares with other songs, the mountain singers who kept it, and the revival and bluegrass players who carried it on. Click any bubble to read more and see its sources.</p>
         </div>
         <figure class="songmap">
@@ -924,7 +987,8 @@ html,body{overflow-x:clip}
           <a class="btn btn-line" href="https://www.youtube.com/watch?v=AT2m_Edk83M" target="_blank" rel="noopener">Learn it: clawhammer</a>
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/5a19dcde-7c17-447c-9b70-f117d25cb5a7/view" target="_blank" rel="noopener">Open the full map</a>
         </div>
-      </div>
+        </div>
+      </details>
 
       <div class="tier" id="porch-tier">
         <div class="art"><img src="img/rocking-chair-regular.jpg" width="1536" height="1024" alt="Rocking Chair Regular: a weathered rocking chair with a woven blanket and an open-back banjo on a wooden porch, marigolds, a river and red mountains under a full moon."></div>
@@ -970,6 +1034,12 @@ html,body{overflow-x:clip}
         <p class="eyebrow">On stage and in the community</p>
         <h2 id="community-title">Where you'll <em>find me.</em></h2>
       </div>
+      <ul class="logowall">
+        <li><a href="https://opcclasses.squarespace.com/bbff" target="_blank" rel="noopener" aria-label="Black Banjo and Fiddle Fellowship"><img src="img/bbff.png" class="lg-bbff" loading="lazy" alt="Black Banjo &amp; Fiddle Fellowship" width="363" height="420"></a></li>
+        <li><a href="https://opcclasses.squarespace.com/" target="_blank" rel="noopener" aria-label="Oakland Public Conservatory of Music"><img src="img/opc.png" class="lg-opc" loading="lazy" alt="Oakland Public Conservatory of Music" width="855" height="420"></a></li>
+        <li><a href="https://www.santafetradfest.org/" target="_blank" rel="noopener" aria-label="Santa Fe TradFest"><img src="img/santa-fe-tradfest.png" class="lg-tradfest" loading="lazy" alt="Santa Fe TradFest" width="827" height="420"></a></li>
+        <li><a href="https://abqfolkfest.org/" target="_blank" rel="noopener" aria-label="Albuquerque Folk Festival"><img src="img/abq-folk-fest.png" class="lg-abqff" loading="lazy" alt="Albuquerque Folk Festival" width="296" height="420"></a></li>
+      </ul>
       <ul class="credits">
         <li><span class="role">Fellow, 2025 to 2026</span><span class="org"><a href="https://opcclasses.squarespace.com/bbff" target="_blank" rel="noopener" style="color:inherit;text-underline-offset:3px">Black Banjo &amp; Fiddle Fellowship</a></span></li>
         <li><span class="role">Banjo Fellow</span><span class="org"><a href="https://opcclasses.squarespace.com/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Oakland Public Conservatory</a></span></li>
@@ -977,6 +1047,45 @@ html,body{overflow-x:clip}
         <li><span class="role">Chair, inaugural youth band showcase</span><span class="org"><a href="https://www.santafetradfest.org/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Santa Fe TradFest 2025</a></span></li>
         <li><span class="role">Emcee</span><span class="org"><a href="https://abqfolkfest.org/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Albuquerque Folk Festival</a></span></li>
         <li><span class="role">Performer</span><span class="org"><a href="https://www.berkeleyoldtimemusic.org/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Berkeley Old Time Music Convention</a></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band dyed" id="friends" aria-labelledby="friends-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Friends of Genell</p>
+        <h2 id="friends-title">The folks who keep <em>the music going.</em></h2>
+        <p>Organizations whose jams, stages and teaching I'm glad to be part of. If you're looking for a session near you, start here.</p>
+      </div>
+      <ul class="logowall">
+        <!-- TODO add href once Genell confirms the Queen Bee web address -->
+        <li><span><img src="img/queen-bee.png" class="lg-queenbee" loading="lazy" alt="Queen Bee Music Association" width="1100" height="415"></span></li>
+        <li class="art"><a href="https://opcclasses.squarespace.com/" target="_blank" rel="noopener" aria-label="Oakland Public Conservatory of Music, twenty years"><img src="img/opc-20.jpg" class="lg-art" loading="lazy" alt="Oakland Public Conservatory of Music 20th anniversary artwork: OPC 20 in green, gold, red and white on black, with the line Rooted in Oakland. Honoring Legacy." width="600" height="600"></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="band undyed" id="events" aria-labelledby="events-title">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Past events</p>
+        <h2 id="events-title">Where I've <em>played.</em></h2>
+      </div>
+      <ul class="events">
+        <li>
+          <figure><img src="img/event-opc-2026-06.jpg" loading="lazy" alt="Flyer for the Black Banjo &amp; Fiddle Fellowship 2026 Cohort free live performance, June 24 2026, at the Oakland Public Conservatory of Music." width="399" height="501"></figure>
+          <span class="when">24 June 2026</span>
+          <span class="what">Black Banjo &amp; Fiddle Fellowship, 2026 Cohort</span>
+          <span class="where">Oakland Public Conservatory of Music · Oakland, California</span>
+        </li>
+        <li>
+          <figure><img src="img/event-botmc-2026-09.jpg" loading="lazy" alt="Poster for the Berkeley Old-Time Music Convention, September 16 to 20 2026, with four dancers in a ring. Concerts, dances, workshops, stringband contest and jams." width="554" height="554"></figure>
+          <span class="when">16 to 20 September 2026</span>
+          <span class="what"><a href="https://www.berkeleyoldtimemusic.org/" target="_blank" rel="noopener">Berkeley Old-Time Music Convention</a></span>
+          <span class="where">Berkeley, California</span>
+        </li>
       </ul>
     </div>
   </section>
