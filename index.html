@@ -538,6 +538,11 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 .tl-more[open] .tl-close{display:inline}
 .tl-tease{margin:16px 0 0;color:var(--on-vat-soft);max-width:46ch}
 .tl-wrap:has(.tl-more[open]) .tl-tease{display:none}
+.tl-photo{margin:26px 0 0;max-width:340px;transform:rotate(-1.5deg)}
+.tl-photo img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:2px solid rgba(242,232,210,.55);box-shadow:7px 7px 0 var(--poppy)}
+.tl-photo figcaption{margin-top:12px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky)}
+.tl-wrap:has(.tl-more[open]) .tl-photo{display:none}
+@media (max-width:860px){.tl-photo{max-width:260px}}
 .tl-more[open]>.timeline{margin-top:32px;animation:tlIn .45s ease-out}
 @keyframes tlIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (max-width:860px){.tl-more>summary{font-size:.74rem;padding:12px 18px 12px 12px}}
@@ -876,6 +881,7 @@ html,body{overflow-x:clip}
         </ol>
         </details>
         <p class="tl-tease">Crete, Guinea, Shanghai, New Mexico and the Black Banjo &amp; Fiddle Fellowship: the instruments, teachers and places along the way.</p>
+        <figure class="tl-photo"><img src="img/camp-fareta.jpg" width="900" height="900" loading="lazy" alt="Genell smiling at Camp Fareta in a yellow and blue wax-print skirt, one foot on a bench, beside a river-stone pavilion among pines."><figcaption>Camp Fareta</figcaption></figure>
         </div>
       </div>
     </div>
