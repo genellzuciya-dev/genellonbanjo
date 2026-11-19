@@ -60,7 +60,7 @@ body{background:var(--indigo-0);color:var(--ink);font-family:var(--mono);font-si
 .outbtn{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;display:none;font:inherit;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--indigo-0);background:var(--marigold);border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 0 0 4px rgba(242,169,59,.25),0 10px 24px -8px rgba(0,0,0,.6)}
 .outbtn:hover{background:var(--cream)}
 .outbtn.show{display:block}
-@media (max-width:720px){.outbtn{top:70px;bottom:auto;font-size:11px;padding:9px 14px}}
+@media (max-width:720px){.outbtn{top:172px;bottom:auto;font-size:11px;padding:9px 14px}}
 .tag.exit{background:var(--poppy);color:var(--ink)}
 .tag.members{background:var(--pink);color:var(--indigo-0)}
 .tag.members::before{background:var(--indigo-0);box-shadow:none}
@@ -128,11 +128,17 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 .split{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
 .split h3{grid-column:span 2;margin:6px 0 0;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400}
 
-/* porch list: keyboard and screen reader friendly way to every spot */
-.list{position:fixed;left:16px;bottom:16px;width:250px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;display:none;z-index:3;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+/* things to do: a top-center dropdown, keyboard and screen reader friendly way to every spot */
+.todo{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center}
+.todo .btn{font-weight:700;border-color:var(--marigold);color:var(--marigold)}
+.todo .btn[aria-expanded="true"]{background:var(--marigold);color:var(--indigo-0);border-bottom-left-radius:6px;border-bottom-right-radius:6px}
+.list{margin-top:6px;width:280px;max-height:70vh;overflow:auto;background:var(--panel);border:1px solid var(--marigold);border-radius:14px;padding:8px 10px 10px;display:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 16px 40px -12px rgba(0,0,0,.7)}
 .list.open{display:block}
-.list h3{margin:2px 4px 8px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.list h3{margin:8px 4px 4px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400}
 .list button{display:block;width:100%;text-align:left;font:inherit;font-size:12px;color:var(--ink);background:none;border:0;border-radius:8px;padding:7px 8px;cursor:pointer}
+.list button .m{float:right;font-size:9px;letter-spacing:.1em;color:var(--pink);border:1px solid var(--pink);border-radius:999px;padding:1px 6px}
+@media (max-width:1000px){.todo{top:78px}}
+@media (max-width:720px){.todo{top:132px}.list{width:min(300px,calc(100vw - 24px))}}
 .list button:hover,.list button:focus-visible{background:rgba(242,169,59,.16);outline:none}
 
 /* welcome */
@@ -157,7 +163,6 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
   header.top{top:10px;left:12px;right:12px}
   .card{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:62%;transform:translateY(30px)}
   .card.open{transform:none}
-  .list{left:8px;right:8px;width:auto;bottom:8px}
   .btn{font-size:10px;padding:6px 10px}
   .tag{font-size:10px;padding:3px 8px 3px 7px}
   .hint{bottom:12px}
@@ -188,11 +193,10 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
   <div class="top-btns">
     <button class="btn member-btn" id="loginBtn" type="button" hidden>Log in with Patreon</button>
     <button class="btn" id="soundBtn" type="button" aria-pressed="true">Sound on</button>
-    <button class="btn" id="listBtn" type="button" aria-expanded="false" aria-controls="list">Porch list</button>
   </div>
 </header>
 
-<nav class="list" id="list" aria-label="Everything on the porch"><h3>Who and what's on the porch</h3></nav>
+<div class="todo"><button class="btn" id="listBtn" type="button" aria-expanded="false" aria-controls="list">Things to do ▾</button><nav class="list" id="list" aria-label="Things to do on the virtual porch"></nav></div>
 <div class="hint" id="hint">Drag to look around · tap a marigold tag to visit</div>
 
 <aside class="card" id="card" aria-live="polite" aria-hidden="true">
@@ -268,6 +272,11 @@ function act(label, url, note, cls=''){
   return `<a class="act ${cls}" href="${url}" target="_blank" rel="noopener">${label}<span>${note||'Open'}</span></a>`;
 }
 
+const LOCKED = (key) => SPOTS[key] && SPOTS[key].members && !MEMBER;
+const lockedCard = (key) => ({eyebrow: SPOTS[key].room ? 'Members · Inside the house' : 'Members · Out back',
+  title: SPOTS[key].room ? 'Inside the house is for members' : (key === 'corn' ? 'Gone like a turkey through the corn' : 'The back porch is for members'),
+  body: () => `<p>${SPOTS[key].room ? "The front porch is open to everyone. Step inside as a member of the Virtual Porch." : "The backyard is for members of the Virtual Porch."} Members get the whole place: the parlor TV with old-time musicians, dancers and cloggers, the couch, the kitchen with coffee and soup, the song keeper's table with every song bubble map, and out back, the back porch and the cornfield where the corn maze game is coming soon.</p>
+      <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3/mo · Patreon', 'warm')}${memberBtn()}</div>`});
 /* ===== What each spot says. Draft wording: rewrite in your own voice. ===== */
 const SPOTS = {
   jambud: {name:'Jam Bud guide', eyebrow:'Front steps', title:'Tune up with Banjo Jam BUD',
@@ -285,7 +294,7 @@ const SPOTS = {
         <div class="tier soon"><div><b>The Songster Society</b><small>A monthly live session with a small group</small></div><i>Coming soon</i></div>
       </div>
       <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
-  songs: {name:'Song map table', room:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
+  songs: {name:'Song map table', room:true, members:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
     body:()=>`<p>Every tune has a trail. My song bubble maps follow where a song came from, who carried it, and how it changed along the way, using sourced facts only. Pull up a seat and start with the Wellerman.</p>
       <div class="acts"><button class="act warm" type="button" id="openMap">Explore the Wellerman<span>Song bubble map</span></button>${MEMBER_MAPS.littleSadie ? '<button class="act" type="button" data-map="littleSadie">Little Sadie<span>Members map</span></button>' : act('Little Sadie', LINKS.patreon, 'For members')}${MEMBER_MAPS.shadyGrove ? '<button class="act" type="button" data-map="shadyGrove">Shady Grove<span>Members map</span></button>' : act('Shady Grove', LINKS.patreon, 'For members')}${memberBtn()}</div>`},
   backporch: {name:'Back porch', members:true, everywhere:true, eyebrow:'Members · The back porch', title:'The back porch is for members',
@@ -297,26 +306,29 @@ const SPOTS = {
     body:()=>`<p>My grandfather used to say I was gone like a turkey through the corn. Out back, past the back porch, there's a corn maze where you help a turkey outrun the farmer.</p>
       <p>${MEMBER ? 'The corn maze game is almost ready. You will be among the first to play.' : 'The corn maze game is for members of the Virtual Porch.'}</p>
       <div class="acts">${act('Play the corn maze', '', '')}${MEMBER ? '' : act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
-  coffee: {name:'Coffee pot', room:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
+  coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
     body:()=>`<p>There's always a pot on. Take what you need, and if you can, leave a little for the next person.</p>
       <div class="split"><h3>Take some coffee</h3></div>
-      <div class="acts">${act('Banjo Jam BUD app', LINKS.jamBudApp, 'Free')}<button class="act" type="button" data-go="songs">The Wellerman song map<span>Free</span></button>${act('Banjo videos on YouTube', LINKS.youtube, 'Free')}${act('Banjo videos on TikTok', LINKS.tiktok, 'Free')}</div>
+      <div class="acts"><button class="act" type="button" id="pourBtn">Pour me a cup<span>Then tap a mug to drink</span></button></div>
       <div class="split"><h3>Leave some coffee</h3></div>
       <div class="acts">${act('Leave some coffee', LINKS.coffee, 'Buy Me a Coffee', 'warm')}</div>`},
+  tea: {name:'Tea table', eyebrow:'Side table', title:'Have a cup of tea',
+    body:()=>`<p>There's a pot of tea by the rocking chair. Pour yourself a cup and stay a while. It's on the house.</p>
+      <div class="acts"><button class="act warm" type="button" id="teaBtn">Pour me a cup of tea<span>Then tap a cup to sip</span></button></div>`},
   cats: {name:'Porch cats', eyebrow:'On the rail', title:'Here, kitty kitty',
     body:()=>`<p>I grew up with about ten cats around at any time, and my grandfather taught me a holler to call them. These three come running when they hear it.</p>
       <div class="acts">${LINKS.catHoller ? `<button class="act" type="button" id="hollerBtn">Hear the cat holler<span>Play</span></button>` : act('Hear the cat holler', '', 'Recording soon')}</div>`},
   banjo: {name:'Gourd banjo', eyebrow:'On the wall', title:'Give it a strum',
     body:()=>`<p>A little bum-ditty in Double C. The banjo's story starts long before porches like this one, and I tell it on the main site.</p>
       <div class="acts"><button class="act" type="button" id="strumBtn">Play it again<span>Strum</span></button>${act('Read the banjo\'s story', LINKS.site, 'Main site')}</div>`},
-  inside: {name:'Step inside', room:true, eyebrow:'The parlor', title:'Come on in',
+  inside: {name:'Step inside', room:true, members:true, eyebrow:'The parlor', title:'Come on in',
     body:()=>`<p>Make yourself at home. The porch TV plays old-time musicians, dancers and cloggers on a loop. Press play on the TV and sit a while.</p>
       ${!PLAYLIST ? '' : CAN_EMBED ? '' : '<p style="color:var(--muted)">The TV plays on genellonbanjo.com. In this preview it shows a test screen.</p>'}
       <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
-  couch: {name:'Couch', room:true, eyebrow:'The couch', title:'Have a seat',
+  couch: {name:'Sit on couch', room:true, members:true, eyebrow:'The couch', title:'Have a seat',
     body:()=>`<p>Kick back and watch a while.${PLAYLIST && CAN_EMBED ? ' Press play on the TV.' : ''}</p>
-      <div class="acts"><button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
-  stove: {name:'Soup on the stove', room:true, eyebrow:'Kitchen stove', title:'What\'s cooking: okra soup',
+      <div class="acts">${PLAYLIST && CAN_EMBED ? '<button class="act" type="button" id="tvPrev">◀ Previous video<span>Bottom dial</span></button><button class="act" type="button" id="tvNext">Next video ▶<span>Top dial</span></button>' : ''}<button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
+  stove: {name:'Soup on the stove', room:true, members:true, eyebrow:'Kitchen stove', title:'What\'s cooking: okra soup',
     body:()=>`<p>There's a pot of okra and tomato soup on the stove. Here's how it comes together. Serves 6.</p>
       <div class="recipe"><h3>You'll need</h3><ul>
         <li>1 lb smoked turkey wings, or a ham hock</li><li>8 cups water and 1 bay leaf</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li>
@@ -329,7 +341,7 @@ const SPOTS = {
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','songs','stove','coffee','backporch','corn','jambud','porchbud','chair','banjo','cats'];
+const ORDER = ['inside','couch','songs','stove','coffee','backporch','corn','jambud','porchbud','chair','tea','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
@@ -337,7 +349,7 @@ const list = document.getElementById('list'), listBtn = document.getElementById(
 document.getElementById('homeLink').href = LINKS.site + '/#porch'; document.getElementById('fbHome').href = LINKS.site;
 let current = null, focusSpot = () => {}, onStrum = () => {};
 function openSpot(key){
-  const s = SPOTS[key]; current = key;
+  const lock = LOCKED(key), s = lock ? lockedCard(key) : SPOTS[key]; current = key;
   cardInner.innerHTML = `<div class="eyebrow">${s.eyebrow}</div><h2>${s.title}</h2>${s.body()}`;
   card.classList.add('open'); card.classList.toggle('mini', key === 'couch'); card.setAttribute('aria-hidden','false');
   document.querySelectorAll('.tag').forEach(t => t.classList.toggle('on', t.dataset.k === key));
@@ -349,8 +361,12 @@ function openSpot(key){
   if (pendingLoginNote){ cardInner.insertAdjacentHTML('afterbegin', `<div class="welcomeback">${pendingLoginNote}</div>`); pendingLoginNote = ''; }
   cardInner.querySelectorAll('[data-go]').forEach(el => el.onclick = () => openSpot(el.dataset.go));
   const gu = document.getElementById('getUp'); if (gu) gu.onclick = () => openSpot('inside');
+  const tn = document.getElementById('tvNext'); if (tn) tn.onclick = () => tvSkip(1);
+  const tp = document.getElementById('tvPrev'); if (tp) tp.onclick = () => tvSkip(-1);
+  const pb = document.getElementById('pourBtn'); if (pb) pb.onclick = () => repour();
   const hb = document.getElementById('hollerBtn'); if (hb) hb.onclick = () => new Audio(LINKS.catHoller).play();
-  focusSpot(key);
+  const tb = document.getElementById('teaBtn'); if (tb) tb.onclick = () => pourTea();
+  focusSpot(lock ? 'door' : key);
   if (key === 'banjo') onStrum();
 }
 const PUBLIC_MAPS = {wellerman:{eyebrow:'Song bubble map 01', title:'The Wellerman', embed:LINKS.wellermanEmbed, view:LINKS.wellerman,
@@ -369,10 +385,14 @@ function openMap(key='wellerman'){
 let flyToMap = (k) => openMap(k), afterMapClose = null;
 function closeMap(){ document.getElementById('mapView').hidden = true; const b = document.getElementById('openMap'); if (b) b.focus(); if (afterMapClose){ const f = afterMapClose; afterMapClose = null; f(); } }
 function goOutside(){ current = 'inside'; closeCard(); }
-function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
+function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room && !LOCKED(current)){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
 document.getElementById('cardClose').onclick = closeCard;
 addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
-ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
+[['On the porch · free', k => !SPOTS[k].room && !SPOTS[k].members], ['Inside the house', k => SPOTS[k].room], ['Out back', k => SPOTS[k].members && !SPOTS[k].room]].forEach(([h, f]) => {
+  const t = document.createElement('h3'); t.textContent = h; list.appendChild(t);
+  ORDER.filter(f).forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; if (SPOTS[k].members){ const m = document.createElement('span'); m.className = 'm'; m.textContent = 'MEMBERS'; b.appendChild(m); } b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
+});
+addEventListener('pointerdown', e => { if (list.classList.contains('open') && !e.target.closest('.todo')){ list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 document.getElementById('outBtn').onclick = goOutside;
 document.getElementById('mapClose').onclick = closeMap;
 document.getElementById('mapView').addEventListener('click', e => { if (e.target.id === 'mapView') closeMap(); });
@@ -428,6 +448,11 @@ function pourSound(dur, delay){
   bp.frequency.setValueAtTime(700, t0); bp.frequency.linearRampToValueAtTime(1300, t0 + dur); // pitch rises as the cup fills
   src.connect(bp).connect(e).connect(master); src.start(t0);
 }
+function blip(f0, f1, dur, vol, type, delay){ const ac = audio(); if (!ac || !soundOn) return; const o = ac.createOscillator(), g = ac.createGain(), t0 = ac.currentTime + (delay||0);
+  o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f1, t0 + dur); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .01); g.gain.exponentialRampToValueAtTime(.0005, t0 + dur);
+  o.connect(g).connect(master); o.start(t0); o.stop(t0 + dur + .02); }
+function click(){ blip(1800, 600, .05, .12, 'square'); blip(900, 300, .06, .08, 'square', .07); } // dial clunk
+function sip(){ [1.0, 1.35, 1.7].forEach(d => blip(260, 140, .14, .09, 'sine', d)); blip(420, 180, .3, .06, 'triangle', 2.1); } // gulps, then an "ahh"
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; if (master) master.gain.value = soundOn ? .9 : 0; };
 onStrum = bumDitty;
@@ -636,8 +661,8 @@ document.getElementById('goBtn').onclick = () => {
     const glass = rm(tv, scrGeo, new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:.08, roughness:.05, metalness:.2}), sx0, sy0, D/2 + .036); glass.castShadow = false;
     // control panel: two big dials, a chrome strip and speaker slots
     const px0 = .7;
-    [[cy + .32, .13],[cy - .02, .11]].forEach(([ky, kr]) => { const k = rm(tv, new THREE.CylinderGeometry(kr, kr, .06, 18), creamE, px0, ky, D/2 + .03); k.rotation.x = Math.PI/2;
-      rm(tv, new THREE.BoxGeometry(.02, kr*1.4, .02), rmat(0x6e1f2a), px0, ky, D/2 + .065); for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; rm(tv, new THREE.BoxGeometry(.012,.012,.02), walnut, px0 + Math.cos(a)*(kr+.02), ky + Math.sin(a)*(kr+.02), D/2 + .01); } });
+    ROOM.dials = []; [[cy + .32, .13, 1],[cy - .02, .11, -1]].forEach(([ky, kr, dir]) => { const dg = pivot(tv, px0, ky, D/2 + .03); const k = rm(dg, new THREE.CylinderGeometry(kr, kr, .06, 18), creamE, 0, 0, 0); k.rotation.x = Math.PI/2;
+      rm(dg, new THREE.BoxGeometry(.02, kr*1.4, .02), rmat(0x6e1f2a), 0, 0, .035); dg.userData = {dir, spin:0}; ROOM.dials.push(dg); for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; rm(tv, new THREE.BoxGeometry(.012,.012,.02), walnut, px0 + Math.cos(a)*(kr+.02), ky + Math.sin(a)*(kr+.02), D/2 + .01); } });
     rm(tv, new THREE.BoxGeometry(.34, .02, .02), chrome, px0, cy - .2, D/2 + .01);
     for (let i=0;i<6;i++) rm(tv, new THREE.BoxGeometry(.3, .018, .02), rmat(0x2b1a10), px0, cy - .28 - i*.055, D/2 + .005);
     rm(tv, new THREE.BoxGeometry(W*.98, .03, .02), chrome, 0, .58, D/2 + .01);
@@ -650,8 +675,8 @@ document.getElementById('goBtn').onclick = () => {
     rm(st, new THREE.BoxGeometry(1.9,.14,.72), wick, 0,.42,0); rm(st, new THREE.BoxGeometry(1.9,.7,.1), wick, 0,.8,-.33).rotation.x = -.1;
     for (const ax of [-.95,.95]) { rm(st, new THREE.BoxGeometry(.1,.38,.72), wick, ax,.62,0); rm(st, new THREE.BoxGeometry(.06,.42,.06), wick, ax,.2,.3); rm(st, new THREE.BoxGeometry(.06,.42,.06), wick, ax,.2,-.3); }
     rm(st, new THREE.BoxGeometry(.8,.12,.6), rmat(0xe8502e), -.42,.54,.02); rm(st, new THREE.BoxGeometry(.8,.12,.6), rmat(0x8fd6d0), .42,.54,.02);
-    rm(st, new THREE.BoxGeometry(.4,.36,.12), rmat(0xf2a93b), -.55,.78,-.22).rotation.z = .15;
-    const throwB = rm(st, new THREE.BoxGeometry(.7,.03,.9), rmat(0xff6fa8), .55,.88,-.12); throwB.rotation.x = -.9;
+    rm(st, new THREE.BoxGeometry(.4,.32,.12), rmat(0xf2a93b), -.6,.74,-.2).rotation.x = -.28;
+    const throwB = rm(st, new THREE.BoxGeometry(.5,.05,.5), rmat(0xff6fa8), .62,.625,.06); throwB.rotation.y = .1;
     // floor lamp with a fringed shade
     const lp = pivot(P, 3.9, .62, -3.4); rm(lp, new THREE.CylinderGeometry(.16,.18,.04,12), rmat(0x2a2a30), 0,.02,0); rm(lp, new THREE.CylinderGeometry(.015,.015,1.6,6), rmat(0x9a7a3a,{metalness:.6}), 0,.8,0);
     rm(lp, new THREE.CylinderGeometry(.18,.3,.32,10,1,true), new THREE.MeshStandardMaterial({color:0xf2a93b, emissive:0xf2a93b, emissiveIntensity:.8, side:THREE.DoubleSide}), 0,1.66,0);
@@ -681,7 +706,7 @@ document.getElementById('goBtn').onclick = () => {
       for (let i=0;i<4;i++) for (let j=0;j<4;j++){ cx.fillStyle = (i+j)%2 ? '#22243a' : '#c4623a'; cx.fillRect(i*32,j*32,32,32); }
       const ct = new THREE.CanvasTexture(chk); ct.wrapS = ct.wrapT = THREE.RepeatWrapping; ct.repeat.set(4, 2);
       const fl = rm(P, new THREE.PlaneGeometry(5.2, 2.6), new THREE.MeshStandardMaterial({map:ct, roughness:.8}), -3.45, .647, -4.75); fl.rotation.x = -Math.PI/2; fl.castShadow = false;
-      const tl = document.createElement('canvas'); tl.width = tl.height = 64; const tx = tl.getContext('2d'); tx.fillStyle = '#f3e6c8'; tx.fillRect(0,0,64,64); tx.strokeStyle = '#8fd6d0'; tx.lineWidth = 4; tx.strokeRect(0,0,64,64); tx.fillStyle = '#ff6fa8'; tx.beginPath(); tx.arc(32,32,5,0,7); tx.fill();
+      const tl = document.createElement('canvas'); tl.width = tl.height = 64; const tx = tl.getContext('2d'); tx.fillStyle = '#1f3a44'; tx.fillRect(0,0,64,64); tx.strokeStyle = '#4f8f93'; tx.lineWidth = 4; tx.strokeRect(0,0,64,64); tx.fillStyle = '#ff6fa8'; tx.beginPath(); tx.arc(32,32,5,0,7); tx.fill();
       const tt = new THREE.CanvasTexture(tl); tt.wrapS = tt.wrapT = THREE.RepeatWrapping; tt.repeat.set(16, 3.4);
       rm(P, new THREE.PlaneGeometry(4.6, 1.0), new THREE.MeshStandardMaterial({map:tt, roughness:.5}), -3.6, 2.05, -6.06).castShadow = false; }
     const cabM = rmat(0x5fb3ad), topM = rmat(0xf3e6c8), chromeK = rmat(0xd8dce4, {metalness:.8, roughness:.25});
@@ -726,9 +751,10 @@ document.getElementById('goBtn').onclick = () => {
         rm(cg, new THREE.CylinderGeometry(.047,.04,.09,14,1,true), cm, 0,.045,0); rm(cg, new THREE.CylinderGeometry(.04,.04,.008,14), cm, 0,.004,0);
         const hdl = rm(cg, new THREE.TorusGeometry(.024,.008,5,10), cm, .055,.048,0); hdl.rotation.y = 0;
         const fill = rm(cg, new THREE.CylinderGeometry(.043,.043,.006,14), new THREE.MeshStandardMaterial({color:0x3b1f12, roughness:.25}), 0,.01,0); fill.visible = false; fill.castShadow = false;
-        return {x, z, fill}; });
+        return {x, z, fill, g:cg, home:cg.position.clone(), hotY:.05, top:.74}; });
       const stream = rm(kc, new THREE.CylinderGeometry(.007,.007,1,6), new THREE.MeshStandardMaterial({color:0x4a2a16, roughness:.2, transparent:true, opacity:.9}), 0,0,0); stream.visible = false; stream.castShadow = false;
-      ROOM.pour = {potP, tip, cups, stream, s:-1, baseX:.07};
+      ROOM.pour = {potP, tip, cups, stream, s:-1, baseX:.07, ref:kc, fillLo:.01, fillH:.068, top:.645, gap:.226};
+      cups.forEach((c,ci) => { c.steam = []; for (let i=0;i<5;i++){ const s4 = rm(kc, new THREE.SphereGeometry(.028,6,4), new THREE.MeshBasicMaterial({color:0xfff4e0, transparent:true, opacity:0, depthWrite:false}), c.x, .74, c.z); s4.castShadow = false; s4.userData.ph = i/5 + ci*.13; c.steam.push(s4); } });
       ROOM.steam = []; const sm = new THREE.MeshBasicMaterial({color:0xf3e6c8, transparent:true, opacity:.3, depthWrite:false});
       for (let i=0;i<6;i++){ const s3 = rm(kc, new THREE.SphereGeometry(.04,6,4), sm.clone(), -.06, 1, 0); s3.castShadow = false; s3.userData.ph = i/6; ROOM.steam.push(s3); } }
     // open shelves with jars, and herbs drying from a rod
@@ -910,8 +936,13 @@ document.getElementById('goBtn').onclick = () => {
   register('couch', ROOM.couch, new THREE.Vector3(2.6, 1.95, -2.4), [[2.62,1.72,-2.25],[2.06,1.85,-5.0]]); spots.couch.inside = true; spots.couch.noShift = true;
   register('stove', ROOM.stove, new THREE.Vector3(-3.6, 2.15, -5.4), [[-2.7,2.45,-2.7],[-3.6,1.5,-5.4]]); spots.stove.inside = true;
   register('coffee', ROOM.coffee, new THREE.Vector3(-1.85, 2.0, -5.6), [[-1.75,2.3,-3.35],[-1.05,1.55,-5.6]]); spots.coffee.anchorIn = new THREE.Vector3(-1.3, 2.05, -5.6); spots.coffee.inside = true;
+  ROOM.pour.cups.forEach((c,i) => c.g.traverse(m => { if (m.isMesh) m.userData.key = 'cup' + i; }));
+  ROOM.dials.forEach(d => d.traverse(m => { if (m.isMesh){ m.userData.key = d.userData.dir > 0 ? 'tvnext' : 'tvprev'; hitList.push(m); } }));
   spots.coffee.hit = () => { const P2 = ROOM.pour; P2.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = .01; }); P2.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); };
+  window.pourTea = () => { const P3 = ROOM.tea; if (P3.s > 0 || ROOM.drink) return; P3.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = P3.fillLo; }); P3.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); };
+  window.repour = () => { if (!ROOM.drink) spots.coffee.hit(); };
   spots.inside.inside = true;
+  spots.door = {view:[[1.4,2.35,6.4],[0,1.7,.3]]};
   door.traverse(m => { if (m.isMesh){ m.userData.key = 'inside'; hitList.push(m); } });
 
   // Jam Bud guide on the steps, holding a tuner that glows green
@@ -960,10 +991,29 @@ document.getElementById('goBtn').onclick = () => {
     spots.chair.anim = (t) => { rock.rotation.x = Math.sin(t*1.1)*.09; };
   }
 
-  // Side table on the porch with two mugs (the coffee pot lives in the kitchen now)
-  { const tb = pivot(scene, -3.55, .62, 2.75);
+  // Side table on the porch with a teapot and two teacups: pour yourself a cup (free, out front)
+  { const tb = pivot(scene, -3.55, .62, 2.75); ROOM.teaT = tb;
     rm(tb, new THREE.CylinderGeometry(.34,.34,.05,14), rmat(0x8a5a3a), 0,.62,0); rm(tb, new THREE.CylinderGeometry(.04,.06,.6,6), rmat(0x8a5a3a), 0,.3,0); rm(tb, new THREE.CylinderGeometry(.22,.24,.04,10), rmat(0x8a5a3a), 0,.02,0);
-    [[.16,.1,0xe8502e],[.1,-.16,0xf2a93b]].forEach(([x,z,c]) => { rm(tb, new THREE.CylinderGeometry(.045,.04,.09,10), rmat(c), x,.69,z); });
+    const tg = pivot(tb, 0, 0, 0); tg.rotation.y = Math.PI - .35; // turn the set toward the steps
+    const potP = pivot(tg, -.02, .645, 0); const pot = pivot(potP, -.13, 0, 0); const glaze = rmat(0x8fd6d0, {roughness:.3, flatShading:false}), rimM = rmat(0xff6fa8);
+    const body = rm(pot, new THREE.SphereGeometry(.11,14,10), glaze, 0,.095,0); body.scale.y = .85;
+    rm(pot, new THREE.CylinderGeometry(.05,.07,.03,12), glaze, 0,.18,0); rm(pot, new THREE.SphereGeometry(.022,8,6), rimM, 0,.205,0);
+    rm(pot, new THREE.TorusGeometry(.11,.008,5,18), rimM, 0,.095,0).rotation.x = Math.PI/2;
+    const sp = rm(pot, new THREE.CylinderGeometry(.012,.026,.14,6), glaze, .14,.13,0); sp.rotation.z = -.85;
+    const hd = rm(pot, new THREE.TorusGeometry(.055,.012,5,10,Math.PI), glaze, -.11,.1,0); hd.rotation.z = Math.PI/2;
+    const tip = pivot(pot, .193, .18, 0);
+    const cups = [[.13,.04,0xf3e6c8],[.27,-.04,0xffc4d8]].map(([x,z,c]) => { const cg = pivot(tg, x, .645, z); const cm = rmat(c, {side:THREE.DoubleSide});
+      rm(cg, new THREE.CylinderGeometry(.065,.065,.008,14), rmat(0xf3e6c8), 0,.004,0); // saucer
+      rm(cg, new THREE.CylinderGeometry(.045,.032,.055,14,1,true), cm, 0,.036,0); rm(cg, new THREE.CylinderGeometry(.032,.032,.006,14), cm, 0,.011,0);
+      rm(cg, new THREE.TorusGeometry(.016,.005,5,10), cm, .05,.04,0);
+      const fill = rm(cg, new THREE.CylinderGeometry(.04,.04,.004,14), new THREE.MeshStandardMaterial({color:0xb5652a, roughness:.2}), 0,.016,0); fill.visible = false; fill.castShadow = false;
+      return {x, z, fill, g:cg, home:cg.position.clone(), hotY:.035, top:.705}; });
+    const stream = rm(tg, new THREE.CylinderGeometry(.006,.006,1,6), new THREE.MeshStandardMaterial({color:0xc7783a, roughness:.2, transparent:true, opacity:.85}), 0,0,0); stream.visible = false; stream.castShadow = false;
+    cups.forEach((c,ci) => { c.steam = []; for (let i=0;i<5;i++){ const s4 = rm(tg, new THREE.SphereGeometry(.024,6,4), new THREE.MeshBasicMaterial({color:0xfff4e0, transparent:true, opacity:0, depthWrite:false}), c.x, c.top, c.z); s4.castShadow = false; s4.userData.ph = i/5 + ci*.13; c.steam.push(s4); } });
+    ROOM.tea = {potP, tip, cups, stream, s:-1, baseX:-.02, ref:tg, fillLo:.016, fillH:.032, top:.645, gap:.19};
+    register('tea', tb, new THREE.Vector3(-3.55, 1.85, 2.75), [[-2.6,2.14,3.87],[-3.5,1.2,2.7]]);
+    cups.forEach((c,i) => c.g.traverse(m => { if (m.isMesh) m.userData.key = 'teacup' + i; }));
+    spots.tea.hit = () => { if (!ROOM.tea.cups.some(c => c.fill.visible)) window.pourTea(); };
   }
 
   // Song keeper at the parlor table, with song bubbles floating up
@@ -972,7 +1022,7 @@ document.getElementById('goBtn').onclick = () => {
     const tw = rmat(0x5a3a26);
     rm(sk, new THREE.CylinderGeometry(.78,.78,.05,24), tw, 0,.74,.75); rm(sk, new THREE.CylinderGeometry(.07,.1,.72,8), tw, 0,.37,.75); rm(sk, new THREE.CylinderGeometry(.3,.34,.04,12), tw, 0,.02,.75);
     rm(sk, new THREE.BoxGeometry(.45,.05,.45), tw, 0,.45,-.05); rm(sk, new THREE.BoxGeometry(.45,.6,.05), tw, 0,.75,-.28);
-    const B = makeBody({skin:0x5c3420, shirt:0xc4623a, pants:0x2b2e44, style:'cap', hair:0x140c0a, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0);
+    const B = makeBody({skin:0x5c3420, shirt:0xc4623a, pants:0x2b2e44, style:'cap', hair:0x140c0a, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0); B.root.scale.setScalar(1.18); B.root.position.y += .12;
     // the hooped crown: braids run from the head out to the hoop, and one braid wraps the hoop
     const braidM = rmat(0x1a100c, {roughness:.7}), beadM = rmat(0xf2a93b, {metalness:.4, roughness:.4});
     const hoop = pivot(B.head, 0, .2, -.13); const R0 = .36;
@@ -1086,12 +1136,14 @@ document.getElementById('goBtn').onclick = () => {
   const canvas = renderer.domElement;
   function pick(e){ const r = canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1, -((e.clientY-r.top)/r.height)*2+1); ray.setFromCamera(ptr, camera); const h = ray.intersectObjects(hitList, false)[0]; return h ? h.object.userData.key : null; }
   canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; if (tween){ camera.position.copy(tween.p1); controls.target.copy(tween.t1); tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } } });
-  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k === 'mappaper'){ if (current !== 'songs') openSpot('songs'); flyToMap('wellerman'); } else if (k) openSpot(k); });
+  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k === 'tvnext' || k === 'tvprev') tvSkip(k === 'tvnext' ? 1 : -1); else if (k === 'teacup0' || k === 'teacup1'){ const c = ROOM.tea.cups[+k[6]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.tea.s < 0) drinkCup(c); else if (current !== 'tea') openSpot('tea'); else pourTea(); } else if (k === 'cup0' || k === 'cup1'){ const c = ROOM.pour.cups[+k[3]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.pour.s < 0) drinkCup(c); else if (current !== 'coffee') openSpot('coffee'); else repour(); } else if (k === 'mappaper'){ if (current !== 'songs') openSpot('songs'); flyToMap('wellerman'); } else if (k) openSpot(k); });
   canvas.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const k = pick(e); if (k !== hoverKey){ hoverKey = k; canvas.classList.toggle('hovering', !!k); Object.entries(tags).forEach(([kk,t]) => t.classList.toggle('on', kk === k || kk === current)); } });
 
   /* --- porch TV: YouTube's own player sits over the screen while you're in the parlor --- */
   const tvEl = document.getElementById('tv'); let tvFrame = null, tvPlaying = false;
   const tvCmd = (func) => { if (tvFrame) tvFrame.contentWindow.postMessage(JSON.stringify({event:'command', func, args:[]}), '*'); };
+  window.tvSkip = (dir) => { const d = ROOM.dials[dir > 0 ? 0 : 1]; d.userData.spin = 1; click(); if (tvFrame) tvCmd(dir > 0 ? 'nextVideo' : 'previousVideo'); else if (current !== 'couch') openSpot('couch'); };
+  window.drinkCup = (c) => { if (ROOM.drink) return; ROOM.drink = {c, s:performance.now(), f0:c.fill.position.y, lo:c.hotY < .04 ? .016 : .01}; sip(); };
   function tvShow(on){
     if (!PLAYLIST || !CAN_EMBED){ tvEl.style.display = 'none'; return; }
     if (on && !tvFrame){ tvFrame = document.createElement('iframe');
@@ -1120,26 +1172,39 @@ document.getElementById('goBtn').onclick = () => {
     controls.update();
     for (const k in spots) if (spots[k].anim) spots[k].anim(t*m);
     for (const c of cats){ c.segs.forEach((s,i) => { s.rotation.y = Math.sin(t*m*2 + c.ph + i*.6)*.35; s.rotation.x = c.curled ? 0 : -.25; }); if (!c.curled) c.head.rotation.y = Math.sin(t*m*.4 + c.ph)*.5; }
+    ROOM.pour.cups.concat(ROOM.tea.cups).forEach(c => { const hot = c.fill.visible && c.fill.position.y > c.hotY && !(ROOM.drink && ROOM.drink.c === c);
+      c.steam.forEach(s => { s.visible = hot; if (!hot) return; const u = (t*m*.28 + s.userData.ph) % 1; s.position.set(c.x + Math.sin(u*7 + s.userData.ph*11)*.025, c.top + u*.42, c.z + Math.cos(u*5 + s.userData.ph*7)*.015); s.scale.setScalar(.5 + u*1.5); s.material.opacity = .42*Math.sin(u*Math.PI)*Math.min(1, (c.fill.position.y-c.hotY)*40); }); });
+    if (ROOM.drink){ const D2 = ROOM.drink, c = D2.c, T = (performance.now() - D2.s)/1000, sm = (x) => { x = Math.min(1, Math.max(0, x)); return x*x*(3-2*x); };
+      const eye = camera.position.clone(), fwd = controls.target.clone().sub(eye).normalize(), down = new THREE.Vector3(0,-1,0);
+      const near = c.g.parent.worldToLocal(eye.clone().addScaledVector(fwd, .42).addScaledVector(down, .13));
+      const up = T < 2.3 ? sm(T/.7) : 1 - sm((T-2.3)/.7); c.g.position.lerpVectors(c.home, near, up);
+      const loc = c.g.parent.worldToLocal(eye.clone()).sub(c.g.position); c.g.rotation.order = 'YXZ'; c.g.rotation.y = Math.atan2(loc.x, loc.z) * up;
+      const tilt = T < .7 ? 0 : T < 1.4 ? sm((T-.7)/.7) : T < 2.0 ? 1 : 1 - sm((T-2.0)/.4); c.g.rotation.x = tilt*1.25;
+      if (T > .9) c.fill.position.y = Math.max(D2.lo, D2.f0 - (D2.f0 - D2.lo)*sm((T-.9)/1.0)); if (T > 1.9) c.fill.visible = false;
+      if (T > 3.05){ c.g.position.copy(c.home); c.g.rotation.set(0,0,0); ROOM.drink = null; } }
+    ROOM.dials.forEach(d => { if (d.userData.spin > 0){ d.userData.spin = Math.max(0, d.userData.spin - .05); d.rotation.z = d.userData.dir * -Math.sin((1 - d.userData.spin)*Math.PI) * .9; } });
     ROOM.steam.forEach(s => { const u = (t*m*.35 + s.userData.ph) % 1; s.position.set(-.06 + Math.sin(u*6 + s.userData.ph*9)*.05, 1.0 + u*.7, 0); s.scale.setScalar(.6 + u*1.6); s.material.opacity = .32*(1-u); });
     bubbles.forEach(b => { const d = b.userData, u = (t*m*.12 + d.ph) % 1; b.position.set(Math.cos(d.a + t*m*.4)*d.r, 1.0 + u*1.4, .78 + Math.sin(d.a + t*m*.4)*d.r); b.material.opacity = .85*Math.sin(u*Math.PI); });
     blades.rotation.y = t*m*1.2;
     { const T = BACK.turkey, u = t*m*.25, x = Math.sin(u)*7, dir = Math.cos(u) > 0 ? 1 : -1;
       T.tk.position.x = x; T.tk.rotation.y = dir*Math.PI/2; T.tk.position.y = Math.abs(Math.sin(t*m*9))*.05; T.neck.rotation.x = Math.sin(t*m*9)*.2; T.fan.rotation.x = -.2 + Math.sin(t*m*2)*.05;
       T.fm.position.x = Math.sin(u - .6)*7; T.fm.rotation.y = (Math.cos(u - .6) > 0 ? 1 : -1)*Math.PI/2; T.FB.leg[1].rotation.x = Math.sin(t*m*8)*.6; T.FB.leg[-1].rotation.x = -Math.sin(t*m*8)*.6; T.FB.arm[1].rotation.z = -.3 + Math.sin(t*m*6)*.4; }
-    { const P2 = ROOM.pour; let pouring = false;
+    const stepPour = (P2) => { let pouring = false;
       if (P2.s > 0){ const T = (performance.now() - P2.s)/1000, sm = (x) => { x = Math.min(1, Math.max(0, x)); return x*x*(3-2*x); };
         let px = P2.baseX, tilt = 0, lift = 0; let prev = P2.baseX;
-        P2.cups.forEach((c,i) => { const si = i*2.0, tx = c.x - .226;
+        P2.cups.forEach((c,i) => { const si = i*2.0, tx = c.x - P2.gap;
           if (T >= si){ px = prev + (tx - prev)*sm((T-si)/.45); }
           const up = sm((T-si-.15)/.4) - sm((T-si-1.55)/.35); lift = Math.max(lift, up*.12); tilt += -1.05*up;
-          if (T > si + .6 && T < si + 1.5){ pouring = true; c.fill.visible = true; c.fill.position.y = .01 + .068*sm((T-si-.6)/.9); P2.pourCup = c; }
+          if (T > si + .6 && T < si + 1.5){ pouring = true; c.fill.visible = true; c.fill.position.y = P2.fillLo + P2.fillH*sm((T-si-.6)/.9); P2.pourCup = c; }
           prev = tx; });
         if (T >= 4.0) px = prev + (P2.baseX - prev)*sm((T-4.0)/.45);
-        P2.potP.position.x = px; P2.potP.position.y = .645 + lift; P2.potP.rotation.z = tilt;
+        P2.potP.position.x = px; P2.potP.position.y = P2.top + lift; P2.potP.rotation.z = tilt;
         if (T > 4.6) P2.s = -1; }
       P2.stream.visible = pouring;
-      if (pouring){ P2.tip.updateMatrixWorld(); const tp = P2.tip.getWorldPosition(new THREE.Vector3()); ROOM.coffee.worldToLocal(tp); const c = P2.pourCup; const bot = .645 + c.fill.position.y;
-        const len = Math.max(.01, tp.y - bot); P2.stream.position.set(tp.x, bot + len/2, c.z); P2.stream.scale.set(1, len, 1); }
+      if (pouring){ P2.tip.updateMatrixWorld(); const tp = P2.tip.getWorldPosition(new THREE.Vector3()); P2.ref.worldToLocal(tp); const c = P2.pourCup; const bot = P2.top + c.fill.position.y;
+        const len = Math.max(.01, tp.y - bot); P2.stream.position.set(tp.x, bot + len/2, c.z); P2.stream.scale.set(1, len, 1); } };
+    stepPour(ROOM.tea);
+    { const P2 = ROOM.pour; stepPour(P2);
       ROOM.steam.forEach(st => st.visible = P2.s < 0); }
     ROOM.exit.ring.scale.setScalar(1 + Math.sin(t*m*3)*.08); ROOM.exit.am.color.setHSL(.1, .9, .58 + Math.sin(t*m*3)*.08);
     ROOM.soupSteam.forEach(s => { const u = (t*m*.3 + s.userData.ph) % 1; s.position.set(Math.sin(u*5 + s.userData.ph*11)*.08, .3 + u*.9, Math.cos(u*4 + s.userData.ph*7)*.06); s.scale.setScalar(.6 + u*2.2); s.material.opacity = .3*(1-u); });
