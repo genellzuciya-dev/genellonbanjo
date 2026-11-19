@@ -106,6 +106,7 @@ p{margin:0}
 .btn-line{border-color:rgba(242,232,210,.55);color:var(--on-vat)}
 .btn-line:hover{background:rgba(242,232,210,.1)}
 .btn-ink{background:var(--ink);color:var(--undyed)}
+@media (max-width:1060px){.top nav{gap:14px;font-size:.72rem}}
 @media (max-width:760px){.top nav .navlink{display:none}}
 
 /* ---------- hero ---------- */
@@ -656,13 +657,10 @@ html,body{overflow-x:clip}
   <div class="wrap">
     <a class="mark" href="#top" aria-label="Genell on Banjo, back to top"><img class="logo" src="img/genell-on-banjo-logo.png" width="400" height="379" alt="Genell on Banjo"></a>
     <nav aria-label="Sections">
-      <a class="navlink" href="#story">Story</a>
-      <a class="navlink" href="#materiality">Banjo timeline</a>
-      <a class="navlink" href="#path">My path</a>
-      <a class="navlink" href="#roots">My roots</a>
-      <a class="navlink" href="#porch">Membership</a>
-      <a class="navlink" href="/porch/">Virtual porch</a>
-      <a class="navlink" href="#contact">Contact</a>
+      <a class="navlink" href="#story">About the banjo</a>
+      <a class="navlink" href="#path">About me</a>
+      <a class="navlink" href="#porch">About the virtual porch</a>
+      <a class="navlink" href="#contact">Events and contact</a>
       <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Join the porch</a>
     </nav>
   </div>
@@ -991,6 +989,42 @@ html,body{overflow-x:clip}
   </section>
   -->
 
+  <section class="band dyed" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="bookgrid">
+        <div class="head">
+          <p class="eyebrow">Events and contact</p>
+          <h2 id="contact-title">Bring the porch <em>to you.</em></h2>
+          <p class="booklede">Performances, talks, workshops, festivals, collaborations and press. Tell me what you have in mind and I'll get back to you.</p>
+        </div>
+        <form class="bookform" id="bookform" action="https://formspree.io/f/xeaazved" method="POST" novalidate>
+          <div class="row2">
+            <label for="bf-name">Name<input id="bf-name" name="name" type="text" autocomplete="name" required></label>
+            <label for="bf-email">Email<input id="bf-email" name="email" type="email" autocomplete="email" required></label>
+          </div>
+          <label for="bf-type">What's this about?
+            <select id="bf-type" name="inquiry_type" required>
+              <option value="">Choose one</option>
+              <option>Performance booking</option>
+              <option>Talk or workshop</option>
+              <option>Festival or event</option>
+              <option>Collaboration or Patreon</option>
+              <option>Press or media</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <div class="row2">
+            <label for="bf-date">Date, if you have one<input id="bf-date" name="event_date" type="text" placeholder="e.g. March 14, 2027"></label>
+            <label for="bf-place">Where<input id="bf-place" name="location" type="text" placeholder="City or venue"></label>
+          </div>
+          <label for="bf-msg">Message<textarea id="bf-msg" name="message" rows="5" required></textarea></label>
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <input type="hidden" name="_subject" value="New inquiry from genellonbanjo.com">
+          <div class="formfoot"><button class="btn btn-poppy" type="submit" id="bf-send">Send message</button><p class="formstatus" id="bf-status" role="status" aria-live="polite"></p></div>
+        </form>
+      </div>
+    </div>
+  </section>
   <div class="strip" aria-hidden="true"></div>
   <section class="band undyed" id="community" aria-labelledby="community-title">
     <div class="wrap">
@@ -1054,42 +1088,6 @@ html,body{overflow-x:clip}
     </div>
   </section>
 
-  <section class="band dyed" id="contact" aria-labelledby="contact-title">
-    <div class="wrap">
-      <div class="bookgrid">
-        <div class="head">
-          <p class="eyebrow">Contact and bookings</p>
-          <h2 id="contact-title">Bring the porch <em>to you.</em></h2>
-          <p class="booklede">Performances, talks, workshops, festivals, collaborations and press. Tell me what you have in mind and I'll get back to you.</p>
-        </div>
-        <form class="bookform" id="bookform" action="https://formspree.io/f/xeaazved" method="POST" novalidate>
-          <div class="row2">
-            <label for="bf-name">Name<input id="bf-name" name="name" type="text" autocomplete="name" required></label>
-            <label for="bf-email">Email<input id="bf-email" name="email" type="email" autocomplete="email" required></label>
-          </div>
-          <label for="bf-type">What's this about?
-            <select id="bf-type" name="inquiry_type" required>
-              <option value="">Choose one</option>
-              <option>Performance booking</option>
-              <option>Talk or workshop</option>
-              <option>Festival or event</option>
-              <option>Collaboration or Patreon</option>
-              <option>Press or media</option>
-              <option>Something else</option>
-            </select>
-          </label>
-          <div class="row2">
-            <label for="bf-date">Date, if you have one<input id="bf-date" name="event_date" type="text" placeholder="e.g. March 14, 2027"></label>
-            <label for="bf-place">Where<input id="bf-place" name="location" type="text" placeholder="City or venue"></label>
-          </div>
-          <label for="bf-msg">Message<textarea id="bf-msg" name="message" rows="5" required></textarea></label>
-          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
-          <input type="hidden" name="_subject" value="New inquiry from genellonbanjo.com">
-          <div class="formfoot"><button class="btn btn-poppy" type="submit" id="bf-send">Send message</button><p class="formstatus" id="bf-status" role="status" aria-live="polite"></p></div>
-        </form>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer class="foot dyed">
