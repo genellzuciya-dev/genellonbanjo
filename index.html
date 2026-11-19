@@ -206,6 +206,11 @@ p{margin:0}
 .songmap iframe{display:block;width:100%;aspect-ratio:16/10;min-height:420px;border:0;background:#fff}
 .songmap figcaption{padding:14px 20px;background:var(--ink);color:var(--undyed);font-size:.95rem}
 .sample{margin-top:clamp(36px,5vw,64px)}
+.glimpse-head{margin-top:clamp(48px,7vw,96px)}
+.porch-world{display:block;margin:0 14px 0 0;border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--marigold);transition:transform .25s}
+.porch-world img{display:block;width:100%;height:auto}
+.porch-world:hover,.porch-world:focus-visible{transform:translate(-3px,-3px)}
+@media (max-width:700px){.porch-world{margin-right:8px;box-shadow:0 0 0 3px var(--undyed),8px 8px 0 3px var(--marigold)}}
 .sample-head h3{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.15;margin:.2em 0 .5em}
 .sample-head h3 em{color:var(--marigold)}
 .dyed .songmap{box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--marigold)}
@@ -934,6 +939,9 @@ html,body{overflow-x:clip}
         </article>
       </div>
 
+      <div class="head porch-head glimpse-head">
+        <h2 id="glimpse-title">A glimpse of what's on the <em>Virtual Porch</em></h2>
+      </div>
       <div class="sample" id="songmap">
         <div class="head sample-head">
           <p class="eyebrow">Song Bubble Map 01</p>
@@ -951,51 +959,18 @@ html,body{overflow-x:clip}
           <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view" target="_blank" rel="noopener">Open the full map</a>
         </div>
       </div>
-      <details class="sample songfold" id="songmap2">
-        <summary>
-          <p class="eyebrow">Song Bubble Map 02</p>
-          <h3 id="songmap2-title">Trace Little Sadie, <em>bubble by bubble.</em></h3>
-          <span class="foldcue"><span class="cue-open">Open this map</span><span class="cue-close">Close</span></span>
-        </summary>
-        <div class="foldbody">
+
+      <div class="sample" id="porch-world">
         <div class="head sample-head">
-          <p>A murder ballad I play in G modal tuning (gDGCD). Start in the middle, then follow the threads to the song's earliest written traces, the 1930s field and prison recordings, the first records of 1929, the version retitled 'Cocaine Blues', and the revival players who carried it on. Click any bubble to read more and see its sources.</p>
+          <p class="eyebrow">The Virtual Porch · Step inside</p>
+          <h3 id="porchworld-title">Come sit on <em>the porch.</em></h3>
+          <p>Walk around my porch and meet the folks on it. Rock in the rocking chair, peek in on the song keeper, and head inside to sit on the settee and watch old-time musicians and dancers on the porch TV. There's soup on the stove, too.</p>
         </div>
-        <figure class="songmap">
-          <iframe data-src="https://www.7vortex.com/ecosystems/0615eac1-12e6-49df-805c-dae6b3ea26f3/embed" title="Interactive history map of Little Sadie" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          <figcaption>Interactive map built on 7VORTEX. Click to explore, then drag to move and scroll or pinch to zoom.</figcaption>
-        </figure>
+        <a class="porch-world" href="/porch/" aria-label="Step onto the Virtual Porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
         <div class="song-links">
-          <a class="btn btn-poppy" href="#porch-tier">Get more song bubble maps</a>
-          <a class="btn btn-line" href="https://www.youtube.com/watch?v=NSS-nYktyvc" target="_blank" rel="noopener">Watch me play it</a>
-          <a class="btn btn-line" href="https://www.youtube.com/watch?v=vFCw67oRv4M" target="_blank" rel="noopener">Learn it: clawhammer</a>
-          <a class="btn btn-line" href="https://www.youtube.com/watch?v=Wf3N20vu19I" target="_blank" rel="noopener">Learn it: bluegrass</a>
-          <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/0615eac1-12e6-49df-805c-dae6b3ea26f3/view" target="_blank" rel="noopener">Open the full map</a>
+          <a class="btn btn-poppy" href="/porch/">Step onto the porch</a>
         </div>
-        </div>
-      </details>
-      <details class="sample songfold" id="songmap3">
-        <summary>
-          <p class="eyebrow">Song Bubble Map 03</p>
-          <h3 id="songmap3-title">Wander into Shady Grove, <em>bubble by bubble.</em></h3>
-          <span class="foldcue"><span class="cue-open">Open this map</span><span class="cue-close">Close</span></span>
-        </summary>
-        <div class="foldbody">
-        <div class="head sample-head">
-          <p>A courting song I play through both its A and B parts. Start in the middle, then follow the threads to its earliest printed traces, the verses and tune it shares with other songs, the mountain singers who kept it, and the revival and bluegrass players who carried it on. Click any bubble to read more and see its sources.</p>
-        </div>
-        <figure class="songmap">
-          <iframe data-src="https://www.7vortex.com/ecosystems/5a19dcde-7c17-447c-9b70-f117d25cb5a7/embed" title="Interactive history map of Shady Grove" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          <figcaption>Interactive map built on 7VORTEX. Click to explore, then drag to move and scroll or pinch to zoom.</figcaption>
-        </figure>
-        <div class="song-links">
-          <a class="btn btn-poppy" href="#porch-tier">Get more song bubble maps</a>
-          <a class="btn btn-line" href="https://www.youtube.com/watch?v=8vQ8BtLO4n4" target="_blank" rel="noopener">Watch me play it</a>
-          <a class="btn btn-line" href="https://www.youtube.com/watch?v=AT2m_Edk83M" target="_blank" rel="noopener">Learn it: clawhammer</a>
-          <a class="btn btn-line" href="https://www.7vortex.com/ecosystems/5a19dcde-7c17-447c-9b70-f117d25cb5a7/view" target="_blank" rel="noopener">Open the full map</a>
-        </div>
-        </div>
-      </details>
+      </div>
 
       <div class="tier" id="porch-tier">
         <div class="art"><img src="img/rocking-chair-regular.jpg" width="1536" height="1024" alt="Rocking Chair Regular: a weathered rocking chair with a woven blanket and an open-back banjo on a wooden porch, marigolds, a river and red mountains under a full moon."></div>
