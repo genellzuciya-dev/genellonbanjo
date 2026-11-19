@@ -62,6 +62,9 @@ body{background:var(--indigo-0);color:var(--ink);font-family:var(--mono);font-si
 .outbtn.show{display:block}
 @media (max-width:720px){.outbtn{top:70px;bottom:auto;font-size:11px;padding:9px 14px}}
 .tag.exit{background:var(--poppy);color:var(--ink)}
+.tag.members{background:var(--pink);color:var(--indigo-0)}
+.tag.members::before{background:var(--indigo-0);box-shadow:none}
+.tag .mtag{font-size:9px;letter-spacing:.1em;padding:1px 6px;border-radius:999px;background:var(--indigo-0);color:var(--pink)}
 .tag.exit::before{background:var(--cream);box-shadow:0 0 8px var(--cream)}
 .tv{position:fixed;z-index:2;display:none;background:#000;border-radius:6px;overflow:hidden}
 .tv iframe{width:100%;height:100%;border:0;display:block}
@@ -82,6 +85,10 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 .top-btns{display:flex;gap:8px;pointer-events:auto}
 .btn{white-space:nowrap;font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .btn:hover,.btn[aria-pressed="true"]{border-color:var(--marigold);color:var(--marigold)}
+.btn.member-btn{border-color:var(--pink);color:var(--pink)}
+.btn.member-btn.in{background:var(--pink);color:var(--indigo-0)}
+.btn[hidden]{display:none}
+.welcomeback{border:1px solid var(--pink);border-radius:10px;padding:8px 11px;margin:0 0 12px;color:var(--pink);font-size:12px}
 
 .hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);font-size:11px;letter-spacing:.06em;color:var(--muted);background:rgba(7,11,34,.6);border:1px solid var(--line);padding:6px 12px;border-radius:999px;pointer-events:none;transition:opacity .6s;white-space:nowrap}
 
@@ -179,6 +186,7 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
     <h1>Welcome to my <em>virtual porch</em></h1>
   </div>
   <div class="top-btns">
+    <button class="btn member-btn" id="loginBtn" type="button" hidden>Log in with Patreon</button>
     <button class="btn" id="soundBtn" type="button" aria-pressed="true">Sound on</button>
     <button class="btn" id="listBtn" type="button" aria-expanded="false" aria-controls="list">Porch list</button>
   </div>
@@ -225,8 +233,35 @@ const LINKS = {
   littleSadie: '',
   shadyGrove: '',
   catHoller: '',       // audio file of the cat holler, e.g. 'audio/cat-holler.m4a'
+  memberApi: 'https://porch-login.genellzuciya.workers.dev',       // the Log in with Patreon service, e.g. 'https://porch-login.yourname.workers.dev'
   tvPlaylist: 'https://www.youtube.com/playlist?list=PLOSrLODL1vG4'       // YouTube playlist link or ID for the parlor TV, e.g. 'https://www.youtube.com/playlist?list=PL...'
 };
+
+/* ===== Members: Log in with Patreon ===== */
+let MEMBER = null, MEMBER_MAPS = {};
+const loginNote = {notmember:"We couldn't find a paid membership on that Patreon account. Join as a Rocking Chair Regular to open the members areas.", failed:"Patreon login didn't go through. Please try again in a moment.", cancelled:'Login was cancelled.', expired:'That login took a while, so it timed out. Please try again.'};
+let pendingLoginNote = '';
+function memberLogin(){ if (LINKS.memberApi) location.href = LINKS.memberApi.replace(/\/$/, '') + '/login'; }
+function memberLogout(){ try { localStorage.removeItem('porchPass'); } catch(e){} MEMBER = null; MEMBER_MAPS = {}; paintMember(); if (current) openSpot(current); }
+function paintMember(){ const b = document.getElementById('loginBtn'); if (!b) return; b.hidden = !LINKS.memberApi;
+  b.classList.toggle('in', !!MEMBER); b.textContent = MEMBER ? (MEMBER.name ? MEMBER.name + ' · Member' : 'Member') + ' · Log out' : 'Log in with Patreon'; b.onclick = MEMBER ? memberLogout : memberLogin; }
+async function memberStart(){
+  const h = location.hash.slice(1), hp = new URLSearchParams(h);
+  if (hp.get('t')){ try { localStorage.setItem('porchPass', hp.get('t')); } catch(e){ MEMBER_PASS = hp.get('t'); } }
+  if (hp.get('login')){ pendingLoginNote = loginNote[hp.get('login')] || ''; if (hp.get('u')) console.info('Your Patreon user ID (for OWNER_USER_ID):', hp.get('u')); }
+  if (h && (hp.get('t') || hp.get('login'))) history.replaceState(null, '', location.pathname + location.search);
+  paintMember();
+  let pass = MEMBER_PASS; try { pass = localStorage.getItem('porchPass') || pass; } catch(e){}
+  if (!LINKS.memberApi || !pass) return;
+  const api = LINKS.memberApi.replace(/\/$/, ''), hdr = {headers:{Authorization:'Bearer ' + pass}};
+  try { const me = await fetch(api + '/me', hdr); if (!me.ok){ try { localStorage.removeItem('porchPass'); } catch(e){} return; }
+    MEMBER = await me.json(); const c = await fetch(api + '/members/content', hdr); if (c.ok){ const d = await c.json(); MEMBER_MAPS = d.maps || {}; }
+  } catch(e){ MEMBER = null; }
+  paintMember(); if (current) openSpot(current);
+}
+let MEMBER_PASS = null;
+const memberBtn = (label='Already a member? Log in with Patreon') => LINKS.memberApi && !MEMBER ? `<button class="act" type="button" data-login="1">${label}<span>Members</span></button>` : '';
+const welcome = () => MEMBER ? `<div class="welcomeback">Welcome back${MEMBER.name ? ', ' + MEMBER.name : ''}. Thank you for keeping the porch going.</div>` : '';
 
 function act(label, url, note, cls=''){
   if (!url) return `<span class="act soon">${label}<span>Coming soon</span></span>`;
@@ -242,16 +277,26 @@ const SPOTS = {
     body:()=>`<p>Have a seat on the swing. When you're ready to go past the jam, I'll help you practice your scales, keep time, and build your own tunes.</p>
       <div class="acts">${act('Watch the explainer', LINKS.porchBudVideo, 'YouTube')}${act('Get Banjo Porch Bud', LINKS.porchBudApp, 'iPhone')}</div>`},
   chair: {name:'Rocking chair', eyebrow:'Pull up a chair', title:'Join the Virtual Porch on Patreon',
-    body:()=>`<p>For full access to this virtual world, become a Patreon member. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
+    body:()=> MEMBER ? `${welcome()}<p>You're a member of the Virtual Porch. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
+      <div class="acts">${act('Visit me on Patreon', LINKS.patreon, 'Patreon')}<button class="act" type="button" data-go="backporch">Head to the back porch<span>Members</span></button></div>` : `<p>For full access to this virtual world, become a Patreon member. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
       <div class="tiers">
         <div class="tier"><div><b>Rocking Chair Regular</b><small>Song bubble maps, field dispatches, polls and dev logs</small></div><i>$3/mo</i></div>
         <div class="tier soon"><div><b>The Folk Naturalist</b><small>Where old-time music meets the natural world</small></div><i>Coming soon</i></div>
         <div class="tier soon"><div><b>The Songster Society</b><small>A monthly live session with a small group</small></div><i>Coming soon</i></div>
       </div>
-      <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}</div>`},
+      <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
   songs: {name:'Song map table', room:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
     body:()=>`<p>Every tune has a trail. My song bubble maps follow where a song came from, who carried it, and how it changed along the way, using sourced facts only. Pull up a seat and start with the Wellerman.</p>
-      <div class="acts"><button class="act warm" type="button" id="openMap">Explore the Wellerman<span>Song bubble map</span></button>${act('Little Sadie', LINKS.littleSadie || LINKS.patreon, 'For members')}${act('Shady Grove', LINKS.shadyGrove || LINKS.patreon, 'For members')}</div>`},
+      <div class="acts"><button class="act warm" type="button" id="openMap">Explore the Wellerman<span>Song bubble map</span></button>${MEMBER_MAPS.littleSadie ? '<button class="act" type="button" data-map="littleSadie">Little Sadie<span>Members map</span></button>' : act('Little Sadie', LINKS.patreon, 'For members')}${MEMBER_MAPS.shadyGrove ? '<button class="act" type="button" data-map="shadyGrove">Shady Grove<span>Members map</span></button>' : act('Shady Grove', LINKS.patreon, 'For members')}${memberBtn()}</div>`},
+  backporch: {name:'Back porch', members:true, everywhere:true, eyebrow:'Members · The back porch', title:'The back porch is for members',
+    body:()=> MEMBER ? `${welcome()}<p>Pull up a seat out back. Practice sessions and more kitchen recipes are on their way, and every song bubble map is open to you at the song keeper's table.</p>
+      <div class="acts">${act('Practice sessions', '', '')}${act('More recipes in the kitchen', '', '')}<button class="act" type="button" data-go="songs">Every song bubble map<span>Open</span></button></div>`
+    : `<p>Members of the Virtual Porch get the whole place: the back porch and backyard, more recipes in the kitchen, practice sessions, every song bubble map, and the research behind them.</p>
+      <div class="acts">${act('Practice sessions', '', '')}${act('More recipes in the kitchen', '', '')}${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
+  corn: {name:'Corn maze', members:true, eyebrow:'Members · Out back', title:'Gone like a turkey through the corn',
+    body:()=>`<p>My grandfather used to say I was gone like a turkey through the corn. Out back, past the back porch, there's a corn maze where you help a turkey outrun the farmer.</p>
+      <p>${MEMBER ? 'The corn maze game is almost ready. You will be among the first to play.' : 'The corn maze game is for members of the Virtual Porch.'}</p>
+      <div class="acts">${act('Play the corn maze', '', '')}${MEMBER ? '' : act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
   coffee: {name:'Coffee pot', room:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
     body:()=>`<p>There's always a pot on. Take what you need, and if you can, leave a little for the next person.</p>
       <div class="split"><h3>Take some coffee</h3></div>
@@ -284,7 +329,7 @@ const SPOTS = {
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','songs','stove','coffee','jambud','porchbud','chair','banjo','cats'];
+const ORDER = ['inside','couch','songs','stove','coffee','backporch','corn','jambud','porchbud','chair','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
@@ -298,23 +343,31 @@ function openSpot(key){
   document.querySelectorAll('.tag').forEach(t => t.classList.toggle('on', t.dataset.k === key));
   const sb = document.getElementById('strumBtn'); if (sb) sb.onclick = onStrum;
   const bo = document.getElementById('backOut'); if (bo) bo.onclick = () => { current = 'inside'; closeCard(); };
-  const om = document.getElementById('openMap'); if (om) om.onclick = openMap;
+  const om = document.getElementById('openMap'); if (om) om.onclick = () => flyToMap('wellerman');
+  cardInner.querySelectorAll('[data-map]').forEach(el => el.onclick = () => flyToMap(el.dataset.map));
+  cardInner.querySelectorAll('[data-login]').forEach(el => el.onclick = memberLogin);
+  if (pendingLoginNote){ cardInner.insertAdjacentHTML('afterbegin', `<div class="welcomeback">${pendingLoginNote}</div>`); pendingLoginNote = ''; }
   cardInner.querySelectorAll('[data-go]').forEach(el => el.onclick = () => openSpot(el.dataset.go));
   const gu = document.getElementById('getUp'); if (gu) gu.onclick = () => openSpot('inside');
   const hb = document.getElementById('hollerBtn'); if (hb) hb.onclick = () => new Audio(LINKS.catHoller).play();
   focusSpot(key);
   if (key === 'banjo') onStrum();
 }
-function openMap(){
+const PUBLIC_MAPS = {wellerman:{eyebrow:'Song bubble map 01', title:'The Wellerman', embed:LINKS.wellermanEmbed, view:LINKS.wellerman,
+  note:"Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources.",
+  links:[['Watch me play it', LINKS.wellermanPlay, 'YouTube'], ['Learn it with Trent Porter', LINKS.wellermanLearn, 'YouTube']]}};
+function openMap(key='wellerman'){
+  const M = PUBLIC_MAPS[key] || MEMBER_MAPS[key]; if (!M) return;
   const mv = document.getElementById('mapView'), fr = document.getElementById('mapFrame');
-  if (!fr.firstChild){
-    if (CAN_EMBED){ const f = document.createElement('iframe'); f.src = LINKS.wellermanEmbed; f.title = 'Interactive history map of the Wellerman'; f.referrerPolicy = 'strict-origin-when-cross-origin'; f.allowFullscreen = true; fr.appendChild(f); }
-    else fr.innerHTML = '<div class="nomap">The map opens right here on genellonbanjo.com. In this preview, open it on 7VORTEX instead.</div>';
-    document.getElementById('mapLinks').innerHTML = act('Watch me play it', LINKS.wellermanPlay, 'YouTube') + act('Learn it with Trent Porter', LINKS.wellermanLearn, 'YouTube') + act('Open the full map', LINKS.wellerman, '7VORTEX') + act('Get more song bubble maps', LINKS.patreon, 'Patreon', 'warm');
-  }
+  mv.querySelector('.maphead .eyebrow').textContent = M.eyebrow; document.getElementById('mapTitle').innerHTML = `${M.title}, <em>bubble by bubble</em>`; mv.querySelector('.mapnote').textContent = M.note;
+  fr.innerHTML = '';
+  if (CAN_EMBED){ const f = document.createElement('iframe'); f.src = M.embed; f.title = 'Interactive history map of ' + M.title; f.referrerPolicy = 'strict-origin-when-cross-origin'; f.allowFullscreen = true; fr.appendChild(f); }
+  else fr.innerHTML = '<div class="nomap">The map opens right here on genellonbanjo.com. In this preview, open it on 7VORTEX instead.</div>';
+  document.getElementById('mapLinks').innerHTML = M.links.map(([l,u,n]) => act(l,u,n)).join('') + act('Open the full map', M.view, '7VORTEX') + (MEMBER ? '' : act('Get more song bubble maps', LINKS.patreon, 'Patreon', 'warm'));
   mv.hidden = false; document.getElementById('mapClose').focus();
 }
-function closeMap(){ document.getElementById('mapView').hidden = true; const b = document.getElementById('openMap'); if (b) b.focus(); }
+let flyToMap = (k) => openMap(k), afterMapClose = null;
+function closeMap(){ document.getElementById('mapView').hidden = true; const b = document.getElementById('openMap'); if (b) b.focus(); if (afterMapClose){ const f = afterMapClose; afterMapClose = null; f(); } }
 function goOutside(){ current = 'inside'; closeCard(); }
 function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
 document.getElementById('cardClose').onclick = closeCard;
@@ -379,6 +432,8 @@ const soundBtn = document.getElementById('soundBtn');
 soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; if (master) master.gain.value = soundOn ? .9 : 0; };
 onStrum = bumDitty;
 
+if (/(^#|&)(t|login)=/.test(location.hash)){ document.getElementById('welcome').classList.add('gone'); if (/login=/.test(location.hash)) setTimeout(() => openSpot('chair'), 1500); }
+memberStart();
 document.getElementById('goBtn').onclick = () => {
   document.getElementById('welcome').classList.add('gone');
   audio(); startCrickets(); setTimeout(bumDitty, 500);
@@ -489,7 +544,7 @@ document.getElementById('goBtn').onclick = () => {
       const ms = rm(tr, new THREE.ConeGeometry(.09 + Math.random()*.08, h, 4), moss, Math.cos(a)*r, 3.7 - h/2 - Math.random()*.5, Math.sin(a)*r); ms.rotation.x = Math.PI; ms.castShadow = false; }
     return tr;
   }
-  liveOak(10.5, -2.5, 1.1); liveOak(-12.5, -1, .9);
+  liveOak(10.5, -2.5, 1.1); liveOak(-12.5, -1, .9); liveOak(-15, -16, 1.2); liveOak(17, -19, 1.3);
   function crow(parent, x, y, z, ry){ const c = pivot(parent, x, y, z); c.rotation.y = ry; const b = rmat(0x101018, {roughness:.4});
     const body = rm(c, new THREE.SphereGeometry(.14,8,6), b, 0,.1,0); body.scale.set(.8,.85,1.5);
     const head = pivot(c, 0, .2, .17); rm(head, new THREE.SphereGeometry(.08,8,6), b); rm(head, new THREE.ConeGeometry(.03,.12,4), b, 0,-.01,.1).rotation.x = Math.PI/2;
@@ -756,6 +811,57 @@ document.getElementById('goBtn').onclick = () => {
   // porch plants and jars
   [[-5.6,3.0],[5.6,3.0],[1.6,3.05]].forEach(([x,z],i) => { rm(H, new THREE.CylinderGeometry(.24,.18,.4,8), rmat([0xc4623a,0x22397a,0xc4623a][i]), x, .82, z); rm(H, new THREE.IcosahedronGeometry(.34,0), rmat(0x5b7d4f), x, 1.2, z); });
 
+  /* --- out back (members): back door, back porch, cornfield --- */
+  const BACK = {};
+  { // kitchen back door with a sign
+    const bd = pivot(scene, -.4, .62, -6.02); const ox = rmat(0x6e1f2a);
+    rm(bd, new THREE.BoxGeometry(1.14, 2.36, .06), rmat(0xf3e6c8), 0, 1.18, 0); rm(bd, new THREE.BoxGeometry(1.0, 2.24, .08), ox, 0, 1.12, .01);
+    const wc = document.createElement('canvas'); wc.width = 128; wc.height = 160; const w = wc.getContext('2d');
+    const gr = w.createLinearGradient(0,0,0,160); gr.addColorStop(0,'#2a2458'); gr.addColorStop(.55,'#e86a5a'); gr.addColorStop(1,'#f2a93b'); w.fillStyle = gr; w.fillRect(0,0,128,160);
+    w.fillStyle = '#c9a03a'; for (let i=0;i<14;i++){ const x = 6 + i*9; w.fillRect(x, 92 - (i%3)*6, 3, 70); w.beginPath(); w.ellipse(x+1, 90 - (i%3)*6, 4, 9, 0, 0, 7); w.fill(); }
+    rm(bd, new THREE.PlaneGeometry(.6, .78), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(wc)}), 0, 1.66, .055).castShadow = false;
+    const sc = document.createElement('canvas'); sc.width = 256; sc.height = 96; const sx2 = sc.getContext('2d'); sx2.fillStyle = '#ff6fa8'; sx2.fillRect(0,0,256,96); sx2.fillStyle = '#101a46'; sx2.font = 'bold 34px Georgia'; sx2.textAlign = 'center'; sx2.fillText('Back porch', 128, 44); sx2.font = '22px monospace'; sx2.fillText('MEMBERS', 128, 78);
+    rm(bd, new THREE.PlaneGeometry(.62, .24), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc)}), 0, .98, .055).castShadow = false;
+    rm(bd, new THREE.SphereGeometry(.04,8,6), rmat(0xd8dce4,{metalness:.8}), .38, 1.05, .07);
+    BACK.door = bd; }
+  { // the back porch
+    const bp = pivot(scene, 0, 0, 0); const deck = rmat(0x9fb4ae), post = rmat(0x1f3f8a), tr = rmat(0xf3e6c8);
+    rm(bp, new THREE.BoxGeometry(9, .6, 2.6), rmat(0x7e958f), 0, .3, -7.55);
+    for (let i=0;i<10;i++) rm(bp, new THREE.BoxGeometry(.88, .04, 2.55), deck, -3.95 + i*.88, .62, -7.55).castShadow = false;
+    [-4.3,-1.2,1.2,4.3].forEach(x => rm(bp, new THREE.CylinderGeometry(.1,.12,2.6,10), post, x, 1.9, -8.7));
+    const rf = rm(bp, new THREE.BoxGeometry(9.4, .12, 3.0), rmat(0xa4523a), 0, 3.3, -7.6); rf.rotation.x = -.12;
+    for (const [x0,x1] of [[-4.3,-1.2],[1.2,4.3]]){ rm(bp, new THREE.BoxGeometry(x1-x0, .07, .12), post, (x0+x1)/2, 1.5, -8.7); for (let x = x0+.25; x < x1-.1; x += .28) rm(bp, new THREE.CylinderGeometry(.025,.025,.86,5), post, x, 1.07, -8.7).castShadow = false; }
+    rm(bp, new THREE.BoxGeometry(2.2, .4, .45), deck, 0, .2, -9.05); rm(bp, new THREE.BoxGeometry(2.2, .2, .45), deck, 0, .1, -9.5);
+    // a bench with a washtub, and a quilt over the rail
+    const bench = pivot(bp, -2.8, .62, -6.6); rm(bench, new THREE.BoxGeometry(1.4,.08,.42), rmat(0x8a5a3a), 0,.45,0); for (const bx of [-.6,.6]) rm(bench, new THREE.BoxGeometry(.08,.45,.38), rmat(0x8a5a3a), bx,.22,0);
+    rm(bp, new THREE.CylinderGeometry(.32,.28,.38,16), rmat(0xb8bcc4,{metalness:.6, roughness:.35}), 2.8, .81, -6.8);
+    rm(bp, new THREE.CylinderGeometry(.012,.012,1.3,4), rmat(0x8a5a3a), 2.8, 1.6, -6.8);
+    const q = rm(bp, new THREE.BoxGeometry(1.2, .7, .03), rmat(0xff6fa8), 2.75, 1.25, -8.72); q.rotation.x = .08;
+    BACK.porch = bp;
+    // back door seen from outside
+    const od = pivot(scene, -.4, .62, -6.3); rm(od, new THREE.BoxGeometry(1.0, 2.24, .06), rmat(0x6e1f2a), 0, 1.12, 0); rm(od, new THREE.PlaneGeometry(.6,.78), new THREE.MeshBasicMaterial({color:0xffc27a}), 0, 1.66, -.035).rotation.y = Math.PI; }
+  { // the cornfield, with a path cut into it from the back steps
+    const mob = matchMedia('(max-width:720px)').matches, step = mob ? 1.15 : .8; const pts = [];
+    for (let z = -11; z > -34; z -= step) for (let x = -26; x < 26; x += step){ const jx = x + (Math.random()-.5)*.3, jz = z + (Math.random()-.5)*.3; if (Math.abs(jx) < 1.1 && jz > -20) continue; if (Math.abs(jz + 20) < .9 && Math.abs(jx) < 9) continue; pts.push([jx, jz, 1.9 + Math.random()*.8]); }
+    const n = pts.length, stalk = new THREE.InstancedMesh(new THREE.CylinderGeometry(.02,.035,1,4), rmat(0x7f8f3c), n), leaf = new THREE.InstancedMesh(new THREE.ConeGeometry(.09,.9,3), rmat(0x5f8a3a), n*2), tas = new THREE.InstancedMesh(new THREE.ConeGeometry(.06,.3,4), rmat(0xd9b24a), n), cob = new THREE.InstancedMesh(new THREE.CylinderGeometry(.045,.035,.26,6), rmat(0xe8b84a), n);
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), S = new THREE.Vector3(), P = new THREE.Vector3();
+    pts.forEach(([x,z,h],i) => { P.set(x, h/2, z); S.set(1,h,1); Q.identity(); M.compose(P,Q,S); stalk.setMatrixAt(i, M);
+      for (let k=0;k<2;k++){ E.set(.9, i*1.7 + k*Math.PI, 0); Q.setFromEuler(E); P.set(x, h*(.45 + k*.2), z); S.set(1,1,.35); M.compose(P,Q,S); leaf.setMatrixAt(i*2+k, M); }
+      P.set(x, h + .1, z); Q.identity(); S.set(1,1,1); M.compose(P,Q,S); tas.setMatrixAt(i, M);
+      E.set(0, 0, .5); Q.setFromEuler(E); P.set(x + .06, h*.6, z); M.compose(P,Q,S); cob.setMatrixAt(i, M); });
+    [stalk, leaf, tas, cob].forEach(m => { m.castShadow = false; m.receiveShadow = true; scene.add(m); });
+    const field = rm(scene, new THREE.PlaneGeometry(56, 26), rmat(0x5a4a2e, {flatShading:false}), 0, .01, -22.5); field.rotation.x = -Math.PI/2; field.castShadow = false;
+    BACK.field = field; }
+  // the turkey and the farmer at the edge of the corn
+  { const tk = pivot(scene, 0, 0, -10.4); const bronze = rmat(0x5a3a26), feather = [0xf2a93b, 0xe8502e, 0x8fd6d0, 0xf3e6c8, 0x6e1f2a];
+    const body = rm(tk, new THREE.SphereGeometry(.28,10,8), bronze, 0,.52,0); body.scale.set(.85,.9,1.15);
+    const fan = pivot(tk, 0, .62, -.22); for (let i=0;i<9;i++){ const a = -1.2 + i*.3; const f = rm(fan, new THREE.BoxGeometry(.11,.5,.02), rmat(feather[i%5]), Math.sin(a)*.28, Math.cos(a)*.28, 0); f.rotation.z = -a; }
+    const neck = pivot(tk, 0, .68, .25); rm(neck, new THREE.CylinderGeometry(.04,.06,.28,6), rmat(0x8fa7ff), 0,.12,0); rm(neck, new THREE.SphereGeometry(.07,8,6), rmat(0x8fa7ff), 0,.28,.02);
+    rm(neck, new THREE.ConeGeometry(.025,.08,4), rmat(0xf2a93b), 0,.28,.1).rotation.x = Math.PI/2; rm(neck, new THREE.SphereGeometry(.035,6,4), rmat(0xe8502e), 0,.2,.08);
+    for (const s2 of [-1,1]) rm(tk, new THREE.CylinderGeometry(.015,.015,.32,4), rmat(0xd9a24a), s2*.09,.16,0);
+    const fm = pivot(scene, -4, 0, -11.2); const FB = makeBody({skin:0x8d5524, shirt:0xf3e6c8, pants:0x22397a, style:'hat', wrap:0xd9b24a}); fm.add(FB.root); FB.arm[1].rotation.x = -2.6; FB.arm[1].rotation.z = -.3;
+    BACK.turkey = {tk, fan, neck, fm, FB}; }
+
   /* --- people --- */
   const SKIN = [0x8d5524, 0x6b3e26, 0xa86b45, 0x4a2c1d];
   function makeBody(o){
@@ -773,6 +879,7 @@ document.getElementById('goBtn').onclick = () => {
     B.head = pivot(B.neck, 0, .08, 0); rm(B.head, new THREE.SphereGeometry(.18,10,8), skin, 0,.16,0);
     if (o.style === 'puff') rm(B.head, new THREE.IcosahedronGeometry(.25,1), hair, 0,.22,-.04);
     else if (o.style === 'wrap'){ rm(B.head, new THREE.SphereGeometry(.2,10,8,0,Math.PI*2,0,Math.PI*.5), rmat(o.wrap), 0,.2,-.01); rm(B.head, new THREE.SphereGeometry(.15,8,6), rmat(o.wrap), 0,.36,-.06); }
+    else if (o.style === 'cap'){ const hc = rm(B.head, new THREE.SphereGeometry(.188,12,8,0,Math.PI*2,0,Math.PI*.55), hair, 0,.18,-.01); hc.scale.set(1,1.05,1.05); }
     else if (o.style === 'hat'){ rm(B.head, new THREE.CylinderGeometry(.34,.34,.03,16), rmat(o.wrap), 0,.3,0); rm(B.head, new THREE.CylinderGeometry(.17,.2,.18,12), rmat(o.wrap), 0,.38,0); rm(B.head, new THREE.CylinderGeometry(.205,.205,.04,12), rmat(0xe8502e), 0,.32,0); }
     else { rm(B.head, new THREE.SphereGeometry(.195,10,8,0,Math.PI*2,0,Math.PI*.5), hair, 0,.2,0); rm(B.head, new THREE.SphereGeometry(.1,8,6), hair, 0,.34,-.13); }
     B.arm = {}; B.elbow = {}; B.hand = {};
@@ -789,6 +896,10 @@ document.getElementById('goBtn').onclick = () => {
   function register(key, obj, anchor, view){ spots[key] = {obj, anchor, view}; obj.traverse(m => { if (m.isMesh){ m.userData.key = key; hitList.push(m); } }); }
   register('inside', tvScreens.group, new THREE.Vector3(0, 3.2, .35), [[-.8,2.15,-1.8],[2.06,1.75,-5.0]]);
   spots.inside.anchorIn = new THREE.Vector3(2.06, 3.25, -5.2);
+  register('backporch', BACK.porch, new THREE.Vector3(-9.8, 1.7, -6.5), [[-8.2,4.6,-15.5],[-.8,1.3,-7.4]]); spots.backporch.anchorIn = new THREE.Vector3(-.4, 3.25, -5.95); spots.backporch.wide = true;
+  BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
+  register('corn', BACK.turkey.tk, new THREE.Vector3(7.6, 3.0, -11), [[11.5,4.4,-5.5],[0,1.2,-12.5]]); spots.corn.wide = true;
+  BACK.turkey.fm.traverse(m => { if (m.isMesh){ m.userData.key = 'corn'; hitList.push(m); } }); BACK.field.userData.key = 'corn'; hitList.push(BACK.field);
   const exitArrow = pivot(scene, 0, .655, -.85);
   { const sh = new THREE.Shape(); sh.moveTo(0,.34); sh.lineTo(.26,.06); sh.lineTo(.1,.06); sh.lineTo(.1,-.3); sh.lineTo(-.1,-.3); sh.lineTo(-.1,.06); sh.lineTo(-.26,.06); sh.closePath();
     const am = new THREE.MeshBasicMaterial({color:0xf2a93b}); const ar = rm(exitArrow, new THREE.ShapeGeometry(sh), am, 0,.005,0); ar.rotation.x = -Math.PI/2; ar.castShadow = false;
@@ -858,19 +969,37 @@ document.getElementById('goBtn').onclick = () => {
   // Song keeper at the parlor table, with song bubbles floating up
   const bubbles = [];
   { const sk = pivot(scene, -3, .62, -1.25);
-    rm(sk, new THREE.CylinderGeometry(.5,.5,.05,16), rmat(0x5a3a26), 0,.72,.55); rm(sk, new THREE.CylinderGeometry(.06,.08,.7,6), rmat(0x5a3a26), 0,.36,.55);
-    rm(sk, new THREE.BoxGeometry(.45,.05,.45), rmat(0x5a3a26), 0,.45,-.05); rm(sk, new THREE.BoxGeometry(.45,.6,.05), rmat(0x5a3a26), 0,.75,-.28);
-    const B = makeBody({skin:SKIN[2], shirt:0xc4623a, pants:0x2b2e44, style:'puff', hair:0x1b1210, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0);
-    const halo = rm(B.head, new THREE.TorusGeometry(.34,.012,6,40), new THREE.MeshBasicMaterial({color:0xf2a93b}), 0,.2,-.12); halo.castShadow = false;
-    for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; const sp = rm(B.head, new THREE.BoxGeometry(.006,.16,.006), new THREE.MeshBasicMaterial({color:0xf3e6c8}), Math.cos(a)*.26, .2 + Math.sin(a)*.26, -.12); sp.rotation.z = a - Math.PI/2; sp.castShadow = false; }
+    const tw = rmat(0x5a3a26);
+    rm(sk, new THREE.CylinderGeometry(.78,.78,.05,24), tw, 0,.74,.75); rm(sk, new THREE.CylinderGeometry(.07,.1,.72,8), tw, 0,.37,.75); rm(sk, new THREE.CylinderGeometry(.3,.34,.04,12), tw, 0,.02,.75);
+    rm(sk, new THREE.BoxGeometry(.45,.05,.45), tw, 0,.45,-.05); rm(sk, new THREE.BoxGeometry(.45,.6,.05), tw, 0,.75,-.28);
+    const B = makeBody({skin:0x5c3420, shirt:0xc4623a, pants:0x2b2e44, style:'cap', hair:0x140c0a, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0);
+    // the hooped crown: braids run from the head out to the hoop, and one braid wraps the hoop
+    const braidM = rmat(0x1a100c, {roughness:.7}), beadM = rmat(0xf2a93b, {metalness:.4, roughness:.4});
+    const hoop = pivot(B.head, 0, .2, -.13); const R0 = .36;
+    for (let i=0;i<54;i++){ const a2 = i/54*Math.PI*2; const knot = rm(hoop, new THREE.SphereGeometry(.026,6,4), braidM, Math.cos(a2)*R0, Math.sin(a2)*R0, 0); knot.scale.set(1.25,.8,.8); knot.rotation.z = a2 + (i%2 ? .5 : -.5); knot.castShadow = false; }
+    for (let i=0;i<14;i++){ const a2 = i/14*Math.PI*2; for (let k=0;k<7;k++){ const r = .14 + k*(R0 - .16)/6; const kn = rm(hoop, new THREE.SphereGeometry(.017,5,4), braidM, Math.cos(a2)*r, Math.sin(a2)*r, -.01 + (k%2)*.006); kn.scale.set(1.3,.8,.8); kn.rotation.z = a2 + (k%2 ? .45 : -.45); kn.castShadow = false; }
+      if (i%2 === 0){ const bd = rm(hoop, new THREE.SphereGeometry(.018,6,4), beadM, Math.cos(a2)*R0, Math.sin(a2)*R0, .025); bd.castShadow = false; } }
     B.arm[-1].rotation.x = -1.1; B.elbow[-1].rotation.x = -.5; B.arm[1].rotation.x = -1.2; B.elbow[1].rotation.x = -.4;
-    const lamp = rm(sk, new THREE.ConeGeometry(.16,.18,10,1,true), new THREE.MeshStandardMaterial({color:0xf2a93b, emissive:0xf2a93b, emissiveIntensity:.8, side:THREE.DoubleSide}), .3,1.05,.55);
-    rm(sk, new THREE.BoxGeometry(.32,.02,.24), rmat(0xf3e6c8), -.05,.76,.55);
+    const lamp = rm(sk, new THREE.ConeGeometry(.16,.18,10,1,true), new THREE.MeshStandardMaterial({color:0xf2a93b, emissive:0xf2a93b, emissiveIntensity:.8, side:THREE.DoubleSide}), .62,1.1,1.0);
+    rm(sk, new THREE.CylinderGeometry(.012,.012,.3,6), rmat(0x9a7a3a,{metalness:.5}), .62,.92,1.0); rm(sk, new THREE.CylinderGeometry(.08,.09,.03,10), rmat(0x9a7a3a,{metalness:.5}), .62,.78,1.0);
+    // the paper bubble map: the same threads as the Wellerman map
+    const mc = document.createElement('canvas'); mc.width = 1024; mc.height = 720; const g = mc.getContext('2d');
+    g.fillStyle = '#f3e6c8'; g.fillRect(0,0,1024,720); g.strokeStyle = 'rgba(110,31,42,.35)'; g.lineWidth = 6; g.strokeRect(14,14,996,692);
+    const nodes = [[512,360,110,'#f2a93b','THE','WELLERMAN'],[200,170,78,'#8fd6d0','Hear me','play it'],[820,170,78,'#ff6fa8','Learn','it'],[170,560,86,'#e8502e','New Zealand','shore whaling'],[512,610,72,'#6f9c86','Who wrote','it?'],[850,555,84,'#8fa7ff','The song\'s','versions']];
+    g.strokeStyle = '#22397a'; g.lineWidth = 5; g.setLineDash([14,10]); nodes.slice(1).forEach(n => { g.beginPath(); g.moveTo(512,360); g.lineTo(n[0],n[1]); g.stroke(); }); g.setLineDash([]);
+    [[90,330,26],[930,360,24],[330,90,20],[700,90,22],[350,660,18],[690,665,20]].forEach(([x,y,r],i) => { g.fillStyle = ['#ff6fa8','#8fd6d0','#f2a93b','#e8502e','#8fa7ff','#6f9c86'][i]; g.globalAlpha = .55; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); g.globalAlpha = 1; });
+    nodes.forEach(([x,y,r,c,l1,l2],i) => { g.fillStyle = c; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); g.strokeStyle = '#22397a'; g.lineWidth = 4; g.stroke();
+      g.fillStyle = '#101a46'; g.textAlign = 'center'; g.font = (i ? 'bold 25px' : 'bold 34px') + ' Georgia'; g.fillText(l1, x, y - (i ? 4 : 8)); g.fillText(l2, x, y + (i ? 26 : 32)); });
+    g.fillStyle = '#6e1f2a'; g.font = '22px monospace'; g.textAlign = 'left'; g.fillText('SONG BUBBLE MAP 01 · tap to explore', 36, 54);
+    const paper = rm(sk, new THREE.PlaneGeometry(1.15, .81), new THREE.MeshStandardMaterial({map:new THREE.CanvasTexture(mc), roughness:.9, emissive:0x2a2014, emissiveIntensity:.5}), -.05, .772, .78);
+    paper.rotation.x = -Math.PI/2; paper.rotation.z = Math.PI; paper.castShadow = false; ROOM.paper = paper;
     const cols = [0xe8502e, 0xf2a93b, 0x6f9c86, 0xf3e6c8, 0x8fa7ff];
     for (let i=0;i<9;i++){ const m = new THREE.MeshStandardMaterial({color:cols[i%5], emissive:cols[i%5], emissiveIntensity:.7, transparent:true, opacity:.85, roughness:.2});
-      const b = rm(sk, new THREE.SphereGeometry(.06 + (i%3)*.03, 12, 8), m, 0, 1, .55); b.castShadow = false; b.userData = {ph:i/9, r:.15 + (i%4)*.08, a:i*.7}; bubbles.push(b); }
-    register('songs', sk, new THREE.Vector3(-3, 2.55, -.6), [[-1.05,2.85,-2.55],[-3.15,1.25,-.75]]); spots.songs.inside = true;
-    spots.songs.anim = (t) => { halo.rotation.z = t*.2; halo.material.color.setHSL(.1 + Math.sin(t*.5)*.03, .9, .6); B.head.rotation.x = .1 + Math.sin(t*.6)*.1; B.arm[1].rotation.z = -.1 + Math.sin(t*1.4)*.12; };
+      const b = rm(sk, new THREE.SphereGeometry(.05 + (i%3)*.025, 12, 8), m, 0, 1, .78); b.castShadow = false; b.userData = {ph:i/9, r:.2 + (i%4)*.1, a:i*.7}; bubbles.push(b); }
+    register('songs', sk, new THREE.Vector3(-3, 2.55, -.5), [[-1.6,2.6,-2.55],[-3.05,1.25,-.5]]); spots.songs.inside = true;
+    paper.userData.key = 'mappaper';
+    spots.songs.anim = (t) => { B.head.rotation.x = .25 + Math.sin(t*.6)*.06; B.arm[1].rotation.z = -.1 + Math.sin(t*1.4)*.12; };
+    ROOM.mapView = [[-3.05, 2.55, -.62], [-3.05, .9, -.47]];
   }
 
   // Gourd banjo hanging on the wall by the door
@@ -915,7 +1044,7 @@ document.getElementById('goBtn').onclick = () => {
   /* --- tags over each spot --- */
   const labels = document.getElementById('labels'), tags = {};
   const exitTag = document.createElement('button'); exitTag.type = 'button'; exitTag.className = 'tag exit hidden'; exitTag.textContent = 'Back to the porch'; exitTag.onclick = goOutside; labels.appendChild(exitTag);
-  ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tag'; b.dataset.k = k; b.textContent = SPOTS[k].name; b.onclick = () => openSpot(k); labels.appendChild(b); tags[k] = b; });
+  ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tag' + (SPOTS[k].members ? ' members' : ''); b.dataset.k = k; b.textContent = SPOTS[k].name; if (SPOTS[k].members){ const mt = document.createElement('span'); mt.className = 'mtag'; mt.textContent = 'MEMBERS'; b.appendChild(mt); } b.onclick = () => openSpot(k); labels.appendChild(b); tags[k] = b; });
 
   /* --- camera moves when a spot opens --- */
   let tween = null;
@@ -926,23 +1055,30 @@ document.getElementById('goBtn').onclick = () => {
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
       controls.target.copy(camera.position).addScaledVector(dir, .12);
       controls.minDistance = controls.maxDistance = .12; controls.minAzimuthAngle = -Infinity; controls.maxAzimuthAngle = Infinity;
-      controls.minPolarAngle = .45; controls.maxPolarAngle = 2.3; controls.enableZoom = false; controls.rotateSpeed = -.45; looking = true; return; }
+      controls.minPolarAngle = L.minP ?? .45; controls.maxPolarAngle = 2.3; controls.enableZoom = false; controls.rotateSpeed = -.45; looking = true; return; }
     looking = false; controls.enableZoom = true; controls.rotateSpeed = 1;
     controls.minDistance = L.minD; controls.maxDistance = L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
     controls.minPolarAngle = L.minP ?? .5; controls.maxPolarAngle = L.maxP ?? 1.5; };
-  function flyTo(pos, tgt, limits){
-    const crossing = (camera.position.z < 0) !== (pos.z < 0);
+  const inHouse = (p) => p.z < 0 && p.z > -6.2 && Math.abs(p.x) < 6.2, behind = (p) => !inHouse(p) && p.z < -.5;
+  function flyTo(pos, tgt, limits, done){
+    const a = camera.position.clone(), pts = [a];
+    const IN_D = new THREE.Vector3(0, 1.8, -1.1), OUT_D = new THREE.Vector3(0, 1.8, 1.9), side = (p) => new THREE.Vector3(Math.sign(p.x || 1)*9, 3.6, 3.5);
+    if (behind(a)) pts.push(side(a));
+    if (inHouse(a) && !inHouse(pos)) pts.push(IN_D, OUT_D);
+    if (behind(pos) && !behind(a)) pts.push(side(pos));
+    if (inHouse(pos) && !inHouse(a)) pts.push(OUT_D, IN_D);
+    pts.push(pos.clone());
     setLimits({minD:0, maxD:Infinity, minA:-Infinity, maxA:Infinity, minP:0, maxP:Math.PI}); pendingLimits = limits || OUT_LIMITS;
-    const IN_D = new THREE.Vector3(0, 1.8, -1.1), OUT_D = new THREE.Vector3(0, 1.8, 1.9);
-    const curve = crossing ? new THREE.CatmullRomCurve3(pos.z < 0 ? [camera.position.clone(), OUT_D, IN_D, pos.clone()] : [camera.position.clone(), IN_D, OUT_D, pos.clone()]) : null;
-    tween = {p0:camera.position.clone(), t0:controls.target.clone(), p1:pos.clone(), t1:tgt.clone(), curve, s:performance.now(), d:crossing ? 2100 : 1100}; }
+    const curve = pts.length > 2 ? new THREE.CatmullRomCurve3(pts) : null;
+    tween = {p0:a.clone(), t0:controls.target.clone(), p1:pos.clone(), t1:tgt.clone(), curve, done, s:performance.now(), d:curve ? 1000 + pts.length*450 : 1100}; }
+  flyToMap = (key='wellerman') => { const [p, t] = ROOM.mapView; flyTo(new THREE.Vector3(...p), new THREE.Vector3(...t), {look:true, minP:.02}, () => { afterMapClose = () => focusSpot('songs'); openMap(key); }); };
   focusSpot = (key) => {
     if (!key){ flyTo(HOME_POS, HOME_T); return; }
     const v = spots[key].view; const p = new THREE.Vector3(...v[0]), t = new THREE.Vector3(...v[1]);
     if (spots[key].inside){ if (mobile && !spots[key].noShift) t.y -= .3; if (mobile && spots[key].noShift) t.y += .15; flyTo(p, t, IN_LIMITS); if (spots[key].hit) spots[key].hit(); return; }
     if (mobile){ p.sub(t).multiplyScalar(1.35).add(t); t.y -= .5; }
     else { const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.4); t.add(side); p.add(side); } // nudge left; the card sits beside the object
-    flyTo(p, t); if (spots[key].hit) spots[key].hit();
+    flyTo(p, t, spots[key].wide ? {minD:3, maxD:28, minA:-Infinity, maxA:Infinity, minP:.3, maxP:1.5} : undefined); if (spots[key].hit) spots[key].hit();
   };
 
   /* --- picking: tap objects in the scene too --- */
@@ -950,7 +1086,7 @@ document.getElementById('goBtn').onclick = () => {
   const canvas = renderer.domElement;
   function pick(e){ const r = canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1, -((e.clientY-r.top)/r.height)*2+1); ray.setFromCamera(ptr, camera); const h = ray.intersectObjects(hitList, false)[0]; return h ? h.object.userData.key : null; }
   canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; if (tween){ camera.position.copy(tween.p1); controls.target.copy(tween.t1); tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } } });
-  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k) openSpot(k); });
+  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k === 'mappaper'){ if (current !== 'songs') openSpot('songs'); flyToMap('wellerman'); } else if (k) openSpot(k); });
   canvas.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const k = pick(e); if (k !== hoverKey){ hoverKey = k; canvas.classList.toggle('hovering', !!k); Object.entries(tags).forEach(([kk,t]) => t.classList.toggle('on', kk === k || kk === current)); } });
 
   /* --- porch TV: YouTube's own player sits over the screen while you're in the parlor --- */
@@ -980,13 +1116,16 @@ document.getElementById('goBtn').onclick = () => {
     if (tween){ const k = Math.min(1, (performance.now()-tween.s)/tween.d), e = k<.5 ? 4*k*k*k : 1 - Math.pow(-2*k+2,3)/2;
       if (tween.curve) camera.position.copy(tween.curve.getPoint(e));
       else camera.position.lerpVectors(tween.p0, tween.p1, e);
-      controls.target.lerpVectors(tween.t0, tween.t1, e); if (k >= 1){ tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } } }
+      controls.target.lerpVectors(tween.t0, tween.t1, e); if (k >= 1){ const dn = tween.done; tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } if (dn) dn(); } }
     controls.update();
     for (const k in spots) if (spots[k].anim) spots[k].anim(t*m);
     for (const c of cats){ c.segs.forEach((s,i) => { s.rotation.y = Math.sin(t*m*2 + c.ph + i*.6)*.35; s.rotation.x = c.curled ? 0 : -.25; }); if (!c.curled) c.head.rotation.y = Math.sin(t*m*.4 + c.ph)*.5; }
     ROOM.steam.forEach(s => { const u = (t*m*.35 + s.userData.ph) % 1; s.position.set(-.06 + Math.sin(u*6 + s.userData.ph*9)*.05, 1.0 + u*.7, 0); s.scale.setScalar(.6 + u*1.6); s.material.opacity = .32*(1-u); });
-    bubbles.forEach(b => { const d = b.userData, u = (t*m*.12 + d.ph) % 1; b.position.set(Math.cos(d.a + t*m*.4)*d.r, .95 + u*1.5, .55 + Math.sin(d.a + t*m*.4)*d.r); b.material.opacity = .85*Math.sin(u*Math.PI); });
+    bubbles.forEach(b => { const d = b.userData, u = (t*m*.12 + d.ph) % 1; b.position.set(Math.cos(d.a + t*m*.4)*d.r, 1.0 + u*1.4, .78 + Math.sin(d.a + t*m*.4)*d.r); b.material.opacity = .85*Math.sin(u*Math.PI); });
     blades.rotation.y = t*m*1.2;
+    { const T = BACK.turkey, u = t*m*.25, x = Math.sin(u)*7, dir = Math.cos(u) > 0 ? 1 : -1;
+      T.tk.position.x = x; T.tk.rotation.y = dir*Math.PI/2; T.tk.position.y = Math.abs(Math.sin(t*m*9))*.05; T.neck.rotation.x = Math.sin(t*m*9)*.2; T.fan.rotation.x = -.2 + Math.sin(t*m*2)*.05;
+      T.fm.position.x = Math.sin(u - .6)*7; T.fm.rotation.y = (Math.cos(u - .6) > 0 ? 1 : -1)*Math.PI/2; T.FB.leg[1].rotation.x = Math.sin(t*m*8)*.6; T.FB.leg[-1].rotation.x = -Math.sin(t*m*8)*.6; T.FB.arm[1].rotation.z = -.3 + Math.sin(t*m*6)*.4; }
     { const P2 = ROOM.pour; let pouring = false;
       if (P2.s > 0){ const T = (performance.now() - P2.s)/1000, sm = (x) => { x = Math.min(1, Math.max(0, x)); return x*x*(3-2*x); };
         let px = P2.baseX, tilt = 0, lift = 0; let prev = P2.baseX;
@@ -1040,7 +1179,7 @@ document.getElementById('goBtn').onclick = () => {
     tags.inside.textContent = inRoom ? 'Parlor TV' : 'Step inside';
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
-      const show = !current ? (!SPOTS[k].room || k === 'inside' || k === 'songs') : inRoom ? !!SPOTS[k].room : current === k;
+      const show = !current ? (!SPOTS[k].room || k === 'inside' || k === 'songs') : inRoom ? (!!SPOTS[k].room || !!SPOTS[k].everywhere) : current === k;
       tg.classList.toggle('hidden', !vis || !show);
       if (vis){ tg.style.left = ((v3.x+1)/2*innerWidth) + 'px'; tg.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     requestAnimationFrame(frame);
