@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Step onto Genell on Banjo's virtual porch: meet the guides, sit on the settee and watch old-time musicians and dancers on the porch TV, and see what's cooking in the kitchen.">
+<meta name="description" content="Step onto Genell on Banjo's virtual porch: meet the guides, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking in the kitchen.">
 <meta property="og:title" content="The Virtual Porch · Genell on Banjo">
 <meta property="og:description" content="Pull up a chair on my virtual porch.">
 <meta property="og:image" content="https://www.genellonbanjo.com/img/virtual-porch.jpg">
@@ -42,6 +42,21 @@ body{background:var(--indigo-0);color:var(--ink);font-family:var(--mono);font-si
 .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.32;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 .grain::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(34,57,122,.55) .8px,transparent 1.3px) 0 0/4px 4px;mix-blend-mode:multiply;opacity:.22}
+.mapview{position:fixed;inset:0;z-index:6;display:grid;place-items:center;background:rgba(7,11,34,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:16px}
+.mapview[hidden]{display:none}
+.mapbox{width:min(1100px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px 20px;position:relative}
+.maphead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.maphead .eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold)}
+.maphead h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);margin:4px 0 6px}
+.maphead h2 em{color:var(--marigold);font-weight:500}
+.mapbox .close{position:static;flex:none;font:inherit;font-size:18px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.mapnote{color:#e9e2f7;margin:0 0 12px;max-width:70ch}
+.mapframe{border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px var(--cream),10px 10px 0 3px var(--marigold);margin-right:10px}
+.mapframe iframe{display:block;width:100%;aspect-ratio:16/9;border:0;min-height:360px;max-height:62vh}
+.mapframe .nomap{padding:40px 24px;text-align:center;color:var(--indigo-0);font-weight:700}
+.maplinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.maplinks .act{flex:1 1 200px}
+@media (max-width:720px){.mapframe iframe{aspect-ratio:3/4;min-height:420px}}
 .outbtn{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;display:none;font:inherit;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--indigo-0);background:var(--marigold);border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 0 0 4px rgba(242,169,59,.25),0 10px 24px -8px rgba(0,0,0,.6)}
 .outbtn:hover{background:var(--cream)}
 .outbtn.show{display:block}
@@ -96,6 +111,8 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 .tier b{font-family:var(--display);font-weight:600;font-size:15px}
 .tier small{display:block;color:var(--muted);font-size:11px}
 .tier i{font-style:normal;color:var(--marigold);font-weight:700;white-space:nowrap}
+.tier.soon{border-style:dashed;opacity:.62}
+.tier.soon i{color:var(--muted);font-weight:400;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
 .card.mini{top:auto;bottom:16px;width:300px}
 .recipe h3{margin:12px 0 4px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold);font-weight:400}
 .recipe ul,.recipe ol{margin:0 0 6px;padding-left:18px;color:#e9e2f7;font-size:12px}
@@ -146,6 +163,14 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 <div class="grain" aria-hidden="true"></div>
 <div id="labels"></div>
 <div id="tv" class="tv" aria-label="Porch TV"></div>
+<div class="mapview" id="mapView" role="dialog" aria-modal="true" aria-labelledby="mapTitle" hidden>
+  <div class="mapbox">
+    <div class="maphead"><div><div class="eyebrow">Song bubble map 01</div><h2 id="mapTitle">The Wellerman, <em>bubble by bubble</em></h2></div><button class="close" id="mapClose" type="button" aria-label="Close the map">×</button></div>
+    <p class="mapnote">Start in the middle: hear me play it, learn it, then follow the threads out to New Zealand shore whaling, the open question of who wrote it, and the song's many versions. Click any bubble to read more and see its sources.</p>
+    <div class="mapframe" id="mapFrame"></div>
+    <div class="maplinks" id="mapLinks"></div>
+  </div>
+</div>
 <button class="outbtn" id="outBtn" type="button">← Back out to the porch</button>
 
 <header class="top">
@@ -193,7 +218,10 @@ const LINKS = {
   jamBudApp: '',       // App Store link for Banjo Jam BUD
   porchBudVideo: '',   // YouTube explainer for Banjo Porch Bud (turn on at launch)
   porchBudApp: '',     // App Store link for Banjo Porch Bud (turn on at launch)
-  wellerman: 'https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view',       // song bubble map links
+  wellerman: 'https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/view',
+  wellermanEmbed: 'https://www.7vortex.com/ecosystems/31adf8a3-8383-435e-89ff-34075a228e6e/embed',
+  wellermanPlay: 'https://www.youtube.com/shorts/Ml6kulACPmQ',
+  wellermanLearn: 'https://www.youtube.com/watch?v=10OMLL_pG2Q',       // song bubble map links
   littleSadie: '',
   shadyGrove: '',
   catHoller: '',       // audio file of the cat holler, e.g. 'audio/cat-holler.m4a'
@@ -213,21 +241,21 @@ const SPOTS = {
   porchbud: {name:'Porch Bud mentor', eyebrow:'Porch swing', title:'Practice with the Porch Bud',
     body:()=>`<p>Have a seat on the swing. When you're ready to go past the jam, I'll help you practice your scales, keep time, and build your own tunes.</p>
       <div class="acts">${act('Watch the explainer', LINKS.porchBudVideo, 'YouTube')}${act('Get Banjo Porch Bud', LINKS.porchBudApp, 'iPhone')}</div>`},
-  chair: {name:'Rocking chair', eyebrow:'Pull up a chair', title:'Join the porch on Patreon',
-    body:()=>`<p>The rocking chair is saved for members. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
+  chair: {name:'Rocking chair', eyebrow:'Pull up a chair', title:'Join the Virtual Porch on Patreon',
+    body:()=>`<p>For full access to this virtual world, become a Patreon member. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
       <div class="tiers">
-        <div class="tier"><div><b>Rocking Chair Regular</b><small>Field dispatches, polls and dev logs</small></div><i>$3/mo</i></div>
-        <div class="tier"><div><b>The Folk Naturalist</b><small>Where old-time music meets the natural world</small></div><i>$8/mo</i></div>
-        <div class="tier"><div><b>The Songster Society</b><small>Monthly live session, about 30 seats</small></div><i>$16/mo</i></div>
+        <div class="tier"><div><b>Rocking Chair Regular</b><small>Song bubble maps, field dispatches, polls and dev logs</small></div><i>$3/mo</i></div>
+        <div class="tier soon"><div><b>The Folk Naturalist</b><small>Where old-time music meets the natural world</small></div><i>Coming soon</i></div>
+        <div class="tier soon"><div><b>The Songster Society</b><small>A monthly live session with a small group</small></div><i>Coming soon</i></div>
       </div>
-      <div class="acts">${act('Pull up a chair on Patreon', LINKS.patreon, 'Patreon', 'warm')}</div>`},
-  songs: {name:'Song keeper', eyebrow:'Parlor table', title:'Follow a song back in time',
-    body:()=>`<p>Every tune has a trail. My song bubble maps follow where a song came from, who carried it, and how it changed along the way, using sourced facts only.</p>
-      <div class="acts">${act('The Wellerman', LINKS.wellerman, 'Free map')}${act('Little Sadie', LINKS.littleSadie || LINKS.patreon, 'Members map')}${act('Shady Grove', LINKS.shadyGrove || LINKS.patreon, 'Members map')}</div>`},
+      <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}</div>`},
+  songs: {name:'Song map table', room:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
+    body:()=>`<p>Every tune has a trail. My song bubble maps follow where a song came from, who carried it, and how it changed along the way, using sourced facts only. Pull up a seat and start with the Wellerman.</p>
+      <div class="acts"><button class="act warm" type="button" id="openMap">Explore the Wellerman<span>Song bubble map</span></button>${act('Little Sadie', LINKS.littleSadie || LINKS.patreon, 'For members')}${act('Shady Grove', LINKS.shadyGrove || LINKS.patreon, 'For members')}</div>`},
   coffee: {name:'Coffee pot', room:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
     body:()=>`<p>There's always a pot on. Take what you need, and if you can, leave a little for the next person.</p>
       <div class="split"><h3>Take some coffee</h3></div>
-      <div class="acts">${act('Banjo Jam BUD app', LINKS.jamBudApp, 'Free')}${act('The Wellerman song map', LINKS.wellerman, 'Free')}${act('Banjo videos on YouTube', LINKS.youtube, 'Free')}${act('Banjo videos on TikTok', LINKS.tiktok, 'Free')}</div>
+      <div class="acts">${act('Banjo Jam BUD app', LINKS.jamBudApp, 'Free')}<button class="act" type="button" data-go="songs">The Wellerman song map<span>Free</span></button>${act('Banjo videos on YouTube', LINKS.youtube, 'Free')}${act('Banjo videos on TikTok', LINKS.tiktok, 'Free')}</div>
       <div class="split"><h3>Leave some coffee</h3></div>
       <div class="acts">${act('Leave some coffee', LINKS.coffee, 'Buy Me a Coffee', 'warm')}</div>`},
   cats: {name:'Porch cats', eyebrow:'On the rail', title:'Here, kitty kitty',
@@ -239,8 +267,8 @@ const SPOTS = {
   inside: {name:'Step inside', room:true, eyebrow:'The parlor', title:'Come on in',
     body:()=>`<p>Make yourself at home. The porch TV plays old-time musicians, dancers and cloggers on a loop. Press play on the TV and sit a while.</p>
       ${!PLAYLIST ? '' : CAN_EMBED ? '' : '<p style="color:var(--muted)">The TV plays on genellonbanjo.com. In this preview it shows a test screen.</p>'}
-      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the settee<span>Watch TV</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
-  couch: {name:'Settee', room:true, eyebrow:'The settee', title:'Have a seat',
+      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
+  couch: {name:'Couch', room:true, eyebrow:'The couch', title:'Have a seat',
     body:()=>`<p>Kick back and watch a while.${PLAYLIST && CAN_EMBED ? ' Press play on the TV.' : ''}</p>
       <div class="acts"><button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
   stove: {name:'Soup on the stove', room:true, eyebrow:'Kitchen stove', title:'What\'s cooking: okra soup',
@@ -256,7 +284,7 @@ const SPOTS = {
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','stove','coffee','jambud','porchbud','chair','songs','banjo','cats'];
+const ORDER = ['inside','couch','songs','stove','coffee','jambud','porchbud','chair','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
@@ -270,18 +298,31 @@ function openSpot(key){
   document.querySelectorAll('.tag').forEach(t => t.classList.toggle('on', t.dataset.k === key));
   const sb = document.getElementById('strumBtn'); if (sb) sb.onclick = onStrum;
   const bo = document.getElementById('backOut'); if (bo) bo.onclick = () => { current = 'inside'; closeCard(); };
+  const om = document.getElementById('openMap'); if (om) om.onclick = openMap;
   cardInner.querySelectorAll('[data-go]').forEach(el => el.onclick = () => openSpot(el.dataset.go));
   const gu = document.getElementById('getUp'); if (gu) gu.onclick = () => openSpot('inside');
   const hb = document.getElementById('hollerBtn'); if (hb) hb.onclick = () => new Audio(LINKS.catHoller).play();
   focusSpot(key);
   if (key === 'banjo') onStrum();
 }
+function openMap(){
+  const mv = document.getElementById('mapView'), fr = document.getElementById('mapFrame');
+  if (!fr.firstChild){
+    if (CAN_EMBED){ const f = document.createElement('iframe'); f.src = LINKS.wellermanEmbed; f.title = 'Interactive history map of the Wellerman'; f.referrerPolicy = 'strict-origin-when-cross-origin'; f.allowFullscreen = true; fr.appendChild(f); }
+    else fr.innerHTML = '<div class="nomap">The map opens right here on genellonbanjo.com. In this preview, open it on 7VORTEX instead.</div>';
+    document.getElementById('mapLinks').innerHTML = act('Watch me play it', LINKS.wellermanPlay, 'YouTube') + act('Learn it with Trent Porter', LINKS.wellermanLearn, 'YouTube') + act('Open the full map', LINKS.wellerman, '7VORTEX') + act('Get more song bubble maps', LINKS.patreon, 'Patreon', 'warm');
+  }
+  mv.hidden = false; document.getElementById('mapClose').focus();
+}
+function closeMap(){ document.getElementById('mapView').hidden = true; const b = document.getElementById('openMap'); if (b) b.focus(); }
 function goOutside(){ current = 'inside'; closeCard(); }
 function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
 document.getElementById('cardClose').onclick = closeCard;
-addEventListener('keydown', e => { if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
 document.getElementById('outBtn').onclick = goOutside;
+document.getElementById('mapClose').onclick = closeMap;
+document.getElementById('mapView').addEventListener('click', e => { if (e.target.id === 'mapView') closeMap(); });
 listBtn.onclick = () => { const o = list.classList.toggle('open'); listBtn.setAttribute('aria-expanded', o); };
 
 /* ===== Sound: a plucked banjo (Karplus-Strong) plus soft crickets ===== */
@@ -549,7 +590,7 @@ document.getElementById('goBtn').onclick = () => {
     rm(tv, new THREE.SphereGeometry(.09,12,6,0,Math.PI*2,0,Math.PI/2), rmat(0x2a2a30), .35, .56 + Hh, -.1);
     for (const s2 of [-1,1]){ const ear = rm(tv, new THREE.CylinderGeometry(.009,.009,.85,4), rmat(0xc0c4cc,{metalness:.7, roughness:.3}), .35 + s2*.2, .56 + Hh + .38, -.1); ear.rotation.z = -s2*.5; rm(tv, new THREE.SphereGeometry(.02,6,4), chrome, .35 + s2*.41, .56 + Hh + .74, -.1); }
     TVDIM = {SW, SH};
-    // wicker settee facing the TV, with cushions and a pink crocheted throw
+    // wicker couch facing the TV, with cushions and a pink crocheted throw
     const st = pivot(P, 2.6, .62, -2.4); st.rotation.y = Math.PI - .12; const wick = rmat(0xb8874a); ROOM.couch = st;
     rm(st, new THREE.BoxGeometry(1.9,.14,.72), wick, 0,.42,0); rm(st, new THREE.BoxGeometry(1.9,.7,.1), wick, 0,.8,-.33).rotation.x = -.1;
     for (const ax of [-.95,.95]) { rm(st, new THREE.BoxGeometry(.1,.38,.72), wick, ax,.62,0); rm(st, new THREE.BoxGeometry(.06,.42,.06), wick, ax,.2,.3); rm(st, new THREE.BoxGeometry(.06,.42,.06), wick, ax,.2,-.3); }
@@ -828,7 +869,7 @@ document.getElementById('goBtn').onclick = () => {
     const cols = [0xe8502e, 0xf2a93b, 0x6f9c86, 0xf3e6c8, 0x8fa7ff];
     for (let i=0;i<9;i++){ const m = new THREE.MeshStandardMaterial({color:cols[i%5], emissive:cols[i%5], emissiveIntensity:.7, transparent:true, opacity:.85, roughness:.2});
       const b = rm(sk, new THREE.SphereGeometry(.06 + (i%3)*.03, 12, 8), m, 0, 1, .55); b.castShadow = false; b.userData = {ph:i/9, r:.15 + (i%4)*.08, a:i*.7}; bubbles.push(b); }
-    register('songs', sk, new THREE.Vector3(-3, 2.55, -.6), [[-2.6,2.0,3.4],[-3,1.5,-1]]);
+    register('songs', sk, new THREE.Vector3(-3, 2.55, -.6), [[-1.05,2.85,-2.55],[-3.15,1.25,-.75]]); spots.songs.inside = true;
     spots.songs.anim = (t) => { halo.rotation.z = t*.2; halo.material.color.setHSL(.1 + Math.sin(t*.5)*.03, .9, .6); B.head.rotation.x = .1 + Math.sin(t*.6)*.1; B.arm[1].rotation.z = -.1 + Math.sin(t*1.4)*.12; };
   }
 
@@ -999,7 +1040,7 @@ document.getElementById('goBtn').onclick = () => {
     tags.inside.textContent = inRoom ? 'Parlor TV' : 'Step inside';
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
-      const show = !current ? (!SPOTS[k].room || k === 'inside') : inRoom ? !!SPOTS[k].room : current === k;
+      const show = !current ? (!SPOTS[k].room || k === 'inside' || k === 'songs') : inRoom ? !!SPOTS[k].room : current === k;
       tg.classList.toggle('hidden', !vis || !show);
       if (vis){ tg.style.left = ((v3.x+1)/2*innerWidth) + 'px'; tg.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     requestAnimationFrame(frame);
