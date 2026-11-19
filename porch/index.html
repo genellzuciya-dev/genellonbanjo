@@ -42,6 +42,12 @@ body{background:var(--indigo-0);color:var(--ink);font-family:var(--mono);font-si
 .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.32;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 .grain::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(34,57,122,.55) .8px,transparent 1.3px) 0 0/4px 4px;mix-blend-mode:multiply;opacity:.22}
+.outbtn{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;display:none;font:inherit;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--indigo-0);background:var(--marigold);border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 0 0 4px rgba(242,169,59,.25),0 10px 24px -8px rgba(0,0,0,.6)}
+.outbtn:hover{background:var(--cream)}
+.outbtn.show{display:block}
+@media (max-width:720px){.outbtn{top:70px;bottom:auto;font-size:11px;padding:9px 14px}}
+.tag.exit{background:var(--poppy);color:var(--ink)}
+.tag.exit::before{background:var(--cream);box-shadow:0 0 8px var(--cream)}
 .tv{position:fixed;z-index:2;display:none;background:#000;border-radius:6px;overflow:hidden}
 .tv iframe{width:100%;height:100%;border:0;display:block}
 #labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
@@ -67,6 +73,7 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 /* the card: right side on desktop, bottom sheet on phones */
 .card{position:fixed;right:16px;top:84px;width:360px;max-height:calc(100% - 100px);overflow-y:auto;background:var(--panel);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:0 0 18px;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform .35s,opacity .35s;z-index:3}
 .card.open{transform:none;opacity:1;pointer-events:auto}
+.card.near{transition:opacity .35s}
 .card .band{height:14px;border-radius:16px 16px 0 0;background:
   radial-gradient(circle at 7px 7px,var(--cream) 2.2px,transparent 2.6px) 0 0/14px 14px,
   linear-gradient(90deg,var(--indigo-2),var(--pink) 55%,var(--marigold));opacity:.95}
@@ -139,6 +146,7 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 <div class="grain" aria-hidden="true"></div>
 <div id="labels"></div>
 <div id="tv" class="tv" aria-label="Porch TV"></div>
+<button class="outbtn" id="outBtn" type="button">← Back out to the porch</button>
 
 <header class="top">
   <div class="brand">
@@ -193,7 +201,7 @@ const LINKS = {
 };
 
 function act(label, url, note, cls=''){
-  if (!url) return `<span class="act soon">${label}<span>${note||'Coming soon'}</span></span>`;
+  if (!url) return `<span class="act soon">${label}<span>Coming soon</span></span>`;
   return `<a class="act ${cls}" href="${url}" target="_blank" rel="noopener">${label}<span>${note||'Open'}</span></a>`;
 }
 
@@ -268,10 +276,12 @@ function openSpot(key){
   focusSpot(key);
   if (key === 'banjo') onStrum();
 }
+function goOutside(){ current = 'inside'; closeCard(); }
 function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
 document.getElementById('cardClose').onclick = closeCard;
 addEventListener('keydown', e => { if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
+document.getElementById('outBtn').onclick = goOutside;
 listBtn.onclick = () => { const o = list.classList.toggle('open'); listBtn.setAttribute('aria-expanded', o); };
 
 /* ===== Sound: a plucked banjo (Karplus-Strong) plus soft crickets ===== */
@@ -302,13 +312,27 @@ function bumDitty(){
 }
 function startCrickets(){
   const ac = audio(); if (!ac || crickets) return;
-  const g = ac.createGain(); g.gain.value = 0; g.connect(master); crickets = g;
-  const chirp = () => { if (!soundOn) return setTimeout(chirp, 1200);
-    const now = ac.currentTime; const o = ac.createOscillator(); o.frequency.value = 4400 + Math.random()*500; const e = ac.createGain(); e.gain.value = 0;
-    o.connect(e).connect(g);
-    for (let i=0;i<3;i++){ e.gain.setValueAtTime(0, now + i*.07); e.gain.linearRampToValueAtTime(.012, now + i*.07 + .015); e.gain.linearRampToValueAtTime(0, now + i*.07 + .05); }
-    o.start(now); o.stop(now + .3); setTimeout(chirp, 900 + Math.random()*2200); };
-  g.gain.linearRampToValueAtTime(1, ac.currentTime + 2); chirp();
+  const g = ac.createGain(); g.gain.value = 0; crickets = g;
+  const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5200; g.connect(lp).connect(master);
+  [{f:4250, period:1.2, pulses:3, pan:-.45, vol:.004}, {f:4480, period:1.7, pulses:4, pan:.5, vol:.0028}].forEach((v,vi) => {
+    const out = ac.createGain(); if (ac.createStereoPanner){ const pn = ac.createStereoPanner(); pn.pan.value = v.pan; out.connect(pn).connect(g); } else out.connect(g);
+    const o = ac.createOscillator(); o.type = 'triangle'; o.frequency.value = v.f; const env = ac.createGain(); env.gain.value = 0; o.connect(env).connect(out); o.start();
+    let next = ac.currentTime + .6 + vi*.45;
+    const schedule = () => { const now = ac.currentTime; if (next < now) next = now + .1;
+      while (next < now + 2){ for (let i=0;i<v.pulses;i++){ const t0 = next + i*.045; env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(v.vol, t0 + .007); env.gain.exponentialRampToValueAtTime(.00001, t0 + .03); env.gain.setValueAtTime(0, t0 + .031); }
+        next += v.period*(.94 + Math.random()*.12); }
+      setTimeout(schedule, 600); };
+    schedule(); });
+  g.gain.linearRampToValueAtTime(1, ac.currentTime + 2);
+}
+function pourSound(dur, delay){
+  const ac = audio(); if (!ac || !soundOn) return;
+  const n = Math.floor(ac.sampleRate*dur), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+  let last = 0; for (let i=0;i<n;i++){ last = last*.6 + (Math.random()*2-1)*.4; d[i] = last*(1 + .5*Math.sin(i/ac.sampleRate*38*Math.PI)); }
+  const src = ac.createBufferSource(); src.buffer = buf; const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 900; bp.Q.value = .9;
+  const e = ac.createGain(); const t0 = ac.currentTime + delay; e.gain.setValueAtTime(0, t0); e.gain.linearRampToValueAtTime(.22, t0 + .08); e.gain.setValueAtTime(.22, t0 + dur - .15); e.gain.linearRampToValueAtTime(0, t0 + dur);
+  bp.frequency.setValueAtTime(700, t0); bp.frequency.linearRampToValueAtTime(1300, t0 + dur); // pitch rises as the cup fills
+  src.connect(bp).connect(e).connect(master); src.start(t0);
 }
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; if (master) master.gain.value = soundOn ? .9 : 0; };
@@ -596,12 +620,19 @@ document.getElementById('goBtn').onclick = () => {
     ROOM.soupSteam = soupSteam; ROOM.flames = flames;
     // coffee pot on the right counter, with two mugs and its own steam
     const kc = pivot(P, -2.0, 1.54 - .645, -5.65); ROOM.coffee = kc;
-    { const pot = pivot(kc, -.06, .645, 0); const enamel = rmat(0x22397a, {roughness:.35, flatShading:false});
+    { const potP = pivot(kc, .07, .645, 0); const pot = pivot(potP, -.13, 0, 0); const enamel = rmat(0x22397a, {roughness:.35, flatShading:false});
       rm(pot, new THREE.CylinderGeometry(.09,.13,.26,14), enamel, 0,.13,0); rm(pot, new THREE.CylinderGeometry(.05,.09,.06,14), enamel, 0,.29,0); rm(pot, new THREE.SphereGeometry(.03,8,6), trim, 0,.34,0);
       const sp = rm(pot, new THREE.CylinderGeometry(.015,.03,.16,6), enamel, .13,.16,0); sp.rotation.z = -.9;
       const hd = rm(pot, new THREE.TorusGeometry(.07,.015,5,10,Math.PI), enamel, -.12,.16,0); hd.rotation.z = Math.PI/2;
       for (let i=0;i<10;i++){ const a = i*2.3; rm(pot, new THREE.SphereGeometry(.012,4,3), trim, Math.cos(a)*.11, .05 + (i%5)*.045, Math.sin(a)*.11); }
-      [[.24,.08,0xe8502e],[.38,-.02,0xf2a93b]].forEach(([x,z,c]) => rm(kc, new THREE.CylinderGeometry(.045,.04,.09,10), rmat(c), x,.69,z));
+      const tip = pivot(pot, .193, .215, 0);
+      const cups = [[.38,.03,0xe8502e],[.58,-.03,0xf2a93b]].map(([x,z,c]) => { const cg = pivot(kc, x, .645, z); const cm = rmat(c, {side:THREE.DoubleSide});
+        rm(cg, new THREE.CylinderGeometry(.047,.04,.09,14,1,true), cm, 0,.045,0); rm(cg, new THREE.CylinderGeometry(.04,.04,.008,14), cm, 0,.004,0);
+        const hdl = rm(cg, new THREE.TorusGeometry(.024,.008,5,10), cm, .055,.048,0); hdl.rotation.y = 0;
+        const fill = rm(cg, new THREE.CylinderGeometry(.043,.043,.006,14), new THREE.MeshStandardMaterial({color:0x3b1f12, roughness:.25}), 0,.01,0); fill.visible = false; fill.castShadow = false;
+        return {x, z, fill}; });
+      const stream = rm(kc, new THREE.CylinderGeometry(.007,.007,1,6), new THREE.MeshStandardMaterial({color:0x4a2a16, roughness:.2, transparent:true, opacity:.9}), 0,0,0); stream.visible = false; stream.castShadow = false;
+      ROOM.pour = {potP, tip, cups, stream, s:-1, baseX:.07};
       ROOM.steam = []; const sm = new THREE.MeshBasicMaterial({color:0xf3e6c8, transparent:true, opacity:.3, depthWrite:false});
       for (let i=0;i<6;i++){ const s3 = rm(kc, new THREE.SphereGeometry(.04,6,4), sm.clone(), -.06, 1, 0); s3.castShadow = false; s3.userData.ph = i/6; ROOM.steam.push(s3); } }
     // open shelves with jars, and herbs drying from a rod
@@ -717,9 +748,17 @@ document.getElementById('goBtn').onclick = () => {
   function register(key, obj, anchor, view){ spots[key] = {obj, anchor, view}; obj.traverse(m => { if (m.isMesh){ m.userData.key = key; hitList.push(m); } }); }
   register('inside', tvScreens.group, new THREE.Vector3(0, 3.2, .35), [[-.8,2.15,-1.8],[2.06,1.75,-5.0]]);
   spots.inside.anchorIn = new THREE.Vector3(2.06, 3.25, -5.2);
+  const exitArrow = pivot(scene, 0, .655, -.85);
+  { const sh = new THREE.Shape(); sh.moveTo(0,.34); sh.lineTo(.26,.06); sh.lineTo(.1,.06); sh.lineTo(.1,-.3); sh.lineTo(-.1,-.3); sh.lineTo(-.1,.06); sh.lineTo(-.26,.06); sh.closePath();
+    const am = new THREE.MeshBasicMaterial({color:0xf2a93b}); const ar = rm(exitArrow, new THREE.ShapeGeometry(sh), am, 0,.005,0); ar.rotation.x = -Math.PI/2; ar.castShadow = false;
+    const ring = rm(exitArrow, new THREE.RingGeometry(.42,.47,40), new THREE.MeshBasicMaterial({color:0xe8502e, transparent:true, opacity:.8}), 0,.004,0); ring.rotation.x = -Math.PI/2; ring.castShadow = false;
+    const pad = rm(exitArrow, new THREE.CircleGeometry(.6,24), new THREE.MeshBasicMaterial({transparent:true, opacity:0, depthWrite:false}), 0,.002,0); pad.rotation.x = -Math.PI/2;
+    exitArrow.traverse(m => { if (m.isMesh){ m.userData.key = 'exit'; hitList.push(m); } });
+    ROOM.exit = {g:exitArrow, ring, am}; }
   register('couch', ROOM.couch, new THREE.Vector3(2.6, 1.95, -2.4), [[2.62,1.72,-2.25],[2.06,1.85,-5.0]]); spots.couch.inside = true; spots.couch.noShift = true;
   register('stove', ROOM.stove, new THREE.Vector3(-3.6, 2.15, -5.4), [[-2.7,2.45,-2.7],[-3.6,1.5,-5.4]]); spots.stove.inside = true;
-  register('coffee', ROOM.coffee, new THREE.Vector3(-2.0, 2.15, -5.6), [[-1.3,2.35,-3.1],[-2.1,1.6,-5.5]]); spots.coffee.inside = true;
+  register('coffee', ROOM.coffee, new THREE.Vector3(-1.85, 2.0, -5.6), [[-1.75,2.3,-3.35],[-1.05,1.55,-5.6]]); spots.coffee.anchorIn = new THREE.Vector3(-1.3, 2.05, -5.6); spots.coffee.inside = true;
+  spots.coffee.hit = () => { const P2 = ROOM.pour; P2.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = .01; }); P2.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); };
   spots.inside.inside = true;
   door.traverse(m => { if (m.isMesh){ m.userData.key = 'inside'; hitList.push(m); } });
 
@@ -834,24 +873,34 @@ document.getElementById('goBtn').onclick = () => {
 
   /* --- tags over each spot --- */
   const labels = document.getElementById('labels'), tags = {};
+  const exitTag = document.createElement('button'); exitTag.type = 'button'; exitTag.className = 'tag exit hidden'; exitTag.textContent = 'Back to the porch'; exitTag.onclick = goOutside; labels.appendChild(exitTag);
   ORDER.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tag'; b.dataset.k = k; b.textContent = SPOTS[k].name; b.onclick = () => openSpot(k); labels.appendChild(b); tags[k] = b; });
 
   /* --- camera moves when a spot opens --- */
   let tween = null;
-  const OUT_LIMITS = {minD:3.5, maxD:mobile ? 28 : 22, minA:-1.1, maxA:1.1}, IN_LIMITS = {minD:1.0, maxD:5.0, minA:-1.3, maxA:1.3};
-  let pendingLimits = null; const setLimits = (L) => { controls.minDistance = L.minD; controls.maxDistance = L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA; };
+  const OUT_LIMITS = {minD:3.5, maxD:mobile ? 28 : 22, minA:-1.1, maxA:1.1}, IN_LIMITS = {look:true};
+  let pendingLimits = null; let looking = false;
+  const setLimits = (L) => {
+    if (L.look){ // stand still and turn: the orbit point sits just in front of the eye
+      const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
+      controls.target.copy(camera.position).addScaledVector(dir, .12);
+      controls.minDistance = controls.maxDistance = .12; controls.minAzimuthAngle = -Infinity; controls.maxAzimuthAngle = Infinity;
+      controls.minPolarAngle = .45; controls.maxPolarAngle = 2.3; controls.enableZoom = false; controls.rotateSpeed = -.45; looking = true; return; }
+    looking = false; controls.enableZoom = true; controls.rotateSpeed = 1;
+    controls.minDistance = L.minD; controls.maxDistance = L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
+    controls.minPolarAngle = L.minP ?? .5; controls.maxPolarAngle = L.maxP ?? 1.5; };
   function flyTo(pos, tgt, limits){
     const crossing = (camera.position.z < 0) !== (pos.z < 0);
-    setLimits({minD:0, maxD:Infinity, minA:-Infinity, maxA:Infinity}); pendingLimits = limits || OUT_LIMITS;
+    setLimits({minD:0, maxD:Infinity, minA:-Infinity, maxA:Infinity, minP:0, maxP:Math.PI}); pendingLimits = limits || OUT_LIMITS;
     const IN_D = new THREE.Vector3(0, 1.8, -1.1), OUT_D = new THREE.Vector3(0, 1.8, 1.9);
     const curve = crossing ? new THREE.CatmullRomCurve3(pos.z < 0 ? [camera.position.clone(), OUT_D, IN_D, pos.clone()] : [camera.position.clone(), IN_D, OUT_D, pos.clone()]) : null;
     tween = {p0:camera.position.clone(), t0:controls.target.clone(), p1:pos.clone(), t1:tgt.clone(), curve, s:performance.now(), d:crossing ? 2100 : 1100}; }
   focusSpot = (key) => {
     if (!key){ flyTo(HOME_POS, HOME_T); return; }
     const v = spots[key].view; const p = new THREE.Vector3(...v[0]), t = new THREE.Vector3(...v[1]);
-    if (spots[key].inside){ if (spots[key].noShift){ if (mobile) t.y += .15; flyTo(p, t, IN_LIMITS); return; } if (!mobile){ const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.7); t.add(side); p.add(side); } else { t.y -= .3; } flyTo(p, t, IN_LIMITS); return; }
+    if (spots[key].inside){ if (mobile && !spots[key].noShift) t.y -= .3; if (mobile && spots[key].noShift) t.y += .15; flyTo(p, t, IN_LIMITS); if (spots[key].hit) spots[key].hit(); return; }
     if (mobile){ p.sub(t).multiplyScalar(1.35).add(t); t.y -= .5; }
-    else { const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.9); t.add(side); p.add(side); } // leave room for the card on the right
+    else { const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.4); t.add(side); p.add(side); } // nudge left; the card sits beside the object
     flyTo(p, t); if (spots[key].hit) spots[key].hit();
   };
 
@@ -860,7 +909,7 @@ document.getElementById('goBtn').onclick = () => {
   const canvas = renderer.domElement;
   function pick(e){ const r = canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1, -((e.clientY-r.top)/r.height)*2+1); ray.setFromCamera(ptr, camera); const h = ray.intersectObjects(hitList, false)[0]; return h ? h.object.userData.key : null; }
   canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; if (tween){ camera.position.copy(tween.p1); controls.target.copy(tween.t1); tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } } });
-  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k) openSpot(k); });
+  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k) openSpot(k); });
   canvas.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const k = pick(e); if (k !== hoverKey){ hoverKey = k; canvas.classList.toggle('hovering', !!k); Object.entries(tags).forEach(([kk,t]) => t.classList.toggle('on', kk === k || kk === current)); } });
 
   /* --- porch TV: YouTube's own player sits over the screen while you're in the parlor --- */
@@ -897,6 +946,22 @@ document.getElementById('goBtn').onclick = () => {
     ROOM.steam.forEach(s => { const u = (t*m*.35 + s.userData.ph) % 1; s.position.set(-.06 + Math.sin(u*6 + s.userData.ph*9)*.05, 1.0 + u*.7, 0); s.scale.setScalar(.6 + u*1.6); s.material.opacity = .32*(1-u); });
     bubbles.forEach(b => { const d = b.userData, u = (t*m*.12 + d.ph) % 1; b.position.set(Math.cos(d.a + t*m*.4)*d.r, .95 + u*1.5, .55 + Math.sin(d.a + t*m*.4)*d.r); b.material.opacity = .85*Math.sin(u*Math.PI); });
     blades.rotation.y = t*m*1.2;
+    { const P2 = ROOM.pour; let pouring = false;
+      if (P2.s > 0){ const T = (performance.now() - P2.s)/1000, sm = (x) => { x = Math.min(1, Math.max(0, x)); return x*x*(3-2*x); };
+        let px = P2.baseX, tilt = 0, lift = 0; let prev = P2.baseX;
+        P2.cups.forEach((c,i) => { const si = i*2.0, tx = c.x - .226;
+          if (T >= si){ px = prev + (tx - prev)*sm((T-si)/.45); }
+          const up = sm((T-si-.15)/.4) - sm((T-si-1.55)/.35); lift = Math.max(lift, up*.12); tilt += -1.05*up;
+          if (T > si + .6 && T < si + 1.5){ pouring = true; c.fill.visible = true; c.fill.position.y = .01 + .068*sm((T-si-.6)/.9); P2.pourCup = c; }
+          prev = tx; });
+        if (T >= 4.0) px = prev + (P2.baseX - prev)*sm((T-4.0)/.45);
+        P2.potP.position.x = px; P2.potP.position.y = .645 + lift; P2.potP.rotation.z = tilt;
+        if (T > 4.6) P2.s = -1; }
+      P2.stream.visible = pouring;
+      if (pouring){ P2.tip.updateMatrixWorld(); const tp = P2.tip.getWorldPosition(new THREE.Vector3()); ROOM.coffee.worldToLocal(tp); const c = P2.pourCup; const bot = .645 + c.fill.position.y;
+        const len = Math.max(.01, tp.y - bot); P2.stream.position.set(tp.x, bot + len/2, c.z); P2.stream.scale.set(1, len, 1); }
+      ROOM.steam.forEach(st => st.visible = P2.s < 0); }
+    ROOM.exit.ring.scale.setScalar(1 + Math.sin(t*m*3)*.08); ROOM.exit.am.color.setHSL(.1, .9, .58 + Math.sin(t*m*3)*.08);
     ROOM.soupSteam.forEach(s => { const u = (t*m*.3 + s.userData.ph) % 1; s.position.set(Math.sin(u*5 + s.userData.ph*11)*.08, .3 + u*.9, Math.cos(u*4 + s.userData.ph*7)*.06); s.scale.setScalar(.6 + u*2.2); s.material.opacity = .3*(1-u); });
     ROOM.flames.forEach((f,i) => { f.scale.y = .8 + Math.sin(t*m*14 + i*1.7)*.3; });
     lanternGlow.forEach((l,i) => l.material.color.setHSL(.1, .95, .7 + Math.sin(t*m*9 + i*3)*.03 + Math.sin(t*m*2.3 + i)*.02));
@@ -909,13 +974,28 @@ document.getElementById('goBtn').onclick = () => {
     tvScreens[0].material.color.setScalar(.9 + Math.sin(t*m*13)*.04 + Math.sin(t*m*3.1)*.04);
     tvScreens.light.color.setHSL((t*m*.07)%1, .6, .6); tvScreens.light.intensity = .55 + Math.sin(t*m*5)*.12;
     const inParlor = (current === 'inside' || current === 'couch') && !tween;
-    if (inParlor && PLAYLIST && CAN_EMBED){ let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; tvScreens[0].updateMatrixWorld();
-      for (const c of corners){ v3.copy(c).applyMatrix4(tvScreens[0].matrixWorld).project(camera); const px = (v3.x+1)/2*innerWidth, py = (1-v3.y)/2*innerHeight; x0 = Math.min(x0,px); x1 = Math.max(x1,px); y0 = Math.min(y0,py); y1 = Math.max(y1,py); }
-      Object.assign(tvEl.style, {left:x0+'px', top:y0+'px', width:(x1-x0)+'px', height:(y1-y0)+'px'}); }
+    if (inParlor && PLAYLIST && CAN_EMBED){ let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, behind = false; tvScreens[0].updateMatrixWorld();
+      for (const c of corners){ v3.copy(c).applyMatrix4(tvScreens[0].matrixWorld).project(camera); if (v3.z > 1 || v3.z < -1) behind = true; const px = (v3.x+1)/2*innerWidth, py = (1-v3.y)/2*innerHeight; x0 = Math.min(x0,px); x1 = Math.max(x1,px); y0 = Math.min(y0,py); y1 = Math.max(y1,py); }
+      // keep playing while you look away, just don't draw the player where the TV isn't
+      const off = behind || x1 < 0 || y1 < 0 || x0 > innerWidth || y0 > innerHeight || (x1-x0) > innerWidth*1.2;
+      tvEl.style.visibility = off ? 'hidden' : 'visible';
+      if (!off) Object.assign(tvEl.style, {left:x0+'px', top:y0+'px', width:(x1-x0)+'px', height:(y1-y0)+'px'}); }
     if (inParlor !== tvShow.on){ tvShow.on = inParlor; tvShow(inParlor); }
     renderer.render(scene, camera);
     // place the tags; hide ones behind the camera or blocked by the house
     const inRoom = current && SPOTS[current].room;
+    document.getElementById('outBtn').classList.toggle('show', !!inRoom && !tween);
+    exitTag.classList.toggle('hidden', !inRoom);
+    if (inRoom){ v3.copy(ROOM.exit.g.position); v3.y += .5; v3.project(camera); const ev = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
+      exitTag.classList.toggle('hidden', !ev); if (ev){ exitTag.style.left = ((v3.x+1)/2*innerWidth) + 'px'; exitTag.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
+    // on wider screens the card sits right beside whatever was tapped
+    if (current && !mobile && !card.classList.contains('mini')){ const sp = spots[current]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
+      if (v3.z < 1 && Math.abs(v3.x) < 1 && Math.abs(v3.y) < 1){ const x = (v3.x+1)/2*innerWidth, y = (1-v3.y)/2*innerHeight, cw = card.offsetWidth, ch = card.offsetHeight;
+        let L = x + 60; if (L + cw > innerWidth - 16) L = x - 60 - cw; L = Math.min(Math.max(16, L), innerWidth - cw - 16);
+        const T2 = Math.min(Math.max(84, y - 40), Math.max(84, innerHeight - ch - 16));
+        card.classList.add('near'); card.style.left = L + 'px'; card.style.right = 'auto'; card.style.top = T2 + 'px'; }
+      else { card.classList.remove('near'); card.style.left = ''; card.style.right = ''; card.style.top = ''; } }
+    else if (card.classList.contains('near')){ card.classList.remove('near'); card.style.left = ''; card.style.right = ''; card.style.top = ''; }
     tags.inside.textContent = inRoom ? 'Parlor TV' : 'Step inside';
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
