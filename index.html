@@ -163,7 +163,7 @@ p{margin:0}
 .roots-mini b{display:block;color:var(--on-vat);font-weight:600}
 @media (max-width:560px){.roots-mini ul{grid-template-columns:1fr}}
 .sample-cols{columns:2;column-gap:clamp(28px,4vw,52px)}
-.sample-cols p{break-inside:avoid;margin:0 0 1em}
+.sample-cols p{margin:0 0 1em}
 .sample .porch-world{margin-bottom:clamp(22px,3vw,34px)}
 .sample .sample-head{margin-top:0;max-width:none}
 .sample .sample-head .sample-cols p{max-width:none}
@@ -551,6 +551,14 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 .pillar:nth-child(3){background:var(--violet);color:var(--undyed);--c:var(--sunshine)}
 .pillar:nth-child(3) svg [fill="#f2a531"]{fill:var(--sunshine)}
 .pillar.nature{--c:var(--sunshine)}
+.glimpse-top .glimpse-head{margin-top:0;max-width:none}
+.glimpse-top .glimpse-head h2{max-width:none}
+.porch-media{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,3vw,36px);align-items:stretch;margin-bottom:clamp(26px,3.5vw,40px)}
+.porch-media .porch-world{margin:0 14px 14px 0;align-self:start}
+.porch-media .porch-world img{display:block;width:100%;height:auto}
+.porch-media .pillar.reimagine{margin:0 8px 14px 0;align-content:center}
+.sample .porch-media + .sample-head, .sample .sample-head{margin-top:0}
+@media (max-width:860px){.porch-media{grid-template-columns:1fr}}
 .glimpse-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
 .glimpse-row .glimpse-head{margin-top:0}
 .pillar.reimagine{background:var(--violet);color:var(--undyed);--c:var(--sunshine);margin-right:8px}
@@ -948,24 +956,25 @@ html,body{overflow-x:clip}
   <div class="patch" aria-hidden="true"></div>
   <section class="band dyed" id="porch" aria-labelledby="glimpse-title">
     <div class="wrap">
-      <div class="glimpse-row">
-        <div class="head porch-head glimpse-head">
+      <div class="glimpse-top">
+          <div class="head porch-head glimpse-head">
           <h2 id="glimpse-title">A glimpse of what's on the <em>Virtual Porch</em></h2>
         </div>
-        <article class="pillar reimagine">
+      </div>
+      <div class="sample" id="porch-world">
+        <div class="porch-media">
+          <a class="porch-world" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
+          <article class="pillar reimagine">
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
           <h3>Immersive Reimagining</h3>
           <p>New digital spaces and virtual tools that connect people to this archive. The Virtual Porch is growing into a whole ecosystem: the Banjo Jam BUD and Porch Bud apps for learning and practice, interactive <a href="/porch/" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song bubble maps</a>, Cultureways recipes from the kitchen, and, coming soon, live events in the backyard.</p>
         </article>
-      </div>
-      <div class="sample" id="porch-world">
-        <a class="porch-world" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
+        </div>
         <div class="head sample-head">
           <p class="eyebrow">The Virtual Porch · Step inside</p>
           <h3 id="porchworld-title">Come sit on the <em>virtual porch.</em></h3>
           <div class="sample-cols">
             <p><b>Why a virtual porch?</b> I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp. You can see more of my art at <a href="https://ilovephotons.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ilovephotons.com</a>.</p>
-            <p>Walk around my virtual porch and meet the folks on it. Rock in the rocking chair, then head inside to explore song bubble maps at the song keeper's table, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking on the stove. And out back, the backyard holds its own secrets and games: storytellers, more history nuggets, a merch blanket from fellow musicians, the corn maze, and soon, live concerts.</p>
           </div>
         </div>
         <div class="song-links">
