@@ -112,8 +112,8 @@ p{margin:0}
 /* ---------- hero ---------- */
 .hero{overflow-x:clip;padding-block:clamp(40px,7vw,96px) clamp(56px,8vw,110px)}
 .hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,5vw,72px);align-items:center}
-.hero h1{font-size:var(--step-4);font-weight:400;letter-spacing:-.02em;margin-top:18px}
-.hero h1 em{font-style:italic;color:var(--marigold);font-weight:400}
+.hero h1,.hero .porch-title{font-size:var(--step-4);font-weight:400;letter-spacing:-.02em;margin-top:18px}
+.hero h1 em,.hero .porch-title em{font-style:italic;color:var(--marigold);font-weight:400}
 .hero .lede{margin-top:24px;max-width:34ch;font-size:var(--step-1);line-height:1.45;color:var(--on-vat-soft)}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .hero .eyebrow{color:var(--sky)}
@@ -425,8 +425,8 @@ p{margin:0}
 .bloom{position:absolute;left:-9%;bottom:-16%;width:38%;z-index:2;pointer-events:none}
 .bloom svg{width:100%;height:auto}
 .moon{display:none}
-.hero h1{font-weight:500}
-.hero h1 em{background:linear-gradient(transparent 62%,rgba(228,83,44,.55) 62%);padding:0 .08em;color:var(--undyed)}
+.hero h1,.hero .porch-title{font-weight:500}
+.hero h1 em,.hero .porch-title em{background:linear-gradient(transparent 62%,rgba(228,83,44,.55) 62%);padding:0 .08em;color:var(--undyed)}
 @media (max-width:860px){.sun{top:-22%;right:-10%}.bloom{left:-4%;bottom:-14%;width:34%}}
 /* story poster */
 .story{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
@@ -494,16 +494,11 @@ p{margin:0}
 .top nav .navlink,.top .brand,.top nav .btn{white-space:nowrap}
 @media (max-width:1060px){.top nav{gap:13px;font-size:.68rem;letter-spacing:.06em}}@media (max-width:930px){.top nav .navlink{display:none}}
 #materiality{scroll-margin-top:110px}
-.hero-porch{display:flex;align-items:center;gap:16px;margin-top:28px;max-width:440px;padding:10px 18px 10px 10px;border-radius:18px;background:rgba(11,20,48,.6);border:1px solid rgba(242,232,210,.24);text-decoration:none;color:var(--on-vat);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
-.hero-porch:hover,.hero-porch:focus-visible{transform:translateY(-2px);border-color:var(--marigold);box-shadow:6px 6px 0 rgba(242,165,49,.55)}
-.hero-porch img{flex:none;width:140px;height:79px;object-fit:cover;border-radius:10px;box-shadow:0 0 0 2px var(--undyed)}
-.hero-porch>span{display:flex;flex-direction:column;gap:3px;min-width:0}
-.hero-porch .hp-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold)}
-.hero-porch .hp-t{font-family:var(--display);font-size:1.22rem;line-height:1.15;color:var(--on-vat)}
-.hero-porch .hp-s{font-size:.86rem;line-height:1.35;color:var(--on-vat-soft)}
-@media (max-width:520px){.hero-porch img{width:104px;height:59px}.hero-porch .hp-t{font-size:1.05rem}}
-.hero-porch.hp-desk{display:none}
-@media (min-width:861px){.hero-porch.hp-mob{display:none}.hero-porch.hp-desk{display:flex;position:absolute;left:0;bottom:calc(100% + 30px);z-index:4;margin:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}}
+.hero h1.hello{font-size:clamp(4.2rem,12vw,10rem);line-height:.95;margin-top:14px}
+.hero .porch-row{margin-top:clamp(56px,7vw,96px)}
+.hero .porch-title{margin-top:12px}
+.hero-porch-big{position:relative}
+.hero-porch-big .tap{position:absolute;left:16px;bottom:16px;font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:#0b1430;background:var(--marigold);padding:8px 14px;border-radius:999px;box-shadow:3px 3px 0 rgba(11,20,48,.55)}
 /* nav: two-line labels with dividers */
 .top nav .navlink{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:2.9em;text-align:center;line-height:1.45}
 .top nav .navlink+.navlink{border-left:1px solid rgba(242,232,210,.3);padding-left:22px}
@@ -517,7 +512,7 @@ p{margin:0}
 --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;background:var(--grain) 0 0/240px 240px;mix-blend-mode:overlay;opacity:.16}
 /* misregistered ink on big type */
-.hero h1,.band h2,.foot h2{text-shadow:.045em .035em 0 rgba(242,112,156,.42),-.03em -.02em 0 rgba(143,214,196,.32)}
+.hero h1,.hero .porch-title,.band h2,.foot h2{text-shadow:.045em .035em 0 rgba(242,112,156,.42),-.03em -.02em 0 rgba(143,214,196,.32)}
 .undyed h2{text-shadow:.04em .03em 0 rgba(242,112,156,.38),-.025em -.02em 0 rgba(122,108,242,.22)}
 /* halftone vignettes on the cream paper sections */
 .undyed{background-color:var(--undyed);background-image:radial-gradient(ellipse 75% 70% at 50% 50%,var(--undyed) 45%,rgba(242,232,210,0) 100%),radial-gradient(rgba(122,108,242,.28) 1.3px,transparent 1.9px);background-size:auto,10px 10px}
@@ -542,7 +537,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 .dyed .songmap{box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--violet)}
 @media (max-width:760px){.hero .frame>img{box-shadow:7px 7px 0 var(--violet),0 20px 40px -16px rgba(0,0,0,.6)}.tier{box-shadow:7px 7px 0 var(--riso-pink)}}
 /* hero headline highlight goes two-tone */
-.hero h1 em{background:linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
+.hero h1 em,.hero .porch-title em{background:linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
 /* riso texture printed onto photos */
 .frame,.tier .art,.pillar.nature figure,.film-art{position:relative}
 .tier .art::after,.pillar.nature figure::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--grain) 0 0/200px 200px;mix-blend-mode:overlay;opacity:.22}
@@ -577,8 +572,8 @@ body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none
  filter:blur(30px) saturate(1.3);animation:slick 38s ease-in-out infinite alternate}
 @keyframes slick{0%{transform:translate(0,0) rotate(0) scale(1)}50%{transform:translate(4%,-3%) rotate(8deg) scale(1.08)}100%{transform:translate(-3%,4%) rotate(-6deg) scale(1.02)}}
 /* iridescent accent words */
-.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{background:var(--holo);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:holoText 14s linear infinite;text-shadow:none}
-.hero h1 em{background-image:var(--holo),linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
+.hero h1 em,.hero .porch-title em,.band h2 em,.foot h2 em,.sample-head h3 em{background:var(--holo);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:holoText 14s linear infinite;text-shadow:none}
+.hero h1 em,.hero .porch-title em{background-image:var(--holo),linear-gradient(transparent 58%,rgba(242,112,156,.55) 58%,rgba(228,83,44,.55) 100%)}
 @keyframes holoText{to{background-position:300% 0}}
 /* holographic foil sweep over cards and photos */
 .pillar,.tier,.film,.hero .frame,.songmap,.pillar.nature figure{position:relative;overflow:hidden}
@@ -605,15 +600,15 @@ body::before{content:"";position:fixed;inset:-20%;z-index:59;pointer-events:none
 .undyed>.wrap{position:relative;z-index:1}
 .undyed .wrap::before{content:"";position:absolute;inset:-60px -40px;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
  background:radial-gradient(45% 40% at 15% 20%,#ffd1ec 0,transparent 70%),radial-gradient(40% 40% at 85% 30%,#c9f3ff 0,transparent 70%),radial-gradient(50% 45% at 50% 90%,#e6ffd6 0,transparent 70%);animation:slick 44s ease-in-out infinite alternate}
-@media (prefers-reduced-motion:reduce){body::before,.pillar::after,.tier::after,.film::after,.songmap::after,.hero .frame::after,.btn-poppy::before,.undyed .wrap::before,.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{animation:none}}
+@media (prefers-reduced-motion:reduce){body::before,.pillar::after,.tier::after,.film::after,.songmap::after,.hero .frame::after,.btn-poppy::before,.undyed .wrap::before,.hero h1 em,.hero .porch-title em,.band h2 em,.foot h2 em,.sample-head h3 em{animation:none}}
 
 /* fix: give italic letters room so the shimmer isn't clipped */
-.hero h1 em,.band h2 em,.foot h2 em,.sample-head h3 em{padding:0 .16em 0 .06em;margin:0 -.1em 0 -.06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero h1 em,.hero .porch-title em,.band h2 em,.foot h2 em,.sample-head h3 em{padding:0 .16em 0 .06em;margin:0 -.1em 0 -.06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 /* fix: on cream sections use deeper jewel-tone shimmer with an ink edge so it never disappears */
 .undyed h2 em,.undyed h3 em{background-image:linear-gradient(115deg,#c2185b 0%,#5b3fd6 20%,#0b7fa6 38%,#1b8a5a 54%,#b0700a 70%,#d1451b 85%,#c2185b 100%);background-size:300% 100%;
  filter:drop-shadow(0 1px 0 rgba(18,28,63,.45)) drop-shadow(0 0 1px rgba(18,28,63,.35))}
 /* a soft dark edge on the dark sections too, for crispness */
-.hero h1 em,.dyed h2 em,.foot h2 em,.dyed .sample-head h3 em{filter:drop-shadow(0 2px 0 rgba(8,14,36,.55))}
+.hero h1 em,.hero .porch-title em,.dyed h2 em,.foot h2 em,.dyed .sample-head h3 em{filter:drop-shadow(0 2px 0 rgba(8,14,36,.55))}
 
 /* bubble map shield + re-centre */
 .songmap{position:relative}
@@ -687,26 +682,27 @@ html,body{overflow-x:clip}
     <div class="wrap">
       <div>
         <p class="eyebrow">Clawhammer banjo · Black old-time tradition</p>
-        <h1 id="hero-title">Welcome to my <em>virtual porch.</em></h1>
+        <h1 id="hero-title" class="hello">Hello.</h1>
         <p class="lede">I'm Genell Zuciya. This is where I share my ongoing learnings, archival discoveries, and musical lineages with you in real time.</p>
         <div class="ctas">
           <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Pull up a chair on Patreon</a>
           <a class="btn btn-line" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">Watch on TikTok</a>
         </div>
-        <a class="hero-porch hp-mob" href="/porch/">
-          <img src="img/virtual-porch.jpg" width="1600" height="900" alt="The 3D Virtual Porch: a teal house at dusk with a banjo player on the steps and cats on the rail.">
-          <span><span class="hp-k">New · Explore in 3D</span><span class="hp-t">Step onto the virtual porch</span><span class="hp-s">Walk around, meet the folks, pour a cup of tea.</span></span>
-        </a>
       </div>
       <figure class="frame" style="margin:0">
         <span class="moon" aria-hidden="true"></span><span class="sun" aria-hidden="true"><svg viewBox="-104 -104 208 208"><g fill="#f2a531"><polygon points="-4,-50 4,-50 0,-102" transform="rotate(0)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(10)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(20)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(30)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(40)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(50)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(60)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(70)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(80)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(90)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(100)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(110)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(120)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(130)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(140)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(150)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(160)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(170)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(180)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(190)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(200)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(210)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(220)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(230)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(240)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(250)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(260)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(270)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(280)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(290)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(300)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(310)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(320)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(330)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(340)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(350)"/></g><circle r="46" fill="#f2a531"/><circle r="36" fill="none" stroke="#e4532c" stroke-width="3" stroke-dasharray="6 5"/><circle r="22" fill="#e4532c"/></svg></span><span class="bloom" aria-hidden="true"><img src="img/geranium.png" width="463" height="520" alt=""></span><span class="perch" aria-hidden="true"><img src="img/swordbill-perch.png" width="502" height="656" alt=""></span>
-        <a class="hero-porch hp-desk" href="/porch/">
-          <img src="img/virtual-porch.jpg" loading="lazy" width="1600" height="900" alt="">
-          <span><span class="hp-k">New · Explore in 3D</span><span class="hp-t">Step onto the virtual porch</span><span class="hp-s">Walk around, meet the folks, pour a cup of tea.</span></span>
-        </a>
         <img src="img/porch-hero.jpg" width="1442" height="805" alt="Genell smiling on a wooden porch with her open-back banjo, a gourd and a fiddle beside her, marigolds and agave in front, mountains and a full moon behind.">
         <figcaption>Roots, lineages and the front porch</figcaption>
       </figure>
+    </div>
+    <div class="wrap porch-row">
+      <div>
+        <p class="eyebrow">New · Explore in 3D</p>
+        <h2 class="porch-title">Welcome to my <em>virtual porch.</em></h2>
+        <p class="lede">Walk around, meet the folks on the porch, pour yourself a cup of tea, and see where they lead.</p>
+        <div class="ctas"><a class="btn btn-poppy" href="/porch/">Step onto the virtual porch</a></div>
+      </div>
+      <a class="porch-world hero-porch-big" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" alt="The 3D Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a banjo player on the front steps and cats on the rail."><span class="tap">Tap to explore</span></a>
     </div>
   </section>
 
