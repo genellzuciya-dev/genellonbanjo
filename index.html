@@ -539,6 +539,12 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;bac
 .pillar:nth-child(3){background:var(--violet);color:var(--undyed);--c:var(--sunshine)}
 .pillar:nth-child(3) svg [fill="#f2a531"]{fill:var(--sunshine)}
 .pillar.nature{--c:var(--sunshine)}
+.glimpse-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.glimpse-row .glimpse-head{margin-top:0}
+.pillar.reimagine{background:var(--violet);color:var(--undyed);--c:var(--sunshine);margin-right:8px}
+.pillar.reimagine svg [fill="#f2a531"]{fill:var(--sunshine)}
+@media (max-width:860px){.glimpse-row{grid-template-columns:1fr}}
+
 .tier{box-shadow:12px 12px 0 var(--riso-pink)}
 .dyed .songmap{box-shadow:0 0 0 3px var(--undyed),14px 14px 0 3px var(--violet)}
 @media (max-width:760px){.hero .frame>img{box-shadow:7px 7px 0 var(--violet),0 20px 40px -16px rgba(0,0,0,.6)}.tier{box-shadow:7px 7px 0 var(--riso-pink)}}
@@ -678,7 +684,7 @@ html,body{overflow-x:clip}
       <a class="navlink" href="#path">About me</a>
       <a class="navlink" href="#porch">About the<br>virtual porch</a>
       <a class="navlink" href="#contact">Events and<br>contact</a>
-      <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Join the porch</a>
+      <a class="btn btn-poppy" href="/porch/">Join the porch</a>
     </nav>
   </div>
 </header>
@@ -691,7 +697,6 @@ html,body{overflow-x:clip}
         <h1 id="hero-title" class="hello">Hello.</h1>
         <p class="lede">I'm Genell Zuciya. This is where I will share my musical journey and archival discoveries with you in real time.</p>
         <div class="ctas">
-          <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Pull up a chair on Patreon</a>
           <a class="btn btn-line" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">Watch on TikTok</a>
         </div>
       </div>
@@ -940,69 +945,28 @@ html,body{overflow-x:clip}
   </section>
 
   <div class="patch" aria-hidden="true"></div>
-  <section class="band dyed" id="porch" aria-labelledby="porch-title">
+  <section class="band dyed" id="porch" aria-labelledby="glimpse-title">
     <div class="wrap">
-      <div class="head porch-head">
-        <h2 id="porch-title">Join the <em>Virtual Porch</em> on Patreon</h2>
-      </div>
-      <div class="pillars">
-        <article class="pillar">
-          <svg viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="22" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="27" cy="27" r="14" fill="none" stroke="#f2e8d2" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="27" cy="27" r="5" fill="#f2a531"/><path d="M27 5v-3M27 52v-3M5 27H2M52 27h-3" stroke="#f2e8d2" stroke-width="2"/></svg>
-          <h3>The Craft &amp; Mechanics</h3>
-          <p>Clawhammer down-stroke playing and historical tunings.</p>
-        </article>
-        <article class="pillar">
-          <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M27 8c9 6 13 15 13 24 0 8-6 14-13 14s-13-6-13-14c0-9 4-18 13-24z" fill="none" stroke="#f2e8d2" stroke-width="2"/><path d="M27 6v-3" stroke="#f2e8d2" stroke-width="2"/><g fill="#f2e8d2"><circle cx="22" cy="28" r="1.8"/><circle cx="32" cy="28" r="1.8"/><circle cx="27" cy="35" r="1.8"/><circle cx="22" cy="40" r="1.8"/><circle cx="32" cy="40" r="1.8"/></g></svg>
-          <h3>The Material Ecology</h3>
-          <p>How traditional gourd and open-back banjos work, and their history and materials.</p>
-        </article>
-        <article class="pillar">
+      <div class="glimpse-row">
+        <div class="head porch-head glimpse-head">
+          <h2 id="glimpse-title">A glimpse of what's on the <em>Virtual Porch</em></h2>
+        </div>
+        <article class="pillar reimagine">
           <svg viewBox="0 0 54 54" aria-hidden="true"><path d="M33 6a21 21 0 1 0 15 30A17 17 0 0 1 33 6z" fill="none" stroke="#f2e8d2" stroke-width="2"/><circle cx="40" cy="14" r="2.2" fill="#f2a531"/><circle cx="46" cy="24" r="1.4" fill="#f2e8d2"/><path d="M12 40h18" stroke="#f2e8d2" stroke-width="2" stroke-dasharray="3 3"/></svg>
           <h3>Immersive Reimagining</h3>
-          <p>New digital spaces and virtual tools that connect people to this archive, like the interactive <a href="/porch/" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song bubble maps</a> on the Virtual Porch.</p>
+          <p>New digital spaces and virtual tools that connect people to this archive. The Virtual Porch is growing into a whole ecosystem: the Banjo Jam BUD and Porch Bud apps for learning and practice, interactive <a href="/porch/" style="color:inherit;text-decoration:underline;text-underline-offset:2px">song bubble maps</a>, Cultureways recipes from the kitchen, and, coming soon, live events in the backyard.</p>
         </article>
-        <article class="pillar nature">
-          <figure><img src="img/sunflower-garden.jpg" width="1200" height="1600" loading="lazy" alt="Genell smiling in her garden in front of tall sunflowers at sunset."><figcaption>In my garden with the sunflowers</figcaption></figure>
-          <div class="txt">
-            <h3>The Natural World</h3>
-            <p>Nature is where I find deep joy and restoration. I hold an MS degree in biomimicry, the practice of learning from how the natural world has solved problems.</p>
-            <p>Many old-time songs are inspired by the natural world: "The Cuckoo," "Shady Grove," "Cluck Old Hen." Wherever I can, I'll tie in lessons from nature.</p>
-            <img class="hens" src="img/cluck-hens.png" width="760" height="355" loading="lazy" alt="Three chickens in riso print colors: a crowing rooster and two hens.">
-          </div>
-        </article>
-      </div>
-
-      <div class="head porch-head glimpse-head">
-        <h2 id="glimpse-title">A glimpse of what's on the <em>Virtual Porch</em></h2>
       </div>
       <div class="sample" id="porch-world">
         <div class="head sample-head">
           <p class="eyebrow">The Virtual Porch · Step inside</p>
           <h3 id="porchworld-title">Come sit on the <em>virtual porch.</em></h3>
-          <p>Walk around my virtual porch and meet the folks on it. Rock in the rocking chair, then head inside to explore song bubble maps at the song keeper's table, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking on the stove.</p>
+          <p><b>Why a virtual porch?</b> I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp. You can see more of my art at <a href="https://ilovephotons.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ilovephotons.com</a>.</p>
+          <p>Walk around my virtual porch and meet the folks on it. Rock in the rocking chair, then head inside to explore song bubble maps at the song keeper's table, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking on the stove. And out back, the backyard holds its own secrets and games: storytellers, more history nuggets, a merch blanket from fellow musicians, the corn maze, and soon, live concerts.</p>
         </div>
         <a class="porch-world" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
         <div class="song-links">
           <a class="btn btn-poppy" href="/porch/">Step onto the virtual porch</a>
-        </div>
-      </div>
-
-      <div class="tier" id="porch-tier">
-        <div class="art"><img src="img/rocking-chair-regular.jpg" width="1536" height="1024" alt="Rocking Chair Regular: a weathered rocking chair with a woven blanket and an open-back banjo on a wooden porch, marigolds, a river and red mountains under a full moon."></div>
-        <div class="info">
-          <p class="eyebrow">$3 tier · Fall soft launch · October to December 2026</p>
-          <h3>Rocking Chair Regular</h3>
-          <p class="price">$3 <small>per month</small></p>
-          <p>Rocking Chair Regulars keep the virtual porch growing. Joining keeps the song bubble maps coming and funds archival research and fieldwork. Each month this fall you'll receive:</p>
-          <ul class="gets">
-            <li><span><b>Song Bubble Maps.</b> Interactive maps like the Wellerman that put each song in context: its people, places, versions and sources.</span></li>
-            <li><span><b>Field Dispatches.</b> Curated historical deep dives, primary source recordings, and research on the instrument's origins and cross-cultural lineages.</span></li>
-            <li><span><b>Community Polls.</b> Direct input on which historical tunes and regional styles we investigate next.</span></li>
-            <li><span><b>Behind-the-Scenes Dev Logs.</b> Early previews and audio tests of what we are building on the Virtual Porch.</span></li>
-          </ul>
-          <p class="season">Instructional tiers and participatory clinics open in January 2027.</p>
-          <div><a class="btn btn-ink" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Become a Rocking Chair Regular</a></div>
-          <p class="coffee-note">Not ready for a monthly? <a href="https://buymeacoffee.com/genellonbanjo" target="_blank" rel="noopener">Buy me a coffee</a> instead. Every cup helps keep the research going.</p>
         </div>
       </div>
 
