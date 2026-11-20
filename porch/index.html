@@ -135,7 +135,10 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
 .tier i{font-style:normal;color:var(--marigold);font-weight:700;white-space:nowrap}
 .tier.soon{border-style:dashed;opacity:.62}
 .tier.soon i{color:var(--muted);font-weight:400;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
-.card.mini{top:auto;bottom:16px;width:300px}
+.card.mini{top:auto;bottom:16px;width:300px;left:16px;right:auto}
+.sipnote{margin:14px 0 18px;padding:11px 12px;border-radius:10px;background:var(--marigold);color:var(--indigo-0);font-weight:700;text-align:center;letter-spacing:.08em;text-transform:uppercase;font-size:12px;animation:sipBlink 1.1s ease-in-out infinite}
+@keyframes sipBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.97)}}
+@media (prefers-reduced-motion:reduce){.sipnote{animation:none}}
 .recipe h3{margin:12px 0 4px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold);font-weight:400}
 .recipe ul,.recipe ol{margin:0 0 6px;padding-left:18px;color:#e9e2f7;font-size:12px}
 .recipe li{margin:3px 0}
@@ -331,12 +334,9 @@ const SPOTS = {
     body:()=>`<p>My grandfather used to say I was gone like a turkey through the corn. Out back, past the back porch, there's a corn maze where you help a turkey outrun the farmer.</p>
       <p>Help the turkey slip past the two farmers and out the far side of the field. Every field you clear gets bigger, and the farmers get quicker.</p>
       <div class="acts">${MEMBER ? '<button class="act warm" type="button" id="mazeBtn">Play the corn maze<span>Start</span></button>' : act('Play the corn maze', '', '') + act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
-  coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
-    body:()=>`<p>There's always a pot on. Take what you need, and if you can, leave a little for the next person.</p>
-      <div class="split"><h3>Take some coffee</h3></div>
-      <div class="acts"><button class="act" type="button" id="pourBtn">Pour me a cup<span>Then tap a mug to drink</span></button></div>
-      <div class="split"><h3>Leave some coffee</h3></div>
-      <div class="acts">${act('Leave some coffee', LINKS.coffee, 'Buy Me a Coffee', 'warm')}</div>`},
+  coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Have a cup of coffee',
+    body:()=>`<p>There's always a pot on. I poured you a cup, and one for whoever pulls up a chair next.</p>
+      <div class="acts"><button class="act" type="button" id="pourBtn">Pour another round<span>Coffee</span></button></div>`},
   tea: {name:'Tea table', eyebrow:'Side table', title:'Have a cup of tea',
     body:()=>`<p>There's a pot of tea by the rocking chair. Pour yourself a cup and stay a while. It's on the house.</p>
       <div class="acts"><button class="act warm" type="button" id="teaBtn">Pour me a cup of tea<span>Then tap a cup to sip</span></button></div>`},
@@ -384,6 +384,7 @@ const card = document.getElementById('card'), cardInner = document.getElementByI
 const list = document.getElementById('list'), listBtn = document.getElementById('listBtn');
 document.getElementById('homeLink').href = LINKS.site + '/#porch'; document.getElementById('fbHome').href = LINKS.site;
 let current = null, focusSpot = () => {}, onStrum = () => {}, meowCats = () => {};
+function sipNote(key, ms){ cardInner.querySelectorAll('.sipnote').forEach(n => n.remove()); clearTimeout(sipNote.t); sipNote.t = setTimeout(() => { if (current === key && !cardInner.querySelector('.sipnote')) cardInner.insertAdjacentHTML('beforeend', '<div class="sipnote" role="status">Tap a cup to sip</div>'); }, ms); }
 function openSpot(key){
   const lock = LOCKED(key), s = lock ? lockedCard(key) : SPOTS[key]; current = key;
   cardInner.innerHTML = `<div class="eyebrow">${s.eyebrow}</div><h2>${s.title}</h2>${s.body()}`;
@@ -836,7 +837,7 @@ document.getElementById('goBtn').onclick = () => {
   }
   // house sides and back (simple box behind the wall)
   rm(H, new THREE.BoxGeometry(WT, top-.6, 6.2), clap, -6.2, (top+.6)/2, -3.1); rm(H, new THREE.BoxGeometry(WT, top-.6, 6.2), clap, 6.2, (top+.6)/2, -3.1);
-  rm(H, new THREE.BoxGeometry(12.4, top-.6, WT), clap, 0, (top+.6)/2, -6.2);
+  rm(H, new THREE.BoxGeometry(5.3, top-.6, WT), clap, -3.55, (top+.6)/2, -6.2); rm(H, new THREE.BoxGeometry(6.1, top-.6, WT), clap, 3.15, (top+.6)/2, -6.2); rm(H, new THREE.BoxGeometry(1.0, top-2.86, WT), clap, -.4, (top+2.86)/2, -6.2); // back wall with the back door opening x[-.9,.1]
   rm(H, new THREE.BoxGeometry(12.4, .6, 6.2), woodDark, 0, .3, -3.1);
   // parlor: a full room behind the front wall, seen through the window and the screen door
   const tvScreens = []; let TVDIM = {SW:.88, SH:.66}; const ROOM = {};
@@ -849,10 +850,11 @@ document.getElementById('goBtn').onclick = () => {
     const wpT = new THREE.CanvasTexture(wp); wpT.wrapS = wpT.wrapT = THREE.RepeatWrapping; wpT.repeat.set(20, 6.4);
     const paper = new THREE.MeshStandardMaterial({map:wpT, roughness:.95, emissive:0x0a0204});
     const wallIn = (w2,h2,x,y,z,ry) => { const m = rm(P, new THREE.PlaneGeometry(w2,h2), paper, x,y,z); m.rotation.y = ry; m.castShadow = false; return m; };
-    wallIn(12.1, 3.85, 0, 2.53, -6.08, 0); wallIn(6, 3.85, -6.08, 2.53, -3.05, Math.PI/2); wallIn(6, 3.85, 6.08, 2.53, -3.05, -Math.PI/2);
+    { const piece = (w2, h2, x, y) => { const t = wpT.clone(); t.needsUpdate = true; t.repeat.set(20*w2/12.1, 6.4*h2/3.85); const m = rm(P, new THREE.PlaneGeometry(w2, h2), new THREE.MeshStandardMaterial({map:t, roughness:.95, emissive:0x0a0204}), x, y, -6.08); m.castShadow = false; };
+      piece(5.15, 3.85, -3.475, 2.53); piece(5.95, 3.85, 3.075, 2.53); piece(1.0, 1.595, -.4, 3.6575); } wallIn(6, 3.85, -6.08, 2.53, -3.05, Math.PI/2); wallIn(6, 3.85, 6.08, 2.53, -3.05, -Math.PI/2);
     const wains = rmat(0x3b2418);
-    rm(P, new THREE.BoxGeometry(12.1, .9, .04), wains, 0, 1.07, -6.05); rm(P, new THREE.BoxGeometry(.04, .9, 6), wains, -6.05, 1.07, -3.05); rm(P, new THREE.BoxGeometry(.04, .9, 6), wains, 6.05, 1.07, -3.05);
-    rm(P, new THREE.BoxGeometry(12.1, .06, .07), rmat(0xf2a93b), 0, 1.54, -6.03);
+    rm(P, new THREE.BoxGeometry(5.15, .9, .04), wains, -3.475, 1.07, -6.05); rm(P, new THREE.BoxGeometry(5.95, .9, .04), wains, 3.075, 1.07, -6.05); rm(P, new THREE.BoxGeometry(.04, .9, 6), wains, -6.05, 1.07, -3.05); rm(P, new THREE.BoxGeometry(.04, .9, 6), wains, 6.05, 1.07, -3.05);
+    rm(P, new THREE.BoxGeometry(5.15, .06, .07), rmat(0xf2a93b), -3.475, 1.54, -6.03); rm(P, new THREE.BoxGeometry(5.95, .06, .07), rmat(0xf2a93b), 3.075, 1.54, -6.03);
     // floor planks and a pressed-tin ceiling
     rm(P, new THREE.BoxGeometry(12.1, .04, 6.0), rmat(0x7a4a2e), 0, .62, -3.05).castShadow = false;
     for (let x=-5.9; x<6; x+=.42) rm(P, new THREE.BoxGeometry(.012, .01, 6), rmat(0x5a341e), x, .645, -3.05).castShadow = false;
@@ -886,7 +888,10 @@ document.getElementById('goBtn').onclick = () => {
     const px0 = .7;
     ROOM.dials = []; [[cy + .32, .13, 1],[cy - .02, .11, -1]].forEach(([ky, kr, dir]) => { const dg = pivot(tv, px0, ky, D/2 + .03); const k = rm(dg, new THREE.CylinderGeometry(kr, kr, .06, 18), creamE, 0, 0, 0); k.rotation.x = Math.PI/2;
       rm(dg, new THREE.BoxGeometry(.02, kr*1.4, .02), rmat(0x6e1f2a), 0, 0, .035); dg.userData = {dir, spin:0}; ROOM.dials.push(dg); for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; rm(tv, new THREE.BoxGeometry(.012,.012,.02), walnut, px0 + Math.cos(a)*(kr+.02), ky + Math.sin(a)*(kr+.02), D/2 + .01); } });
-    rm(tv, new THREE.BoxGeometry(.34, .02, .02), chrome, px0, cy - .2, D/2 + .01);
+    { const lab = (txt, y) => { const c = document.createElement('canvas'); c.width = 256; c.height = 48; const x = c.getContext('2d'); x.fillStyle = '#2b1a10'; x.font = 'bold 30px monospace'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt, 128, 26);
+        const t = new THREE.CanvasTexture(c); const m = rm(tv, new THREE.PlaneGeometry(.3, .056), new THREE.MeshBasicMaterial({map:t, transparent:true}), px0, y, D/2 + .012); m.castShadow = false; };
+      lab('GO FORWARD', cy + .5); lab('GO BACK', cy - .165); }
+    rm(tv, new THREE.BoxGeometry(.34, .02, .02), chrome, px0, cy - .215, D/2 + .01);
     for (let i=0;i<6;i++) rm(tv, new THREE.BoxGeometry(.3, .018, .02), rmat(0x2b1a10), px0, cy - .28 - i*.055, D/2 + .005);
     rm(tv, new THREE.BoxGeometry(W*.98, .03, .02), chrome, 0, .58, D/2 + .01);
     // rabbit ears
@@ -901,10 +906,10 @@ document.getElementById('goBtn').onclick = () => {
     rm(st, new THREE.BoxGeometry(.4,.32,.12), rmat(0xf2a93b), -.6,.74,-.2).rotation.x = -.28;
     const throwB = rm(st, new THREE.BoxGeometry(.5,.05,.5), rmat(0xff6fa8), .62,.625,.06); throwB.rotation.y = .1;
     // floor lamp with a fringed shade
-    const lp = pivot(P, 3.9, .62, -3.4); rm(lp, new THREE.CylinderGeometry(.16,.18,.04,12), rmat(0x2a2a30), 0,.02,0); rm(lp, new THREE.CylinderGeometry(.015,.015,1.6,6), rmat(0x9a7a3a,{metalness:.6}), 0,.8,0);
+    const lp = pivot(P, 5.55, .62, -5.55); rm(lp, new THREE.CylinderGeometry(.16,.18,.04,12), rmat(0x2a2a30), 0,.02,0); rm(lp, new THREE.CylinderGeometry(.015,.015,1.6,6), rmat(0x9a7a3a,{metalness:.6}), 0,.8,0);
     rm(lp, new THREE.CylinderGeometry(.18,.3,.32,10,1,true), new THREE.MeshStandardMaterial({color:0xf2a93b, emissive:0xf2a93b, emissiveIntensity:.8, side:THREE.DoubleSide}), 0,1.66,0);
     for (let i=0;i<16;i++){ const a = i/16*Math.PI*2; rm(lp, new THREE.BoxGeometry(.01,.08,.01), rmat(0xe8502e), Math.cos(a)*.3, 1.46, Math.sin(a)*.3).castShadow = false; }
-    const lampL = new THREE.PointLight(0xffb060, .9, 6, 1.6); lampL.position.set(3.9, 2.0, -3.4); scene.add(lampL);
+    const lampL = new THREE.PointLight(0xffb060, .9, 6, 1.6); lampL.position.set(5.55, 2.0, -5.55); scene.add(lampL);
     // rug, plants and a banjo on a stand
     const rc = document.createElement('canvas'); rc.width = 256; rc.height = 192; const rx = rc.getContext('2d');
     rx.fillStyle = '#f2a93b'; rx.fillRect(0,0,256,192); rx.fillStyle = '#6e1f2a'; rx.fillRect(10,10,236,172); rx.fillStyle = '#ff6fa8';
@@ -1139,15 +1144,16 @@ document.getElementById('goBtn').onclick = () => {
   const BACK = {};
   { // kitchen back door with a sign
     const bd = pivot(scene, -.4, .62, -6.02); const ox = rmat(0x6e1f2a);
-    rm(bd, new THREE.BoxGeometry(1.14, 2.36, .06), rmat(0xf3e6c8), 0, 1.18, 0); rm(bd, new THREE.BoxGeometry(1.0, 2.24, .08), ox, 0, 1.12, .01);
+    const trimM = rmat(0xf3e6c8); for (const sx of [-.535,.535]) rm(bd, new THREE.BoxGeometry(.07, 2.36, .06), trimM, sx, 1.18, 0); rm(bd, new THREE.BoxGeometry(1.14, .07, .06), trimM, 0, 2.325, 0);
+    const hinge = pivot(bd, -.5, 0, .01); const leaf = pivot(hinge, .5, 0, 0); rm(leaf, new THREE.BoxGeometry(1.0, 2.24, .08), ox, 0, 1.12, 0);
     const wc = document.createElement('canvas'); wc.width = 128; wc.height = 160; const w = wc.getContext('2d');
     const gr = w.createLinearGradient(0,0,0,160); gr.addColorStop(0,'#2a2458'); gr.addColorStop(.55,'#e86a5a'); gr.addColorStop(1,'#f2a93b'); w.fillStyle = gr; w.fillRect(0,0,128,160);
     w.fillStyle = '#c9a03a'; for (let i=0;i<14;i++){ const x = 6 + i*9; w.fillRect(x, 92 - (i%3)*6, 3, 70); w.beginPath(); w.ellipse(x+1, 90 - (i%3)*6, 4, 9, 0, 0, 7); w.fill(); }
-    rm(bd, new THREE.PlaneGeometry(.6, .78), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(wc)}), 0, 1.66, .055).castShadow = false;
-    const sc = document.createElement('canvas'); sc.width = 256; sc.height = 96; const sx2 = sc.getContext('2d'); sx2.fillStyle = '#ff6fa8'; sx2.fillRect(0,0,256,96); sx2.fillStyle = '#101a46'; sx2.font = 'bold 34px Georgia'; sx2.textAlign = 'center'; sx2.fillText('Back porch', 128, 44); sx2.font = '22px monospace'; sx2.fillText('MEMBERS', 128, 78);
-    rm(bd, new THREE.PlaneGeometry(.62, .24), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc)}), 0, .98, .055).castShadow = false;
-    rm(bd, new THREE.SphereGeometry(.04,8,6), rmat(0xd8dce4,{metalness:.8}), .38, 1.05, .07);
-    BACK.door = bd; }
+    rm(leaf, new THREE.PlaneGeometry(.6, .78), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(wc)}), 0, 1.66, .045).castShadow = false;
+    const sc = document.createElement('canvas'); sc.width = 256; sc.height = 96; const sx2 = sc.getContext('2d'); sx2.fillStyle = '#ff6fa8'; sx2.fillRect(0,0,256,96); sx2.fillStyle = '#101a46'; sx2.font = 'bold 34px Georgia'; sx2.textAlign = 'center'; sx2.textBaseline = 'middle'; sx2.font = 'bold 40px Georgia'; sx2.fillText('Back porch', 128, 50);
+    rm(leaf, new THREE.PlaneGeometry(.62, .24), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc)}), 0, .98, .045).castShadow = false;
+    rm(leaf, new THREE.SphereGeometry(.04,8,6), rmat(0xd8dce4,{metalness:.8}), .38, 1.05, .06);
+    BACK.door = bd; BACK.hinge = hinge; BACK.doorK = 0; BACK.doorTo = 0; }
   { // the back porch
     const bp = pivot(scene, 0, 0, 0); const deck = rmat(0x9fb4ae), post = rmat(0x1f3f8a), tr = rmat(0xf3e6c8);
     rm(bp, new THREE.BoxGeometry(9, .6, 2.6), rmat(0x7e958f), 0, .3, -7.55);
@@ -1163,7 +1169,7 @@ document.getElementById('goBtn').onclick = () => {
     const q = rm(bp, new THREE.BoxGeometry(1.2, .7, .03), rmat(0xff6fa8), 2.75, 1.25, -8.72); q.rotation.x = .08;
     BACK.porch = bp;
     // back door seen from outside
-    const od = pivot(scene, -.4, .62, -6.3); rm(od, new THREE.BoxGeometry(1.0, 2.24, .06), rmat(0x6e1f2a), 0, 1.12, 0); rm(od, new THREE.PlaneGeometry(.6,.78), new THREE.MeshBasicMaterial({color:0xffc27a}), 0, 1.66, -.035).rotation.y = Math.PI; }
+    const od = pivot(scene, -.4, .62, -6.3); BACK.outDoor = od; rm(od, new THREE.BoxGeometry(1.0, 2.24, .06), rmat(0x6e1f2a), 0, 1.12, 0); rm(od, new THREE.PlaneGeometry(.6,.78), new THREE.MeshBasicMaterial({color:0xffc27a}), 0, 1.66, -.035).rotation.y = Math.PI; }
   { // the cornfield, with a path cut into it from the back steps
     const mob = matchMedia('(max-width:720px)').matches, step = mob ? 1.15 : .8; const pts = [];
     for (let z = -11; z > -34; z -= step) for (let x = -26; x < 26; x += step){ const jx = x + (Math.random()-.5)*.3, jz = z + (Math.random()-.5)*.3; if (Math.abs(jx) < 1.1 && jz > -20) continue; if (Math.abs(jz + 20) < .9 && Math.abs(jx) < 9) continue; pts.push([jx, jz, 1.9 + Math.random()*.8]); }
@@ -1336,6 +1342,38 @@ document.getElementById('goBtn').onclick = () => {
     }
   }
 
+  /* --- free-roaming yard animals: a dog and two chickens on a slow loop around the house, front yard to backyard --- */
+  { const loop = new THREE.CatmullRomCurve3([[0,5.6],[5.6,5.2],[7.1,2.5],[7.0,0],[6.9,-5.9],[5.5,-7.6],[5.4,-9.5],[4.5,-10.0],[0,-10.0],[-4.5,-10.0],[-5.4,-9.5],[-5.5,-7.6],[-6.9,-5.9],[-7.0,0],[-7.1,2.5],[-5.6,5.2]].map(([x,z]) => new THREE.Vector3(x, 0, z)), true);
+    const dogM = rmat(0xb5763a), dogD = rmat(0x5a3420), dogL = rmat(0xf3e6c8), blk = rmat(0x111111);
+    const dog = pivot(scene); const dB = pivot(dog, 0, 0, 0);
+    { const b = rm(dB, new THREE.BoxGeometry(.26,.24,.62), dogM, 0,.44,0); rm(dB, new THREE.BoxGeometry(.2,.14,.3), dogL, 0,.36,.12);
+      const hd = pivot(dB, 0, .6, .34); rm(hd, new THREE.BoxGeometry(.2,.19,.22), dogM, 0,0,.02); rm(hd, new THREE.BoxGeometry(.12,.1,.15), dogL, 0,-.04,.17); rm(hd, new THREE.SphereGeometry(.03,6,4), blk, 0,-.01,.25);
+      for (const s of [-1,1]){ const er = rm(hd, new THREE.BoxGeometry(.05,.15,.08), dogD, s*.115,-.02,-.01); er.rotation.z = s*.25; rm(hd, new THREE.SphereGeometry(.018,5,4), blk, s*.05,.04,.12); }
+      dog.userData.head = hd;
+      const legs = []; for (const [lx,lz] of [[-.09,.22],[.09,.22],[-.09,-.22],[.09,-.22]]){ const lg = pivot(dB, lx, .34, lz); rm(lg, new THREE.CylinderGeometry(.035,.03,.34,5), dogM, 0,-.17,0); rm(lg, new THREE.BoxGeometry(.06,.04,.08), dogL, 0,-.33,.02); legs.push(lg); }
+      const tl = pivot(dB, 0, .52, -.3); const tm = rm(tl, new THREE.CylinderGeometry(.025,.015,.26,5), dogM, 0,.12,0); tl.rotation.x = -.7;
+      dog.userData.legs = legs; dog.userData.tail = tl; }
+    const chicken = (col) => { const c = pivot(scene); const m = rmat(col), red = rmat(0xd8352a), yel = rmat(0xf2a93b);
+      const b = rm(c, new THREE.SphereGeometry(.13,9,7), m, 0,.27,0); b.scale.set(.85,.9,1.25);
+      const tl = rm(c, new THREE.ConeGeometry(.08,.18,5), m, 0,.38,-.14); tl.rotation.x = -.6;
+      const hd = pivot(c, 0, .37, .12); rm(hd, new THREE.SphereGeometry(.065,8,6), m, 0,.04,0); rm(hd, new THREE.ConeGeometry(.02,.06,4), yel, 0,.03,.08).rotation.x = Math.PI/2;
+      for (let i=0;i<3;i++) rm(hd, new THREE.BoxGeometry(.012,.04 - Math.abs(i-1)*.01,.03), red, 0,.11,-.02 + i*.025); rm(hd, new THREE.SphereGeometry(.018,5,4), red, 0,-.01,.06);
+      for (const s of [-1,1]) rm(hd, new THREE.SphereGeometry(.01,4,3), blk, s*.05,.06,.04);
+      const legs = []; for (const s of [-1,1]){ const lg = pivot(c, s*.045, .16, 0); rm(lg, new THREE.CylinderGeometry(.01,.01,.16,4), yel, 0,-.08,0); rm(lg, new THREE.BoxGeometry(.05,.01,.06), yel, 0,-.16,.02); legs.push(lg); }
+      c.userData = {head:hd, legs}; return c; };
+    const hens = [{g:chicken(0xf3e6c8), u:.3, per:150, off:.55, ph:0}, {g:chicken(0x8a4a24), u:.36, per:175, off:.95, ph:2.1}];
+    const place = (g, u, off, bob) => { const p = loop.getPointAt(u), tg = loop.getTangentAt(u); g.position.set(p.x - tg.z*off, bob, p.z + tg.x*off); g.rotation.y = Math.atan2(tg.x, tg.z); };
+    let lastT = null;
+    YARD.roam = (t) => { const dt = lastT === null ? 0 : Math.min(.1, Math.max(0, t - lastT)); lastT = t;
+      // the dog trots the whole loop in about 70 seconds
+      const du = (t/70) % 1; place(dog, du, 0, 0); const D = dog.userData, w = Math.sin(t*9);
+      D.legs.forEach((lg,i) => { lg.rotation.x = (i === 0 || i === 3 ? w : -w)*.55; }); dB.position.y = Math.abs(Math.sin(t*9))*.025; D.tail.rotation.z = Math.sin(t*14)*.5; D.head.rotation.y = Math.sin(t*.7)*.25;
+      // the hens wander: walk a little, stop to peck, walk again
+      for (const h of hens){ const s = Math.max(0, .9 + Math.cos(t*.8 + h.ph)*1.1); h.u = (h.u + dt*s/h.per) % 1; place(h.g, h.u, h.off, 0);
+        const U = h.g.userData, walking = s > .25; U.legs.forEach((lg,i) => { lg.rotation.x = walking ? Math.sin(t*12 + i*Math.PI)*.5 : 0; });
+        U.head.rotation.x = walking ? Math.sin(t*12)*.12 : (Math.sin(t*7 + h.ph) > .2 ? 1.0 : .2); U.head.position.z = walking ? .12 + Math.sin(t*12)*.02 : .12; } };
+  }
+
   const spots = {}; // key -> {obj, anchor (Vector3 in world for tag), view: [camPos, target]}
   const hitList = [];
   function register(key, obj, anchor, view){ spots[key] = {obj, anchor, view}; obj.traverse(m => { if (m.isMesh){ m.userData.key = key; hitList.push(m); } }); }
@@ -1346,7 +1384,7 @@ document.getElementById('goBtn').onclick = () => {
   register('corn', BACK.turkey.tk, new THREE.Vector3(7.6, 3.0, -11), [[11.5,4.4,-5.5],[0,1.2,-12.5]]); spots.corn.wide = true;
   BACK.turkey.fm.traverse(m => { if (m.isMesh){ m.userData.key = 'corn'; hitList.push(m); } }); BACK.field.userData.key = 'corn'; hitList.push(BACK.field);
   register('market', YARD.market, new THREE.Vector3(8.5, 2.95, -8.6), [[8.4,4.5,-12.6],[8.5,.9,-8.5]]); spots.market.wide = true; spots.market.anim = YARD.marketAnim;
-  register('indigo', YARD.indigo, new THREE.Vector3(-7.8, 2.6, -8.6), [[-7.6,4.4,-12.6],[-7.8,.9,-8.4]]); spots.indigo.wide = true; spots.indigo.anim = YARD.indigoAnim;
+  register('indigo', YARD.indigo, new THREE.Vector3(-7.8, 2.6, -8.6), [[-7.6,4.4,-12.6],[-7.8,.9,-8.4]]); spots.indigo.wide = true; spots.indigo.cardAt = new THREE.Vector3(-9.5, 2.5, -8.6); spots.indigo.anim = YARD.indigoAnim;
   register('braids', YARD.braids, new THREE.Vector3(1.7, 2.35, -7.5), [[3.6,3.9,-12.8],[1.6,1.1,-7.4]]); spots.braids.wide = true; spots.braids.anim = YARD.braidAnim;
   const exitArrow = pivot(scene, 0, .655, -.85);
   { const sh = new THREE.Shape(); sh.moveTo(0,.34); sh.lineTo(.26,.06); sh.lineTo(.1,.06); sh.lineTo(.1,-.3); sh.lineTo(-.1,-.3); sh.lineTo(-.1,.06); sh.lineTo(-.26,.06); sh.closePath();
@@ -1355,15 +1393,15 @@ document.getElementById('goBtn').onclick = () => {
     const pad = rm(exitArrow, new THREE.CircleGeometry(.6,24), new THREE.MeshBasicMaterial({transparent:true, opacity:0, depthWrite:false}), 0,.002,0); pad.rotation.x = -Math.PI/2;
     exitArrow.traverse(m => { if (m.isMesh){ m.userData.key = 'exit'; hitList.push(m); } });
     ROOM.exit = {g:exitArrow, ring, am}; }
-  register('musicwall', ROOM.musicwall, new THREE.Vector3(3.35, 3.85, -.3), [[3.35,2.3,-4.6],[3.35,2.5,-.1]]); spots.musicwall.inside = true;
+  register('musicwall', ROOM.musicwall, new THREE.Vector3(3.35, 3.85, -.3), [[3.35,2.5,-3.9],[3.35,2.25,-.1]]); spots.musicwall.inside = true; spots.musicwall.cardMode = 'bottom';
   register('couch', ROOM.couch, new THREE.Vector3(2.6, 1.95, -2.4), [[2.62,1.72,-2.25],[2.06,1.85,-5.0]]); spots.couch.inside = true; spots.couch.noShift = true;
   register('stove', ROOM.stove, new THREE.Vector3(-3.6, 2.15, -5.4), [[-2.7,2.45,-2.7],[-3.6,1.5,-5.4]]); spots.stove.inside = true;
   register('coffee', ROOM.coffee, new THREE.Vector3(-1.85, 2.0, -5.6), [[-1.75,2.3,-3.35],[-1.05,1.55,-5.6]]); spots.coffee.anchorIn = new THREE.Vector3(-1.3, 2.05, -5.6); spots.coffee.inside = true;
   ROOM.pour.cups.forEach((c,i) => c.g.traverse(m => { if (m.isMesh) m.userData.key = 'cup' + i; }));
   [ROOM.chop.onion, ROOM.chop.board].forEach(m => { m.userData.key = 'onion'; hitList.push(m); });
   ROOM.dials.forEach(d => d.traverse(m => { if (m.isMesh){ m.userData.key = d.userData.dir > 0 ? 'tvnext' : 'tvprev'; hitList.push(m); } }));
-  spots.coffee.hit = () => { const P2 = ROOM.pour; P2.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = .01; }); P2.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); };
-  window.pourTea = () => { const P3 = ROOM.tea; if (P3.s > 0 || ROOM.drink) return; P3.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = P3.fillLo; }); P3.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); };
+  spots.coffee.hit = () => { const P2 = ROOM.pour; P2.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = .01; }); P2.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); sipNote('coffee', 4700); };
+  window.pourTea = () => { const P3 = ROOM.tea; if (P3.s > 0 || ROOM.drink) return; P3.cups.forEach(c => { c.fill.visible = false; c.fill.position.y = P3.fillLo; }); P3.s = performance.now() + 900; pourSound(.95, 1.5); pourSound(.95, 3.5); sipNote('tea', 4700); };
   window.repour = () => { if (!ROOM.drink) spots.coffee.hit(); };
   spots.inside.inside = true;
   spots.door = {view:[[1.4,2.35,6.4],[0,1.7,.3]]};
@@ -1435,25 +1473,31 @@ document.getElementById('goBtn').onclick = () => {
     const stream = rm(tg, new THREE.CylinderGeometry(.006,.006,1,6), new THREE.MeshStandardMaterial({color:0xc7783a, roughness:.2, transparent:true, opacity:.85}), 0,0,0); stream.visible = false; stream.castShadow = false;
     cups.forEach((c,ci) => { c.steam = []; for (let i=0;i<5;i++){ const s4 = rm(tg, new THREE.SphereGeometry(.024,6,4), new THREE.MeshBasicMaterial({color:0xfff4e0, transparent:true, opacity:0, depthWrite:false}), c.x, c.top, c.z); s4.castShadow = false; s4.userData.ph = i/5 + ci*.13; c.steam.push(s4); } });
     ROOM.tea = {potP, tip, cups, stream, s:-1, baseX:-.02, ref:tg, fillLo:.016, fillH:.032, top:.645, gap:.19};
-    register('tea', tb, new THREE.Vector3(-3.55, 1.85, 2.75), [[-2.6,2.14,3.87],[-3.5,1.2,2.7]]);
+    register('tea', tb, new THREE.Vector3(-3.55, 1.85, 2.75), [[-2.6,2.14,3.87],[-3.5,1.2,2.7]]); spots.tea.cardAt = new THREE.Vector3(-3.1, 1.75, 2.7);
     cups.forEach((c,i) => c.g.traverse(m => { if (m.isMesh) m.userData.key = 'teacup' + i; }));
-    spots.tea.hit = () => { if (!ROOM.tea.cups.some(c => c.fill.visible)) window.pourTea(); };
+    spots.tea.hit = () => { if (!ROOM.tea.cups.some(c => c.fill.visible)) window.pourTea(); else sipNote('tea', 600); };
   }
 
   // Song keeper at the parlor table, with song bubbles floating up
   const bubbles = [];
-  { const sk = pivot(scene, -3, .62, -1.25);
+  { const sk = pivot(scene, -3, .62, -2.0);
     const tw = rmat(0x5a3a26);
     rm(sk, new THREE.CylinderGeometry(.78,.78,.05,24), tw, 0,.74,.75); rm(sk, new THREE.CylinderGeometry(.07,.1,.72,8), tw, 0,.37,.75); rm(sk, new THREE.CylinderGeometry(.3,.34,.04,12), tw, 0,.02,.75);
-    rm(sk, new THREE.BoxGeometry(.45,.05,.45), tw, 0,.45,-.05); rm(sk, new THREE.BoxGeometry(.45,.6,.05), tw, 0,.75,-.28);
-    const B = makeBody({skin:0x5c3420, shirt:0xc4623a, pants:0x2b2e44, style:'cap', hair:0x140c0a, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0); B.root.scale.setScalar(1.18); B.root.position.y += .12;
+    rm(sk, new THREE.BoxGeometry(.45,.05,.45), tw, 0,.45,-.4); rm(sk, new THREE.BoxGeometry(.45,.7,.05), tw, 0,.8,-.63); for (const [lx,lz] of [[-.19,-.21],[.19,-.21],[-.19,-.59],[.19,-.59]]) rm(sk, new THREE.BoxGeometry(.04,.45,.04), tw, lx,.22,lz);
+    const B = makeBody({skin:0x5c3420, shirt:0xc4623a, pants:0x2b2e44, style:'cap', hair:0x140c0a, pattern:0xf3e6c8}); sk.add(B.root); sit(B, .0); B.root.scale.setScalar(1.3); B.root.position.set(0, .47, -.36);
     // the hooped crown: braids run from the head out to the hoop, and one braid wraps the hoop
     const braidM = rmat(0x1a100c, {roughness:.7}), beadM = rmat(0xf2a93b, {metalness:.4, roughness:.4});
     const hoop = pivot(B.head, 0, .2, -.13); const R0 = .36;
     for (let i=0;i<54;i++){ const a2 = i/54*Math.PI*2; const knot = rm(hoop, new THREE.SphereGeometry(.026,6,4), braidM, Math.cos(a2)*R0, Math.sin(a2)*R0, 0); knot.scale.set(1.25,.8,.8); knot.rotation.z = a2 + (i%2 ? .5 : -.5); knot.castShadow = false; }
     for (let i=0;i<14;i++){ const a2 = i/14*Math.PI*2; for (let k=0;k<7;k++){ const r = .14 + k*(R0 - .16)/6; const kn = rm(hoop, new THREE.SphereGeometry(.017,5,4), braidM, Math.cos(a2)*r, Math.sin(a2)*r, -.01 + (k%2)*.006); kn.scale.set(1.3,.8,.8); kn.rotation.z = a2 + (k%2 ? .45 : -.45); kn.castShadow = false; }
       if (i%2 === 0){ const bd = rm(hoop, new THREE.SphereGeometry(.018,6,4), beadM, Math.cos(a2)*R0, Math.sin(a2)*R0, .025); bd.castShadow = false; } }
-    B.arm[-1].rotation.x = -1.1; B.elbow[-1].rotation.x = -.5; B.arm[1].rotation.x = -1.2; B.elbow[1].rotation.x = -.4;
+    for (const sd of [-1,1]){ B.arm[sd].rotation.x = -1.15; B.elbow[sd].rotation.x = -.35; B.arm[sd].rotation.z = sd*-.08; }
+    // incense at the far end of the table, by the window, with a thin curl of smoke
+    const inc = pivot(sk, -.32, .765, 1.3); rm(inc, new THREE.CylinderGeometry(.07,.05,.025,12), rmat(0xc4623a), 0,.012,0);
+    const stick = rm(inc, new THREE.CylinderGeometry(.004,.004,.26,4), rmat(0x5a2a1a), .04,.13,0); stick.rotation.z = -.3;
+    rm(inc, new THREE.SphereGeometry(.009,5,4), new THREE.MeshBasicMaterial({color:0xff7a3a}), .078,.252,0).castShadow = false;
+    const smM = new THREE.MeshBasicMaterial({color:0xe9e2f7, transparent:true, opacity:.35, depthWrite:false}); const smoke = [];
+    for (let i=0;i<10;i++){ const sp = rm(inc, new THREE.SphereGeometry(.018,6,4), smM.clone(), .08,.26,0); sp.castShadow = false; sp.userData.ph = i/10; smoke.push(sp); }
     const lamp = rm(sk, new THREE.ConeGeometry(.16,.18,10,1,true), new THREE.MeshStandardMaterial({color:0xf2a93b, emissive:0xf2a93b, emissiveIntensity:.8, side:THREE.DoubleSide}), .62,1.1,1.0);
     rm(sk, new THREE.CylinderGeometry(.012,.012,.3,6), rmat(0x9a7a3a,{metalness:.5}), .62,.92,1.0); rm(sk, new THREE.CylinderGeometry(.08,.09,.03,10), rmat(0x9a7a3a,{metalness:.5}), .62,.78,1.0);
     // the paper bubble map: the same threads as the Wellerman map
@@ -1470,10 +1514,12 @@ document.getElementById('goBtn').onclick = () => {
     const cols = [0xe8502e, 0xf2a93b, 0x6f9c86, 0xf3e6c8, 0x8fa7ff];
     for (let i=0;i<9;i++){ const m = new THREE.MeshStandardMaterial({color:cols[i%5], emissive:cols[i%5], emissiveIntensity:.7, transparent:true, opacity:.85, roughness:.2});
       const b = rm(sk, new THREE.SphereGeometry(.05 + (i%3)*.025, 12, 8), m, 0, 1, .78); b.castShadow = false; b.userData = {ph:i/9, r:.2 + (i%4)*.1, a:i*.7}; bubbles.push(b); }
-    register('songs', sk, new THREE.Vector3(-3, 2.55, -.5), [[-1.6,2.6,-2.55],[-3.05,1.25,-.5]]); spots.songs.inside = true;
+    register('songs', sk, new THREE.Vector3(-3, 2.55, -1.25), [[-1.6,2.6,-3.3],[-3.05,1.25,-1.25]]); spots.songs.inside = true;
     paper.userData.key = 'mappaper';
-    spots.songs.anim = (t) => { B.head.rotation.x = .25 + Math.sin(t*.6)*.06; B.arm[1].rotation.z = -.1 + Math.sin(t*1.4)*.12; };
-    ROOM.mapView = [[-3.05, 2.55, -.62], [-3.05, .9, -.47]];
+    spots.songs.anim = (t) => { B.head.rotation.x = .25 + Math.sin(t*.6)*.06;
+      B.arm[1].rotation.z = -.08 + Math.sin(t*1.4)*.16; B.arm[1].rotation.x = -1.15 + Math.sin(t*.9)*.06; B.arm[-1].rotation.z = .08 + Math.sin(t*1.1 + 1.3)*.13; B.arm[-1].rotation.x = -1.15 + Math.cos(t*.7)*.06;
+      smoke.forEach(sp => { const u = (t*.22 + sp.userData.ph) % 1; sp.position.set(.08 + Math.sin(u*9 + sp.userData.ph*4)*.03*u*3, .26 + u*.75, Math.cos(u*7)*.02*u*3); sp.scale.setScalar(.7 + u*2.2); sp.material.opacity = .35*(1 - u); }); };
+    ROOM.mapView = [[-3.05, 2.55, -1.37], [-3.05, .9, -1.22]];
   }
 
   // Gourd banjo hanging on the wall by the door
@@ -1503,7 +1549,7 @@ document.getElementById('goBtn').onclick = () => {
     cat(cg, 0x18181e, 2.6, 1.54, 3.42, 1.6, false);
     cat(cg, 0xd8893a, 5.0, 1.54, 3.42, -1.4, false);
     cat(cg, 0x8a8a90, 1.3, .62, 1.0, .3, true);
-    register('cats', cg, new THREE.Vector3(2.6, 2.15, 3.42), [[3.8,2.3,7.4],[3.4,1.4,3.2]]);
+    register('cats', cg, new THREE.Vector3(2.6, 2.15, 3.42), [[3.8,2.25,8.0],[3.6,1.05,3.2]]); spots.cats.cardAt = new THREE.Vector3(3.8, 1.25, 3.5); spots.cats.cardMode = 'below';
   }
 
   /* fireflies drifting over the poppies */
@@ -1534,13 +1580,14 @@ document.getElementById('goBtn').onclick = () => {
     controls.minDistance = L.minD; controls.maxDistance = L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
     controls.minPolarAngle = L.minP ?? .5; controls.maxPolarAngle = L.maxP ?? 1.5; };
   const inHouse = (p) => p.z < 0 && p.z > -6.2 && Math.abs(p.x) < 6.2, behind = (p) => !inHouse(p) && p.z < -.5;
-  function flyTo(pos, tgt, limits, done){
+  function flyTo(pos, tgt, limits, done, via){
     const a = camera.position.clone(), pts = [a];
+    if (via){ pts.push(...via); } else {
     const IN_D = new THREE.Vector3(0, 1.8, -1.1), OUT_D = new THREE.Vector3(0, 1.8, 1.9), side = (p) => new THREE.Vector3(Math.sign(p.x || 1)*9, 3.6, 3.5);
     if (behind(a)) pts.push(side(a));
     if (inHouse(a) && !inHouse(pos)) pts.push(IN_D, OUT_D);
     if (behind(pos) && !behind(a)) pts.push(side(pos));
-    if (inHouse(pos) && !inHouse(a)) pts.push(OUT_D, IN_D);
+    if (inHouse(pos) && !inHouse(a)) pts.push(OUT_D, IN_D); }
     pts.push(pos.clone());
     setLimits({minD:0, maxD:Infinity, minA:-Infinity, maxA:Infinity, minP:0, maxP:Math.PI}); pendingLimits = limits || OUT_LIMITS;
     const curve = pts.length > 2 ? new THREE.CatmullRomCurve3(pts) : null;
@@ -1552,7 +1599,11 @@ document.getElementById('goBtn').onclick = () => {
     if (spots[key].inside){ if (mobile && !spots[key].noShift) t.y -= .3; if (mobile && spots[key].noShift) t.y += .15; flyTo(p, t, IN_LIMITS); if (spots[key].hit) spots[key].hit(); return; }
     if (mobile){ p.sub(t).multiplyScalar(1.35).add(t); t.y -= .5; }
     else { const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.4); t.add(side); p.add(side); } // nudge left; the card sits beside the object
-    flyTo(p, t, spots[key].wide ? {minD:3, maxD:28, minA:-Infinity, maxA:Infinity, minP:.3, maxP:1.5} : undefined); if (spots[key].hit) spots[key].hit();
+    const lim = spots[key].wide ? {minD:3, maxD:28, minA:-Infinity, maxA:Infinity, minP:.3, maxP:1.5} : undefined;
+    if (key === 'backporch' && inHouse(camera.position)){ // walk straight out the back door
+      BACK.doorTo = 1; click();
+      flyTo(p, t, lim, () => setTimeout(() => { BACK.doorTo = 0; }, 400), [new THREE.Vector3(-.4, 1.75, -5.0), new THREE.Vector3(-.4, 1.75, -6.15), new THREE.Vector3(-.4, 1.9, -7.4)]); return; }
+    flyTo(p, t, lim); if (spots[key].hit) spots[key].hit();
   };
 
   /* --- picking: tap objects in the scene too --- */
@@ -1570,7 +1621,7 @@ document.getElementById('goBtn').onclick = () => {
   window.chopOnion = () => { const C = ROOM.chop; if (C.s > 0) return; C.s = performance.now(); C.onion.visible = false;
     C.dice.forEach(d => { d.visible = true; d.userData.fell = false; }); [0,.09,.18,.27].forEach(knock); [1.95,2.1,2.25].forEach(plop); };
   meowCats = () => { meow(560, 0); meow(700, .8); cats[0].meowAt = clock.getElapsedTime(); cats[1].meowAt = clock.getElapsedTime() + .8; };
-  window.drinkCup = (c) => { if (ROOM.drink) return; ROOM.drink = {c, s:performance.now(), f0:c.fill.position.y, lo:c.hotY < .04 ? .016 : .01}; sip(); };
+  window.drinkCup = (c) => { if (ROOM.drink) return; cardInner.querySelectorAll('.sipnote').forEach(n => n.remove()); ROOM.drink = {c, s:performance.now(), f0:c.fill.position.y, lo:c.hotY < .04 ? .016 : .01}; sip(); };
   function tvShow(on){
     if (!PLAYLIST || !CAN_EMBED){ tvEl.style.display = 'none'; return; }
     if (on && !tvFrame){ tvFrame = document.createElement('iframe');
@@ -1600,6 +1651,8 @@ document.getElementById('goBtn').onclick = () => {
       controls.target.lerpVectors(tween.t0, tween.t1, e); if (k >= 1){ const dn = tween.done; tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } if (dn) dn(); } }
     controls.update();
     for (const k in spots) if (spots[k].anim) spots[k].anim(t*m);
+    if (BACK.doorK !== BACK.doorTo){ BACK.doorK += Math.sign(BACK.doorTo - BACK.doorK)*Math.min(Math.abs(BACK.doorTo - BACK.doorK), .05); BACK.hinge.rotation.y = -1.5*BACK.doorK*BACK.doorK*(3 - 2*BACK.doorK); BACK.outDoor.visible = BACK.doorK < .03; }
+    YARD.roam(t*m);
     for (const c of cats){ c.segs.forEach((s,i) => { s.rotation.y = Math.sin(t*m*2 + c.ph + i*.6)*.35; s.rotation.x = c.curled ? 0 : -.25; }); if (!c.curled) c.head.rotation.y = Math.sin(t*m*.4 + c.ph)*.5; const mu = c.meowAt != null ? (t - c.meowAt)/.75 : -1; c.head.rotation.x = mu > 0 && mu < 1 ? -.45*Math.sin(mu*Math.PI) : 0; }
     ROOM.pour.cups.concat(ROOM.tea.cups).forEach(c => { const hot = c.fill.visible && c.fill.position.y > c.hotY && !(ROOM.drink && ROOM.drink.c === c);
       c.steam.forEach(s => { s.visible = hot; if (!hot) return; const u = (t*m*.28 + s.userData.ph) % 1; s.position.set(c.x + Math.sin(u*7 + s.userData.ph*11)*.025, c.top + u*.42, c.z + Math.cos(u*5 + s.userData.ph*7)*.015); s.scale.setScalar(.5 + u*1.5); s.material.opacity = .42*Math.sin(u*Math.PI)*Math.min(1, (c.fill.position.y-c.hotY)*40); }); });
@@ -1676,10 +1729,13 @@ document.getElementById('goBtn').onclick = () => {
     if (inRoom){ v3.copy(ROOM.exit.g.position); v3.y += .5; v3.project(camera); const ev = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
       exitTag.classList.toggle('hidden', !ev); if (ev){ exitTag.style.left = ((v3.x+1)/2*innerWidth) + 'px'; exitTag.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     // on wider screens the card sits right beside whatever was tapped
-    if (current && !mobile && !card.classList.contains('mini')){ const sp = spots[current]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
-      if (v3.z < 1 && Math.abs(v3.x) < 1 && Math.abs(v3.y) < 1){ const x = (v3.x+1)/2*innerWidth, y = (1-v3.y)/2*innerHeight, cw = card.offsetWidth, ch = card.offsetHeight;
-        let L = x + 60; if (L + cw > innerWidth - 16) L = x - 60 - cw; L = Math.min(Math.max(16, L), innerWidth - cw - 16);
-        const T2 = Math.min(Math.max(84, y - 40), Math.max(84, innerHeight - ch - 16));
+    if (current && !mobile && !card.classList.contains('mini')){ const sp = spots[current]; v3.copy(sp.cardAt || (inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor)).project(camera);
+      if (sp.cardMode === 'bottom' || (v3.z < 1 && Math.abs(v3.x) < 1 && Math.abs(v3.y) < 1)){ const x = (v3.x+1)/2*innerWidth, y = (1-v3.y)/2*innerHeight, cw = card.offsetWidth, ch = card.offsetHeight;
+        let L = x + 60, T2;
+        if (sp.cardMode === 'below'){ L = x - cw/2; T2 = Math.min(y + 24, Math.max(84, innerHeight - ch - 16)); }
+        else if (sp.cardMode === 'bottom'){ L = innerWidth/2 - cw/2; T2 = Math.max(84, innerHeight - ch - 22); }
+        else { if (L + cw > innerWidth - 16) L = x - 60 - cw; T2 = Math.min(Math.max(84, y - 40), Math.max(84, innerHeight - ch - 16)); }
+        L = Math.min(Math.max(16, L), innerWidth - cw - 16);
         card.classList.add('near'); card.style.left = L + 'px'; card.style.right = 'auto'; card.style.top = T2 + 'px'; }
       else { card.classList.remove('near'); card.style.left = ''; card.style.right = ''; card.style.top = ''; } }
     else if (card.classList.contains('near')){ card.classList.remove('near'); card.style.left = ''; card.style.right = ''; card.style.top = ''; }
