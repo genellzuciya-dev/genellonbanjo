@@ -494,10 +494,21 @@ p{margin:0}
 .top nav .navlink,.top .brand,.top nav .btn{white-space:nowrap}
 @media (max-width:1060px){.top nav{gap:13px;font-size:.68rem;letter-spacing:.06em}}@media (max-width:930px){.top nav .navlink{display:none}}
 #materiality{scroll-margin-top:110px}
+.hero-porch{display:flex;align-items:center;gap:16px;margin-top:28px;max-width:440px;padding:10px 18px 10px 10px;border-radius:18px;background:rgba(11,20,48,.6);border:1px solid rgba(242,232,210,.24);text-decoration:none;color:var(--on-vat);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.hero-porch:hover,.hero-porch:focus-visible{transform:translateY(-2px);border-color:var(--marigold);box-shadow:6px 6px 0 rgba(242,165,49,.55)}
+.hero-porch img{flex:none;width:140px;height:79px;object-fit:cover;border-radius:10px;box-shadow:0 0 0 2px var(--undyed)}
+.hero-porch>span{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hero-porch .hp-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold)}
+.hero-porch .hp-t{font-family:var(--display);font-size:1.22rem;line-height:1.15;color:var(--on-vat)}
+.hero-porch .hp-s{font-size:.86rem;line-height:1.35;color:var(--on-vat-soft)}
+@media (max-width:520px){.hero-porch img{width:104px;height:59px}.hero-porch .hp-t{font-size:1.05rem}}
+.hero-porch.hp-desk{display:none}
+@media (min-width:861px){.hero-porch.hp-mob{display:none}.hero-porch.hp-desk{display:flex;position:absolute;left:0;bottom:calc(100% + 30px);z-index:4;margin:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}}
 /* nav: two-line labels with dividers */
 .top nav .navlink{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:2.9em;text-align:center;line-height:1.45}
 .top nav .navlink+.navlink{border-left:1px solid rgba(242,232,210,.3);padding-left:22px}
 @media (max-width:1060px){.top nav .navlink+.navlink{padding-left:13px}}
+@media (max-width:930px){.top nav .navlink{display:none}}
 @media (min-width:861px){.hero{padding-top:clamp(110px,11vw,170px)}.hero .wrap{max-width:1380px;grid-template-columns:minmax(0,.72fr) minmax(0,1.4fr)}.hero .frame .bloom{transform:scale(1.3);transform-origin:0 100%}.hero .frame .perch{left:auto;right:-20.5%;top:-85%;width:50%;transform:none}}
 @media (min-width:861px) and (max-width:1700px){.hero .frame .perch{right:-14%}}
 
@@ -682,9 +693,17 @@ html,body{overflow-x:clip}
           <a class="btn btn-poppy" href="https://www.patreon.com/c/genellonbanjo/membership" target="_blank" rel="noopener">Pull up a chair on Patreon</a>
           <a class="btn btn-line" href="https://www.tiktok.com/@genellonbanjo" target="_blank" rel="noopener">Watch on TikTok</a>
         </div>
+        <a class="hero-porch hp-mob" href="/porch/">
+          <img src="img/virtual-porch.jpg" width="1600" height="900" alt="The 3D Virtual Porch: a teal house at dusk with a banjo player on the steps and cats on the rail.">
+          <span><span class="hp-k">New · Explore in 3D</span><span class="hp-t">Step onto the virtual porch</span><span class="hp-s">Walk around, meet the folks, pour a cup of tea.</span></span>
+        </a>
       </div>
       <figure class="frame" style="margin:0">
         <span class="moon" aria-hidden="true"></span><span class="sun" aria-hidden="true"><svg viewBox="-104 -104 208 208"><g fill="#f2a531"><polygon points="-4,-50 4,-50 0,-102" transform="rotate(0)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(10)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(20)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(30)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(40)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(50)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(60)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(70)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(80)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(90)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(100)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(110)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(120)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(130)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(140)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(150)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(160)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(170)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(180)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(190)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(200)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(210)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(220)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(230)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(240)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(250)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(260)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(270)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(280)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(290)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(300)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(310)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(320)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(330)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(340)"/><polygon points="-4,-50 4,-50 0,-102" transform="rotate(350)"/></g><circle r="46" fill="#f2a531"/><circle r="36" fill="none" stroke="#e4532c" stroke-width="3" stroke-dasharray="6 5"/><circle r="22" fill="#e4532c"/></svg></span><span class="bloom" aria-hidden="true"><img src="img/geranium.png" width="463" height="520" alt=""></span><span class="perch" aria-hidden="true"><img src="img/swordbill-perch.png" width="502" height="656" alt=""></span>
+        <a class="hero-porch hp-desk" href="/porch/">
+          <img src="img/virtual-porch.jpg" loading="lazy" width="1600" height="900" alt="">
+          <span><span class="hp-k">New · Explore in 3D</span><span class="hp-t">Step onto the virtual porch</span><span class="hp-s">Walk around, meet the folks, pour a cup of tea.</span></span>
+        </a>
         <img src="img/porch-hero.jpg" width="1442" height="805" alt="Genell smiling on a wooden porch with her open-back banjo, a gourd and a fiddle beside her, marigolds and agave in front, mountains and a full moon behind.">
         <figcaption>Roots, lineages and the front porch</figcaption>
       </figure>
