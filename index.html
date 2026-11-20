@@ -156,6 +156,18 @@ p{margin:0}
 .roots{display:grid;gap:22px}
 .roots p{color:var(--on-vat-soft);max-width:48ch}
 .roots p strong{color:var(--on-vat);font-weight:600}
+.roots-mini{padding:16px 20px 18px;border-radius:10px;background:rgba(242,232,210,.07);border:1px dashed rgba(242,232,210,.35)}
+.roots-mini .eyebrow{margin:0 0 10px}
+.roots-mini ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px}
+.roots-mini li{font-size:.9rem;line-height:1.4;color:var(--on-vat-soft)}
+.roots-mini b{display:block;color:var(--on-vat);font-weight:600}
+@media (max-width:560px){.roots-mini ul{grid-template-columns:1fr}}
+.sample-cols{columns:2;column-gap:clamp(28px,4vw,52px)}
+.sample-cols p{break-inside:avoid;margin:0 0 1em}
+.sample .porch-world{margin-bottom:clamp(22px,3vw,34px)}
+.sample .sample-head{margin-top:0;max-width:none}
+.sample .sample-head .sample-cols p{max-width:none}
+@media (max-width:760px){.sample-cols{columns:1}}
 .holler{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;padding:18px 20px;border-radius:10px;background:rgba(242,232,210,.07);border:1px dashed rgba(242,232,210,.35)}
 .holler p{color:var(--on-vat);font-family:var(--display);font-style:italic;font-size:1.12rem;line-height:1.4}
 .timeline{list-style:none;margin:0;padding:0;position:relative}
@@ -710,13 +722,13 @@ html,body{overflow-x:clip}
       <div>
         <p class="eyebrow">New · Explore in 3D</p>
         <h2 class="porch-title">Welcome to my <em>virtual porch.</em></h2>
-        <p class="lede">Walk around, meet the folks on the porch, pour yourself a cup of tea or coffee, and see where your curiosity leads you. The virtual porch was kicked off in September 2026, and I plan to keep expanding the interactive games and areas for learning, playing music and storytelling. There's even a virtual market and a kitchen with shared recipes!</p>
+        <p class="lede">Walk around, meet the folks on the porch, pour yourself a cup of tea or coffee, and see where your curiosity leads you.</p>
+        <p class="lede">The virtual porch was kicked off in September 2026, and I plan to keep expanding the interactive games and areas for learning, playing music and storytelling. There's even a virtual market and a kitchen with shared recipes!</p>
         <div class="ctas"><a class="btn btn-poppy" href="/porch/">Step onto the virtual porch</a></div>
       </div>
       <a class="porch-world hero-porch-big" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" alt="The 3D Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a banjo player on the front steps and cats on the rail."><span class="tap">Tap to explore</span></a>
     </div>
   </section>
-
   <div class="patch" aria-hidden="true"></div>
   <section class="band undyed" id="story" aria-labelledby="story-title">
     <div class="wrap">
@@ -836,12 +848,16 @@ html,body{overflow-x:clip}
       </div>
       <div class="path">
         <div class="roots">
-          <p>I was raised on Harriet Tubman Lane in <strong>Freetown, a part of Columbia, Maryland</strong>. My great-grandmother was a recycler. My family has a junkyard, and my grandfather ran a hauling business, bringing mulch to people and hauling away what they no longer wanted. It was a grounded upbringing, and it still anchors me.</p>
-          <div class="holler">
-            <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M9 34c0-9 4-15 13-15s13 6 13 15" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linecap="round"/><path d="M13 21l-2-9 7 5M31 21l2-9-7 5" fill="none" stroke="#f2a531" stroke-width="2.2" stroke-linejoin="round"/><circle cx="18" cy="27" r="1.6" fill="#f2e8d2"/><circle cx="26" cy="27" r="1.6" fill="#f2e8d2"/></svg>
-            <p>We always had about ten cats around, and my grandfather raised me to have a holler to call them home.</p>
+          <p>I was raised singing <strong>alto</strong> in both the <strong>gospel choir at church</strong> and the <strong>school choir</strong>, from elementary school all the way through college. I dabbled with guitar and piano along the way, and I've always been involved in dance and the performing arts.</p>
+          <div class="roots-mini" aria-labelledby="roots-title">
+            <p class="eyebrow" id="roots-title">My roots</p>
+            <ul>
+              <li><b>Cameroon</b>Hausa and Tikar roots</li>
+              <li><b>Martinique</b>Ancestry through the Caribbean</li>
+              <li><b>South Carolina Lowcountry</b>Gullah Geechee heritage, and the indigo that runs through this site</li>
+              <li><b>Columbia, Maryland</b>Home: Freetown, Howard County, near the Chesapeake Bay</li>
+            </ul>
           </div>
-          <p>I was raised singing <strong>alto</strong> in both the <strong>gospel choir at church</strong> and the <strong>school choir</strong>, from elementary school all the way through college. I dabbled with guitar and piano along the way.</p>
         </div>
         <div class="tl-wrap">
         <details class="tl-more">
@@ -929,21 +945,6 @@ html,body{overflow-x:clip}
       </div>
     </div>
   </section>
-
-  <section class="band undyed" id="roots" aria-labelledby="roots-title">
-    <div class="wrap">
-      <div class="head">
-        <h2 id="roots-title">My <em>roots</em></h2>
-      </div>
-      <ol class="places">
-          <li><span class="pin">1</span><div><h3>Cameroon</h3><p>Hausa and Tikar roots, in present-day Cameroon.</p></div></li>
-          <li><span class="pin">2</span><div><h3>Martinique</h3><p>Ancestry through Martinique, in the Caribbean.</p></div></li>
-          <li><span class="pin">3</span><div><h3>South Carolina Lowcountry</h3><p>Gullah Geechee heritage, and the indigo that runs through this site.</p></div></li>
-          <li><span class="pin">4</span><div><h3>Columbia, Maryland</h3><p>Home. Freetown, Howard County, near the Chesapeake Bay.</p></div></li>
-        </ol>
-    </div>
-  </section>
-
   <div class="patch" aria-hidden="true"></div>
   <section class="band dyed" id="porch" aria-labelledby="glimpse-title">
     <div class="wrap">
@@ -958,13 +959,15 @@ html,body{overflow-x:clip}
         </article>
       </div>
       <div class="sample" id="porch-world">
+        <a class="porch-world" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
         <div class="head sample-head">
           <p class="eyebrow">The Virtual Porch · Step inside</p>
           <h3 id="porchworld-title">Come sit on the <em>virtual porch.</em></h3>
-          <p><b>Why a virtual porch?</b> I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp. You can see more of my art at <a href="https://ilovephotons.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ilovephotons.com</a>.</p>
-          <p>Walk around my virtual porch and meet the folks on it. Rock in the rocking chair, then head inside to explore song bubble maps at the song keeper's table, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking on the stove. And out back, the backyard holds its own secrets and games: storytellers, more history nuggets, a merch blanket from fellow musicians, the corn maze, and soon, live concerts.</p>
+          <div class="sample-cols">
+            <p><b>Why a virtual porch?</b> I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp. You can see more of my art at <a href="https://ilovephotons.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ilovephotons.com</a>.</p>
+            <p>Walk around my virtual porch and meet the folks on it. Rock in the rocking chair, then head inside to explore song bubble maps at the song keeper's table, sit on the couch and watch old-time musicians and dancers on the porch TV, and see what's cooking on the stove. And out back, the backyard holds its own secrets and games: storytellers, more history nuggets, a merch blanket from fellow musicians, the corn maze, and soon, live concerts.</p>
+          </div>
         </div>
-        <a class="porch-world" href="/porch/" aria-label="Step onto the virtual porch"><img src="img/virtual-porch.jpg" width="1600" height="900" loading="lazy" alt="The Virtual Porch: a teal house at dusk with deep blue porch posts, string lights, a guide on the front steps with a banjo, a rocking chair, porch cats, live oaks with Spanish moss and a red moon."></a>
         <div class="song-links">
           <a class="btn btn-poppy" href="/porch/">Step onto the virtual porch</a>
         </div>
