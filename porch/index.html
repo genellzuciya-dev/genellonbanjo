@@ -110,6 +110,8 @@ header.top{position:fixed;top:14px;left:16px;right:16px;max-width:calc(100vw - 3
 .btn[hidden]{display:none}
 .welcomeback{border:1px solid var(--pink);border-radius:10px;padding:8px 11px;margin:0 0 12px;color:var(--pink);font-size:12px}
 
+.sitprompt{position:fixed;left:50%;bottom:54px;transform:translateX(-50%);z-index:30;font-weight:700;font-size:12px;padding:10px 18px;border-color:var(--marigold);color:var(--indigo-0);background:var(--marigold);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.sitprompt:hover{color:var(--indigo-0);filter:brightness(1.08)}
 .hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);font-size:11px;letter-spacing:.06em;color:var(--muted);background:rgba(7,11,34,.6);border:1px solid var(--line);padding:6px 12px;border-radius:999px;pointer-events:none;transition:opacity .6s;white-space:nowrap}
 
 /* the card: right side on desktop, bottom sheet on phones */
@@ -235,6 +237,7 @@ header.top{position:fixed;top:14px;left:16px;right:16px;max-width:calc(100vw - 3
 </header>
 
 <div class="todo"><button class="btn" id="listBtn" type="button" aria-expanded="false" aria-controls="list">Things to do ▾</button><nav class="list" id="list" aria-label="Things to do on the virtual porch"></nav></div>
+<button class="btn sitprompt" id="sitPrompt" type="button" hidden>Sit on the stump and listen to a story</button>
 <div class="hint" id="hint">Drag to look around · tap a marigold tag to visit</div>
 
 <aside class="card" id="card" aria-live="polite" aria-hidden="true">
@@ -285,7 +288,7 @@ let MEMBER = null, MEMBER_MAPS = {};
 const loginNote = {notmember:"We couldn't find a paid membership on that Patreon account. Join as a Rocking Chair Regular to open the members areas.", failed:"Patreon login didn't go through. Please try again in a moment.", cancelled:'Login was cancelled.', expired:'That login took a while, so it timed out. Please try again.'};
 let pendingLoginNote = '';
 function memberLogin(){ if (LINKS.memberApi) location.href = LINKS.memberApi.replace(/\/$/, '') + '/login'; }
-function memberLogout(){ try { localStorage.removeItem('porchPass'); } catch(e){} MEMBER = null; MEMBER_MAPS = {}; paintMember(); if (current) openSpot(current); }
+function memberLogout(){ try { localStorage.removeItem('porchPass'); } catch(e){} MEMBER = null; MEMBER_MAPS = {}; paintMember(); if (current) openSpot(current); else goOutside(); }
 function paintMember(){ const b = document.getElementById('loginBtn'); if (!b) return; b.hidden = !LINKS.memberApi;
   b.classList.toggle('in', !!MEMBER); b.textContent = MEMBER ? (MEMBER.name ? MEMBER.name + ' · Member' : 'Member') + ' · Log out' : 'Log in with Patreon'; b.onclick = MEMBER ? memberLogout : memberLogin; }
 async function memberStart(){
@@ -313,8 +316,8 @@ function act(label, url, note, cls=''){
 
 const LOCKED = (key) => SPOTS[key] && SPOTS[key].members && !MEMBER;
 const lockedCard = (key) => ({eyebrow: SPOTS[key].room ? 'Members · Inside the house' : 'Members · Out back',
-  title: SPOTS[key].room ? 'Inside the house is for members' : (key === 'corn' ? 'Gone like a turkey through the corn' : 'The back porch is for members'),
-  body: () => `<p>${SPOTS[key].room ? "The front porch is open to everyone. Step inside as a member of the Virtual Porch." : "The backyard is for members of the Virtual Porch."} Members get the whole place: the parlor TV with old-time musicians, dancers and cloggers, the couch, the kitchen with coffee and soup, the song keeper's table with every song bubble map, and out back, the back porch and the cornfield where the corn maze game is coming soon.</p>
+  title: SPOTS[key].title,
+  body: () => `${(SPOTS[key].body().match(/<p>[\s\S]*?<\/p>/) || [''])[0]}<p>${SPOTS[key].room ? "The front porch is open to everyone. Step inside as a member of the Virtual Porch." : "The backyard is for members of the Virtual Porch."} Members get the whole place: the parlor TV with old-time musicians, dancers and cloggers, the couch, the kitchen with coffee and soup, the song keeper's table with every song bubble map, and out back, the back porch and the cornfield where the corn maze game is coming soon.</p>
       <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3/mo · Patreon', 'warm')}${memberBtn()}</div>`});
 /* ===== What each spot says. Draft wording: rewrite in your own voice. ===== */
 const SPOTS = {
@@ -406,11 +409,12 @@ document.getElementById('homeLink').href = LINKS.site + '/#porch'; document.getE
 let current = null, focusSpot = () => {}, onStrum = () => {}, meowCats = () => {};
 function sipNote(key, ms){ cardInner.querySelectorAll('.sipnote').forEach(n => n.remove()); clearTimeout(sipNote.t); sipNote.t = setTimeout(() => { if (current === key && !cardInner.querySelector('.sipnote')) cardInner.insertAdjacentHTML('beforeend', '<div class="sipnote" role="status">Tap a cup to sip</div>'); }, ms); }
 function openSpot(key){
+  { const sp0 = document.getElementById('sitPrompt'); if (sp0) sp0.hidden = true; }
   const lock = LOCKED(key), s = lock ? lockedCard(key) : SPOTS[key]; current = key;
   cardInner.innerHTML = `<div class="eyebrow">${s.eyebrow}</div><h2>${s.title}</h2>${s.body()}`;
   card.classList.add('open'); card.classList.toggle('mini', key === 'couch'); card.setAttribute('aria-hidden','false');
   document.querySelectorAll('.tag').forEach(t => t.classList.toggle('on', t.dataset.k === key));
-  const bo = document.getElementById('backOut'); if (bo) bo.onclick = () => { current = 'inside'; closeCard(); };
+  const bo = document.getElementById('backOut'); if (bo) bo.onclick = goOutside;
   const om = document.getElementById('openMap'); if (om) om.onclick = () => flyToMap('wellerman');
   cardInner.querySelectorAll('[data-map]').forEach(el => el.onclick = () => flyToMap(el.dataset.map));
   cardInner.querySelectorAll('[data-login]').forEach(el => el.onclick = memberLogin);
@@ -441,8 +445,8 @@ function openMap(key='wellerman'){
 }
 let flyToMap = (k) => openMap(k), afterMapClose = null;
 function closeMap(){ document.getElementById('mapView').hidden = true; const b = document.getElementById('openMap'); if (b) b.focus(); if (afterMapClose){ const f = afterMapClose; afterMapClose = null; f(); } }
-function goOutside(){ current = 'inside'; closeCard(); }
-function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room && !LOCKED(current)){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
+function goOutside(){ closeCard(); current = null; focusSpot(null); }
+function closeCard(){ card.classList.remove('open'); card.setAttribute('aria-hidden','true'); document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
 document.getElementById('cardClose').onclick = closeCard;
 addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mazeView').hidden){ MAZE.close(); return; } if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 [['On the porch · free', k => !SPOTS[k].room && !SPOTS[k].members], ['Inside the house', k => SPOTS[k].room], ['Out back', k => SPOTS[k].members && !SPOTS[k].room]].forEach(([h, f]) => {
@@ -1499,10 +1503,10 @@ document.getElementById('goBtn').onclick = () => {
     const dirt = new THREE.InstancedMesh(new THREE.CircleGeometry(.6, 10), rmat(0x5a4632, {flatShading:false}), pathPts.length);
     pathPts.forEach((q,i) => { E4.set(-Math.PI/2, 0, 0); Q4.setFromEuler(E4); M4.compose(P4.set(q.x, .02, q.z), Q4, S4.set(1,1,1)); dirt.setMatrixAt(i, M4); }); dirt.receiveShadow = true; trail.add(dirt);
     // stepping stones: tap one to walk to it
-    const stones = []; curves.forEach((c, ci) => { const L = c.getLength(), n = Math.max(2, Math.round(L/2.2)); for (let i=0;i<=n;i++){ const u = i/n, q = c.getPointAt(u), tg = c.getTangentAt(Math.min(.999, u));
+    const stones = []; curves.forEach((c, ci) => { const L = c.getLength(), n = Math.max(2, Math.round(L/2.2)), cl = ci >= 1 && ci <= clearings.length ? clearings[ci-1] : null; for (let i=0;i<=n;i++){ const u = i/n, q = c.getPointAt(u), tg = c.getTangentAt(Math.min(.999, u)); if (cl && Math.hypot(q.x - cl.x, q.z - cl.z) < 3.4) continue;
       const st2 = rm(trail, new THREE.CylinderGeometry(.36,.4,.07,8), stoneM, q.x, .045, q.z); st2.rotation.y = R()*3; st2.castShadow = false; stones.push({m:st2, p:q.clone(), tg:tg.clone(), ci, u}); } });
-    clearings.forEach(c => { const g = rm(trail, new THREE.CircleGeometry(2.3, 18), rmat(0x4f5a34, {flatShading:false}), c.x, .025, c.z); g.rotation.x = -Math.PI/2; g.castShadow = false; });
-    const near = (x, z) => { for (const q of pathPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.7) return true; for (const c of clearings) if ((c.x-x)**2 + (c.z-z)**2 < 7.3) return true; return false; };
+    clearings.forEach(c => { const g = rm(trail, new THREE.CircleGeometry(3.4, 22), rmat(0x4f5a34, {flatShading:false}), c.x, .025, c.z); g.rotation.x = -Math.PI/2; g.castShadow = false; });
+    const near = (x, z) => { for (const q of pathPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.7) return true; for (const c of clearings) if ((c.x-x)**2 + (c.z-z)**2 < 14) return true; return false; };
     const trees = []; for (let tries=0; tries<16000 && trees.length < 520; tries++){ const x = -46 + R()*86, z = -34 - R()*44; if (!inBand(x, z) || near(x, z)) continue; if (trees.some(t => (t.x-x)**2 + (t.z-z)**2 < 1.5)) continue; trees.push({x, z, k:.75 + R()*.6, type:Math.floor(R()*4)}); }
     const cnt = [0,0,0,0]; trees.forEach(t => cnt[t.type]++);
     const trunkD = new THREE.InstancedMesh(new THREE.CylinderGeometry(.16,.24,1,6), rmat(0x3b2f2a), trees.length), trunkB = new THREE.InstancedMesh(new THREE.CylinderGeometry(.1,.13,1,6), rmat(0xe8e2d4), cnt[2] + 1);
@@ -1529,14 +1533,14 @@ document.getElementById('goBtn').onclick = () => {
     fly.castShadow = false; trail.add(fly);
     const sCols = [0x8fd6d0, 0xb79ad8, 0xff9fc8, 0x7dffc8, 0xf2a93b], sirens = [], sirenMeshes = [];
     clearings.forEach((c,i) => { const toward = pathPts.reduce((bst,q) => { const d = (q.x-c.x)**2 + (q.z-c.z)**2; return d > 4 && d < bst.d ? {d, q} : bst; }, {d:1e9, q:new THREE.Vector3(c.x, 0, c.z + 3)}).q;
-      const ang = Math.atan2(toward.x - c.x, toward.z - c.z), sv = pivot(trail, c.x - Math.sin(ang)*.6, 0, c.z - Math.cos(ang)*.6); sv.rotation.y = ang;
+      const ang = Math.atan2(toward.x - c.x, toward.z - c.z), sv = pivot(trail, c.x - Math.sin(ang)*2.0, 0, c.z - Math.cos(ang)*2.0); sv.rotation.y = ang;
       const gm = new THREE.MeshStandardMaterial({color:sCols[i], emissive:sCols[i], emissiveIntensity:.9, transparent:true, opacity:.8, roughness:.4, side:THREE.DoubleSide});
       rm(sv, new THREE.CylinderGeometry(.16,.55,1.5,16,1,true), gm, 0,.75,0); rm(sv, new THREE.CylinderGeometry(.12,.17,.36,10), gm, 0,1.46,0); rm(sv, new THREE.SphereGeometry(.2,12,10), gm, 0,1.78,0);
       for (let k=0;k<6;k++){ const h = rm(sv, new THREE.SphereGeometry(.1,8,6), gm, (k-2.5)*.065, 1.38, -.15 - Math.abs(k-2.5)*.01); h.scale.set(.75, 4.2 - (k%2)*.9, .6); }
       for (const sd of [-1,1]){ const arm = pivot(sv, sd*.17, 1.5, 0); rm(arm, new THREE.CylinderGeometry(.04,.035,.5,6), gm, 0,-.25,0); arm.rotation.z = sd*.55; arm.rotation.x = -.6; }
-      const stump = new THREE.Vector3(c.x + Math.sin(ang)*1.3, 0, c.z + Math.cos(ang)*1.3); rm(trail, new THREE.CylinderGeometry(.32,.36,.42,10), rmat(0x6e4a32), stump.x, .21, stump.z);
+      const stump = new THREE.Vector3(c.x + Math.sin(ang)*2.0, 0, c.z + Math.cos(ang)*2.0), stumpM = rm(trail, new THREE.CylinderGeometry(.32,.36,.42,10), rmat(0x6e4a32), stump.x, .21, stump.z);
       const orbs = []; for (let k=0;k<4;k++){ const o = rm(trail, new THREE.SphereGeometry(.06,8,6), new THREE.MeshBasicMaterial({color:[0xf3e6c8, sCols[i]][k%2]}), c.x, 1.6, c.z); o.castShadow = false; orbs.push(o); }
-      sirens.push({sv, c, ph:i*2.1, orbs, stump, ang}); sirenMeshes.push(sv); });
+      sirens.push({sv, c, ph:i*2.1, orbs, stump, stumpM, ang}); sirenMeshes.push(sv); });
     YARD.sirenAnim = (t) => {
       sirens.forEach(S => { S.sv.position.y = .15 + Math.sin(t*.9 + S.ph)*.08; S.orbs.forEach((o,k) => { const a = t*.4 + k*1.57 + S.ph; o.position.set(S.sv.position.x + Math.cos(a)*.7, 1.5 + Math.sin(t*.8 + k)*.35, S.sv.position.z + Math.sin(a)*.7); }); });
       for (let i=0;i<fN;i++){ const f = fd[i], bb = Math.max(0, Math.sin(t*1.7 + f.ph)); M4.compose(P4.set(f.x + Math.sin(t*.3 + f.ph)*.8, f.y + Math.sin(t*.7 + f.ph*2)*.3, f.z + Math.cos(t*.25 + f.ph)*.8), Q4.identity(), S4.set(1,1,1)); fly.setMatrixAt(i, M4); fly.setColorAt(i, cc.setRGB(bb, bb*.9, bb*.35)); }
@@ -1641,17 +1645,24 @@ document.getElementById('goBtn').onclick = () => {
   spots.sirens.inside = true; spots.sirens.homeView = spots.sirens.view; spots.sirens.anim = YARD.sirenAnim;
   YARD.stones.forEach((st,i) => { st.m.userData.key = 'hike' + i; hitList.push(st.m); });
   YARD.yardStones.forEach((st,i) => { st.m.userData.key = 'walk' + i; hitList.push(st.m); });
-  YARD.walk = (i) => { const st = YARD.yardStones[i]; if (!st) return; if (st.back && LOCKED('backporch')){ openSpot('backporch'); return; }
+  YARD.clearLine = (a, b) => { for (let k=1;k<10;k++){ const x = a.x + (b.x - a.x)*k/10, z = a.z + (b.z - a.z)*k/10; if (Math.abs(x) < 6.6 && z < .6 && z > -6.8) return false; } return true; };
+  YARD.walk = (i) => { const st = YARD.yardStones[i]; if (!st) return; YARD.hideSit(); if ((st.back || st.p.z < -.5) && LOCKED('backporch')){ openSpot('backporch'); return; }
     if (current){ card.classList.remove('open'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
     const cam = camera.position, fwd = st.tg.clone(), toCam = new THREE.Vector3(cam.x - st.p.x, 0, cam.z - st.p.z); if (toCam.dot(fwd) > 0) fwd.negate();
-    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 5 ? [] : undefined); };
-  YARD.sirens.forEach((S,i) => S.sv.traverse(m => { if (m.isMesh) m.userData.key = 'siren' + i; }));
+    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, YARD.clearLine(cam, st.p) ? [] : undefined); };
+  YARD.sirens.forEach((S,i) => { S.sv.traverse(m => { if (m.isMesh){ m.userData.key = 'siren' + i; hitList.push(m); } }); S.stumpM.userData.key = 'siren' + i; hitList.push(S.stumpM); });
+  const sitBtn = document.getElementById('sitPrompt');
+  YARD.hideSit = () => { sitBtn.hidden = true; };
+  YARD.showSit = (i) => { sitBtn.hidden = false; sitBtn.onclick = () => YARD.sitWithSiren(i); };
+  YARD.nearSiren = (p, r) => { let best = -1, bd = r; YARD.sirens.forEach((S,i) => { const d = Math.hypot(p.x - S.c.x, p.z - S.c.z); if (d < bd){ bd = d; best = i; } }); return best; };
+  YARD.backToPath = (i) => { const S = YARD.sirens[i]; let bi = -1, bd = 1e9; YARD.stones.forEach((st,k) => { const d = Math.hypot(st.p.x - S.stump.x, st.p.z - S.stump.z); if (d < bd){ bd = d; bi = k; } }); if (bi >= 0) YARD.hike(bi); };
   // walk the trail: a tapped stone carries you there at eye height, facing on down the path; tap a siren to sit on her stump
   YARD.hike = (i) => { const st = YARD.stones[i]; if (!st) return; if (LOCKED('sirens')){ openSpot('sirens'); return; }
     if (current){ card.classList.remove('open'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
     const cam = camera.position, fwd = st.tg.clone(), toCam = new THREE.Vector3(cam.x - st.p.x, 0, cam.z - st.p.z); if (toCam.dot(fwd) > 0) fwd.negate();
-    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 30 ? [] : undefined); };
-  YARD.sitWithSiren = (i) => { const S = YARD.sirens[i]; if (!S) return; spots.sirens.view = [[S.stump.x, 1.15, S.stump.z],[S.c.x, 1.5, S.c.z]]; openSpot('sirens'); spots.sirens.view = spots.sirens.homeView; };
+    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 30 ? [] : undefined); const ns = YARD.nearSiren(st.p, 7.5); if (ns >= 0) YARD.showSit(ns); else YARD.hideSit(); };
+  YARD.sitWithSiren = (i) => { const S = YARD.sirens[i]; if (!S) return; YARD.hideSit(); const sp = S.sv.position; spots.sirens.view = [[S.stump.x, 1.15, S.stump.z],[sp.x, 1.45, sp.z]]; openSpot('sirens'); spots.sirens.view = spots.sirens.homeView;
+    if (!LOCKED('sirens')){ cardInner.insertAdjacentHTML('beforeend', '<p><button class="btn" id="backPath" type="button">Back to the path</button></p>'); document.getElementById('backPath').onclick = () => YARD.backToPath(i); } };
   YARD.dog.traverse(m => { if (m.isMesh){ m.userData.key = 'dog'; hitList.push(m); } });
   YARD.hens.forEach((h,i) => h.g.traverse(m => { if (m.isMesh){ m.userData.key = 'hen' + i; hitList.push(m); } }));
   YARD.toy.traverse(m => { if (m.isMesh){ m.userData.key = 'toybox'; hitList.push(m); } }); YARD.stick.userData.key = 'stick'; hitList.push(YARD.stick);
@@ -1844,6 +1855,7 @@ document.getElementById('goBtn').onclick = () => {
 
   /* --- camera moves when a spot opens --- */
   let tween = null;
+  const NM_MAXD = mobile ? 22 : 16, NM_MINP = .95;
   const OUT_LIMITS = {minD:3.5, maxD:mobile ? 64 : 60, minA:-1.1, maxA:1.1, minP:.25}, IN_LIMITS = {look:true};
   let pendingLimits = null; let looking = false; let viewSlide = 0;
   const setLimits = (L) => {
@@ -1853,8 +1865,10 @@ document.getElementById('goBtn').onclick = () => {
       controls.minDistance = controls.maxDistance = .12; controls.minAzimuthAngle = -Infinity; controls.maxAzimuthAngle = Infinity;
       controls.minPolarAngle = L.minP ?? .45; controls.maxPolarAngle = 2.3; controls.enableZoom = false; controls.rotateSpeed = -.45; looking = true; return; }
     looking = false; controls.enableZoom = true; controls.rotateSpeed = 1;
-    controls.minDistance = L.minD; controls.maxDistance = L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
-    controls.minPolarAngle = L.minP ?? .5; controls.maxPolarAngle = L.maxP ?? 1.5; };
+    const front = !MEMBER && isFinite(L.maxD); // non-members: front porch only
+    controls.minDistance = L.minD; controls.maxDistance = front ? Math.min(L.maxD, NM_MAXD) : L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
+    const off = camera.position.clone().sub(controls.target), pol = Math.atan2(Math.hypot(off.x, off.z), off.y) - .02;
+    controls.minPolarAngle = front ? Math.max(L.minP ?? .5, Math.min(NM_MINP, pol)) : (L.minP ?? .5); controls.maxPolarAngle = L.maxP ?? 1.5; };
   const inHouse = (p) => p.z < 0 && p.z > -6.2 && Math.abs(p.x) < 6.2, behind = (p) => !inHouse(p) && p.z < -.5;
   function flyTo(pos, tgt, limits, done, via){
     const a = camera.position.clone(), pts = [a];
@@ -1940,7 +1954,7 @@ document.getElementById('goBtn').onclick = () => {
       c.steam.forEach(s => { s.visible = hot; if (!hot) return; const u = (t*m*.28 + s.userData.ph) % 1; s.position.set(c.x + Math.sin(u*7 + s.userData.ph*11)*.025, c.top + u*.42, c.z + Math.cos(u*5 + s.userData.ph*7)*.015); s.scale.setScalar(.5 + u*1.5); s.material.opacity = .42*Math.sin(u*Math.PI)*Math.min(1, (c.fill.position.y-c.hotY)*40); }); });
     if (ROOM.drink){ const D2 = ROOM.drink, c = D2.c, T = (performance.now() - D2.s)/1000, sm = (x) => { x = Math.min(1, Math.max(0, x)); return x*x*(3-2*x); };
       const eye = camera.position.clone(), fwd = controls.target.clone().sub(eye).normalize(), down = new THREE.Vector3(0,-1,0);
-      const near = c.g.parent.worldToLocal(eye.clone().addScaledVector(fwd, .42).addScaledVector(down, .13));
+      const rgt = fwd.clone().cross(new THREE.Vector3(0,1,0)).normalize(), upv = rgt.clone().cross(fwd).normalize(); const near = c.g.parent.worldToLocal(eye.clone().addScaledVector(fwd, .52).addScaledVector(upv, -.035));
       const up = T < 2.3 ? sm(T/.7) : 1 - sm((T-2.3)/.7); c.g.position.lerpVectors(c.home, near, up);
       const loc = c.g.parent.worldToLocal(eye.clone()).sub(c.g.position); c.g.rotation.order = 'YXZ'; c.g.rotation.y = Math.atan2(loc.x, loc.z) * up;
       const tilt = T < .7 ? 0 : T < 1.4 ? sm((T-.7)/.7) : T < 2.0 ? 1 : 1 - sm((T-2.0)/.4); c.g.rotation.x = tilt*1.25;
@@ -2005,8 +2019,10 @@ document.getElementById('goBtn').onclick = () => {
     if (inParlor !== tvShow.on){ tvShow.on = inParlor; tvShow(inParlor); }
     renderer.render(scene, camera);
     // place the tags; hide ones behind the camera or blocked by the house
-    const inRoom = current && SPOTS[current].room;
-    document.getElementById('outBtn').classList.toggle('show', !!inRoom && !tween);
+    const inRoom = current && SPOTS[current].room && !LOCKED(current), outB = document.getElementById('outBtn');
+    const away = !inRoom && !card.classList.contains('open') && camera.position.distanceTo(HOME_POS) > 4;
+    outB.classList.toggle('show', (!!inRoom || away) && !tween);
+    const outTxt = inRoom ? '← Back out to the porch' : '← Back to the front porch'; if (outB.textContent !== outTxt) outB.textContent = outTxt;
     exitTag.classList.toggle('hidden', !inRoom);
     if (inRoom){ v3.copy(ROOM.exit.g.position); v3.y += .5; v3.project(camera); const ev = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
       exitTag.classList.toggle('hidden', !ev); if (ev){ exitTag.style.left = ((v3.x+1)/2*innerWidth) + 'px'; exitTag.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
