@@ -351,8 +351,8 @@ const SPOTS = {
   greenhouse: {name:'Magical greenhouse', members:true, yard:true, far:true, eyebrow:'Members · Past the corn', title:'The magical greenhouse',
     body:()=>`<p>Beyond the corn stands a glowing greenhouse full of plants that light up the night. It's still growing, so check back to see what blooms inside.</p>
       <div class="acts">${act('Step inside the greenhouse', '', '')}</div>`},
-  sirens: {name:'Siren trail', members:true, yard:true, far:true, eyebrow:'Members · Into the woods', title:'The storytelling trail',
-    body:()=>`<p>Follow the stepping stones into the woods and you'll find a ring of stones where the storytelling sirens gather. They'll be sharing stories here soon.</p>
+  sirens: {name:'Storytelling woods', members:true, yard:true, far:true, eyebrow:'Members · Into the woods', title:'The storytelling woods',
+    body:()=>`<p>Past the corn, the woods close in. Paths wind every which way under the trees, past glowing mushrooms and fireflies, and there's no seeing the way from above. Wander long enough and you'll stumble on a storytelling siren in a hidden clearing, with a stump to sit on and listen. They'll be sharing stories here soon.</p>
       <div class="acts">${act('Hear a story', '', '')}</div>`},
   coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Have a cup of coffee',
     body:()=>`<p>There's always a pot on. I poured you a cup, and one for whoever pulls up a chair next.</p>
@@ -1221,9 +1221,9 @@ document.getElementById('goBtn').onclick = () => {
   { // the cornfield, with a path cut into it from the back steps
     const mob = matchMedia('(max-width:720px)').matches, step = mob ? 1.15 : .8; const pts = [];
     for (let z = -11; z > -34; z -= step) for (let x = -26; x < 26; x += step){ const jx = x + (Math.random()-.5)*.3, jz = z + (Math.random()-.5)*.3; if (Math.abs(jx) < 1.1 && jz > -20) continue; if (Math.abs(Math.abs(jx) - 8.4) < 4.2 && jz > -15.5) continue; if (Math.abs(jz + 20) < .9 && Math.abs(jx) < 9) continue; pts.push([jx, jz, 1.9 + Math.random()*.8]); }
-    const n = pts.length; const leafG = new THREE.SphereGeometry(1, 5, 3), tasG = new THREE.SphereGeometry(1, 5, 3);
+    const n = pts.length; const leafG = new THREE.SphereGeometry(1, 6, 4), tasG = new THREE.SphereGeometry(1, 8, 6);
     leafG.scale(.075, .42, .02); leafG.translate(0, .4, 0); tasG.scale(.07, .17, .07);
-    const stalk = new THREE.InstancedMesh(new THREE.CylinderGeometry(.022,.035,1,6), rmat(0x7f8f3c), n), leaf = new THREE.InstancedMesh(leafG, rmat(0x5f8a3a), n*3), tas = new THREE.InstancedMesh(tasG, rmat(0xd9b24a), n), cob = new THREE.InstancedMesh(new THREE.CylinderGeometry(.045,.035,.26,6), rmat(0xe8b84a), n);
+    const stalk = new THREE.InstancedMesh(new THREE.CylinderGeometry(.022,.035,1,6), rmat(0x7f8f3c), n), leaf = new THREE.InstancedMesh(leafG, rmat(0x5f8a3a, {flatShading:false}), n*3), tas = new THREE.InstancedMesh(tasG, rmat(0xd9b24a, {flatShading:false}), n), cob = new THREE.InstancedMesh(new THREE.CylinderGeometry(.045,.035,.26,6), rmat(0xe8b84a), n);
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), S = new THREE.Vector3(), P = new THREE.Vector3();
     pts.forEach(([x,z,h],i) => { P.set(x, h/2, z); S.set(1,h,1); Q.identity(); M.compose(P,Q,S); stalk.setMatrixAt(i, M);
       for (let k=0;k<3;k++){ E.set(.95 + k*.18, i*1.7 + k*2.1, 0, 'YXZ'); Q.setFromEuler(E); P.set(x, h*(.32 + k*.18), z); S.set(1,1,1); M.compose(P,Q,S); leaf.setMatrixAt(i*3+k, M); }
@@ -1425,47 +1425,105 @@ document.getElementById('goBtn').onclick = () => {
     for (let i=0;i<=16;i++){ const a = i/16*Math.PI; rm(am, new THREE.SphereGeometry(.07,6,4), new THREE.MeshBasicMaterial({color:i%2 ? 0xffd59a : 0xff9fc8}), Math.cos(a)*4.3, .7 + Math.sin(a)*4.3, -2.55).castShadow = false; }
     for (const sd of [-1,1]){ rm(am, new THREE.BoxGeometry(.7,1.3,.6), rmat(0x1c1c22), sd*3.6,1.37,-2.3); rm(am, new THREE.CylinderGeometry(.18,.18,.04,14), rmat(0x555566), sd*3.6,1.55,-1.99).rotation.x = Math.PI/2; }
     const aL = new THREE.PointLight(0xff9fc8, 1.2, 14, 1.4); aL.position.set(0, 4, 0); am.add(aL); }
-  { const gh = pivot(scene, -19, 0, -46); YARD.greenhouse = gh;
+  { // the magical greenhouse: a central domed pavilion, glass wings, end rotundas and a domed entry
+    const gh = pivot(scene, -21, 0, -47); YARD.greenhouse = gh;
     const glass = new THREE.MeshStandardMaterial({color:0xcff5ec, emissive:0x2a8f7a, emissiveIntensity:.35, transparent:true, opacity:.26, roughness:.1, metalness:.1, side:THREE.DoubleSide, depthWrite:false});
-    const fr2 = rmat(0xf3e6c8, {metalness:.3});
-    rm(gh, new THREE.BoxGeometry(7.4,.5,5.4), rmat(0x9a8c70), 0,.25,0);
-    rm(gh, new THREE.BoxGeometry(7,2.4,5), glass, 0,1.7,0).castShadow = false;
-    const roof = rm(gh, new THREE.CylinderGeometry(2.5,2.5,7,22,1,true,0,Math.PI), glass, 0,2.9,0); roof.rotation.z = Math.PI/2; roof.castShadow = false;
-    for (let i=0;i<=7;i++){ const x = -3.5 + i; const rb = rm(gh, new THREE.TorusGeometry(2.5,.045,5,18,Math.PI), fr2, x,2.9,0); rb.rotation.y = Math.PI/2;
-      for (const sd of [-1,1]) rm(gh, new THREE.BoxGeometry(.06,2.4,.06), fr2, x,1.7,sd*2.5); }
-    for (const sd of [-1,1]) rm(gh, new THREE.BoxGeometry(7,.06,.06), fr2, 0,2.9,sd*2.5);
-    const cup = rm(gh, new THREE.SphereGeometry(.8,14,8,0,Math.PI*2,0,Math.PI/2), glass, 0,5.35,0); cup.castShadow = false;
-    rm(gh, new THREE.CylinderGeometry(.82,.82,.1,14), fr2, 0,5.35,0); rm(gh, new THREE.SphereGeometry(.12,8,6), rmat(0xf2a93b, {metalness:.6}), 0,6.25,0);
-    rm(gh, new THREE.BoxGeometry(1.1,2.1,.08), fr2, 0,1.55,2.52);
-    const glowMats = []; const gcol = [0x7dffc8, 0xb79ad8, 0xff9fc8, 0x8fd6d0, 0xf2a93b];
-    for (let i=0;i<18;i++){ const c = gcol[i%5], mt = new THREE.MeshStandardMaterial({color:c, emissive:c, emissiveIntensity:.8, roughness:.5}); glowMats.push(mt);
-      const x = -3 + (i%6)*1.2 + (Math.random()-.5)*.3, z = (Math.floor(i/6)-1)*1.5;
-      if (i%3 === 0){ rm(gh, new THREE.CylinderGeometry(.05,.07,.6,6), rmat(0xf3e6c8), x,.8,z); rm(gh, new THREE.SphereGeometry(.28,10,6,0,Math.PI*2,0,Math.PI/2), mt, x,1.1,z); }
-      else { const b = rm(gh, new THREE.IcosahedronGeometry(.4 + Math.random()*.25,1), mt, x,.95 + Math.random()*.4,z); b.scale.y = 1.3; } }
+    const fr2 = rmat(0xf3e6c8, {metalness:.3}), gold = rmat(0xf2a93b, {metalness:.6, roughness:.35}), plinth = rmat(0x9a8c70);
+    const G = (geo, x, y, z) => { const m = rm(gh, geo, glass, x, y, z); m.castShadow = false; return m; };
+    const dome = (r, x, y, z) => { G(new THREE.SphereGeometry(r, 20, 10, 0, Math.PI*2, 0, Math.PI/2), x, y, z);
+      for (let i=0;i<8;i++){ const rb = rm(gh, new THREE.TorusGeometry(r, .035 + r*.01, 4, 14, Math.PI), fr2, x, y, z); rb.rotation.y = i/8*Math.PI; }
+      rm(gh, new THREE.TorusGeometry(r, .06, 4, 24), fr2, x, y, z).rotation.x = Math.PI/2;
+      rm(gh, new THREE.CylinderGeometry(.03, .06, .4, 6), gold, x, y + r + .2, z); rm(gh, new THREE.SphereGeometry(.1 + r*.02, 8, 6), gold, x, y + r + .45, z); };
+    const rotunda = (r, h, x, z, y0=.5) => { G(new THREE.CylinderGeometry(r, r, h, 8, 1, true), x, y0 + h/2, z);
+      for (let i=0;i<8;i++){ const a = i/8*Math.PI*2 + Math.PI/8; rm(gh, new THREE.BoxGeometry(.07, h, .07), fr2, x + Math.cos(a)*r, y0 + h/2, z + Math.sin(a)*r); }
+      rm(gh, new THREE.CylinderGeometry(r + .08, r + .08, .14, 8), fr2, x, y0 + h, z); rm(gh, new THREE.CylinderGeometry(r + .25, r + .3, .5, 8), plinth, x, .25, z); dome(r, x, y0 + h + .07, z); };
+    // center pavilion with a lantern on top
+    rotunda(2.5, 3.4, 0, 0); rotunda(.65, .7, 0, 0, 6.5);
+    // two glass wings with barrel roofs
+    for (const sd of [-1,1]){ const cx = sd*4.4;
+      rm(gh, new THREE.BoxGeometry(3.6, .5, 3.4), plinth, cx, .25, 0);
+      G(new THREE.BoxGeometry(3.6, 2.4, 3), cx, 1.7, 0);
+      const roof = G(new THREE.CylinderGeometry(1.5, 1.5, 3.6, 18, 1, true, 0, Math.PI), cx, 2.9, 0); roof.rotation.z = Math.PI/2;
+      for (let i=0;i<=4;i++){ const x = cx - 1.8 + i*.9; rm(gh, new THREE.TorusGeometry(1.5, .04, 4, 14, Math.PI), fr2, x, 2.9, 0).rotation.y = Math.PI/2; for (const zz of [-1.5,1.5]) rm(gh, new THREE.BoxGeometry(.05, 2.4, .05), fr2, x, 1.7, zz); }
+      for (let i=0;i<3;i++) rm(gh, new THREE.SphereGeometry(.07, 6, 4), gold, cx - .9 + i*.9, 4.45, 0);
+      rotunda(1.7, 2.8, sd*7.6, 0); }
+    // domed entry porch facing the corn
+    rm(gh, new THREE.BoxGeometry(2, .5, 1.8), plinth, 0, .25, 3.1); G(new THREE.BoxGeometry(1.7, 2.4, 1.5), 0, 1.7, 3.1);
+    for (const [px,pz] of [[-.85,2.35],[.85,2.35],[-.85,3.85],[.85,3.85]]) rm(gh, new THREE.BoxGeometry(.08, 2.4, .08), fr2, px, 1.7, pz);
+    rm(gh, new THREE.BoxGeometry(1.9, .12, 1.7), fr2, 0, 2.95, 3.1); dome(.85, 0, 3.0, 3.1);
+    rm(gh, new THREE.TorusGeometry(.55, .05, 4, 12, Math.PI), gold, 0, 1.9, 3.86);
+    // glowing plants, flowers and mushrooms inside every section
+    const glowMats = [], gcol = [0x7dffc8, 0xb79ad8, 0xff9fc8, 0x8fd6d0, 0xf2a93b];
+    const plant = (x, z, i) => { const c = gcol[i%5], mt = new THREE.MeshStandardMaterial({color:c, emissive:c, emissiveIntensity:.8, roughness:.5}); glowMats.push(mt);
+      if (i%3 === 0){ rm(gh, new THREE.CylinderGeometry(.05,.07,.55,6), rmat(0xf3e6c8), x, .78, z); rm(gh, new THREE.SphereGeometry(.26,10,6,0,Math.PI*2,0,Math.PI/2), mt, x, 1.05, z); }
+      else { const bl = rm(gh, new THREE.IcosahedronGeometry(.32 + (i%4)*.08, 1), mt, x, .9 + (i%3)*.15, z); bl.scale.y = 1.3; } };
+    let pi = 0; for (let i=0;i<7;i++){ const a = i/7*Math.PI*2; plant(Math.cos(a)*1.6, Math.sin(a)*1.6, pi++); } plant(0, 0, pi++);
+    for (const sd of [-1,1]){ for (let i=0;i<4;i++) plant(sd*(3.1 + i*.9), (i%2 ? .7 : -.7), pi++); for (let i=0;i<4;i++){ const a = i/4*Math.PI*2; plant(sd*7.6 + Math.cos(a)*.9, Math.sin(a)*.9, pi++); } }
     const vine = new THREE.MeshStandardMaterial({color:0x7dffc8, emissive:0x2fbf8a, emissiveIntensity:.7}); glowMats.push(vine);
-    for (let i=0;i<10;i++){ for (let k=0;k<5;k++) rm(gh, new THREE.SphereGeometry(.07,6,4), vine, -3.2 + i*.7, 4.6 - k*.22, Math.sin(i)*.6).scale.set(1,.6,.6); }
-    const gL = new THREE.PointLight(0x8fffd8, 2.0, 13, 1.4); gL.position.set(0, 2.6, 0); gh.add(gL);
-    YARD.ghAnim = (t) => { glowMats.forEach((mt,i) => { mt.emissiveIntensity = .55 + Math.sin(t*.9 + i*1.3)*.35; }); gL.intensity = 1.8 + Math.sin(t*.6)*.4; }; }
-  { const trail = pivot(scene); YARD.trail = trail; const stoneM = rmat(0xa89a7c);
-    const tp = new THREE.CatmullRomCurve3([[14,-33],[16,-38],[15,-43],[19,-48],[23,-52],[25.6,-55.4]].map(([x,z]) => new THREE.Vector3(x,0,z)));
-    for (let i=0;i<=26;i++){ const q = tp.getPointAt(i/26), s2 = rm(trail, new THREE.CylinderGeometry(.34,.38,.06,7), stoneM, q.x + (i%2 ? .18 : -.18), .03, q.z); s2.rotation.y = i; s2.castShadow = false; }
-    const trunk = rmat(0x3b2f2a), leafs = [rmat(0x24432f), rmat(0x2c4a3a), rmat(0x35583e)];
-    [[20,-44],[30,-47],[34,-53],[21,-59],[31,-62],[25,-65],[36,-59],[16.5,-52],[29,-50.5],[38,-49],[18,-64],[34,-67],[12,-47],[39,-64]].forEach(([x,z],i) => { const k = .8 + (i%3)*.25;
-      rm(trail, new THREE.CylinderGeometry(.18*k,.26*k,2.2*k,6), trunk, x,1.1*k,z);
-      [[0,2.6,0,1.3],[.6,2.2,.3,.9],[-.5,2.3,-.3,.95]].forEach(([dx,dy,dz,r],j) => rm(trail, new THREE.IcosahedronGeometry(r*k,1), leafs[(i+j)%3], x+dx*k, dy*k, z+dz*k)); });
-    const C = new THREE.Vector3(27.5, 0, -57.5), sirens = [];
-    for (let i=0;i<9;i++){ const a = i/9*Math.PI*2; rm(trail, new THREE.DodecahedronGeometry(.28,0), stoneM, C.x + Math.cos(a)*2.4, .18, C.z + Math.sin(a)*2.4); }
-    const sCols = [0x8fd6d0, 0xb79ad8, 0xff9fc8];
-    for (let i=0;i<3;i++){ const a = i/3*Math.PI*2 + .4, sv = pivot(trail, C.x + Math.cos(a)*1.6, 0, C.z + Math.sin(a)*1.6); sv.rotation.y = Math.atan2(C.x - sv.position.x, C.z - sv.position.z);
+    for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; for (let k=0;k<6;k++) rm(gh, new THREE.SphereGeometry(.07,6,4), vine, Math.cos(a)*(2.2 - k*.05), 3.7 - k*.24, Math.sin(a)*(2.2 - k*.05)).scale.set(1,.6,.6); }
+    const gL = new THREE.PointLight(0x8fffd8, 2.2, 16, 1.4); gL.position.set(0, 2.8, 0); gh.add(gL);
+    YARD.ghAnim = (t) => { glowMats.forEach((mt,i) => { mt.emissiveIntensity = .55 + Math.sin(t*.9 + i*1.3)*.35; }); gL.intensity = 2 + Math.sin(t*.6)*.4; }; }
+  { // the storytelling forest: dense mixed woods with winding hidden paths, glowing mushrooms, fireflies, and a siren in each hidden clearing
+    const trail = pivot(scene); YARD.trail = trail; const stoneM = rmat(0xa89a7c);
+    const R = (() => { let x = 1234567; return () => (x = (x*16807) % 2147483647) / 2147483647; })();
+    const paths = [
+      [[14,-34.5],[15.5,-38],[14.5,-42],[17,-46],[16,-50],[18.5,-54],[17,-58],[19,-63],[22,-66]],
+      [[15,-42],[19,-41.5],[23,-43],[27,-42],[31,-44.5],[35,-43]],
+      [[17,-50],[21,-51],[24.5,-49],[28,-52],[30,-56],[34,-55],[37,-58]],
+      [[18.5,-58],[22,-59],[25,-62],[28.5,-61],[31,-65],[35,-66]],
+      [[27,-42],[26,-46],[28,-52]] ].map(pts => new THREE.CatmullRomCurve3(pts.map(([x,z]) => new THREE.Vector3(x,0,z))));
+    const pathPts = []; paths.forEach(c => { const L = c.getLength(); for (let i=0;i<=L/.5;i++) pathPts.push(c.getPointAt(Math.min(1, i*.5/L))); });
+    const clearings = [[16,-50.5],[35,-43],[37,-58],[22,-66],[35,-66]].map(([x,z]) => new THREE.Vector3(x,0,z));
+    // soft packed-dirt paths with a few stepping stones
+    const dirt = new THREE.InstancedMesh(new THREE.CircleGeometry(.55, 10), rmat(0x5a4632, {flatShading:false}), pathPts.length), M4 = new THREE.Matrix4(), Q4 = new THREE.Quaternion(), E4 = new THREE.Euler(), P4 = new THREE.Vector3(), S4 = new THREE.Vector3();
+    pathPts.forEach((q,i) => { E4.set(-Math.PI/2, 0, 0); Q4.setFromEuler(E4); M4.compose(P4.set(q.x, .02, q.z), Q4, S4.set(1,1,1)); dirt.setMatrixAt(i, M4); }); dirt.receiveShadow = true; trail.add(dirt);
+    for (let i=0;i<pathPts.length;i+=5){ const q = pathPts[i], st2 = rm(trail, new THREE.CylinderGeometry(.24,.28,.05,7), stoneM, q.x + (R()-.5)*.3, .04, q.z + (R()-.5)*.3); st2.rotation.y = i; st2.castShadow = false; }
+    clearings.forEach(c => { const g = rm(trail, new THREE.CircleGeometry(2.3, 18), rmat(0x4f5a34, {flatShading:false}), c.x, .025, c.z); g.rotation.x = -Math.PI/2; g.castShadow = false; });
+    // a dense mix of trees placed off the paths and clearings
+    const near = (x, z) => { for (const q of pathPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.6) return true; for (const c of clearings) if ((c.x-x)**2 + (c.z-z)**2 < 7.3) return true; return false; };
+    const trees = []; for (let tries=0; tries<6000 && trees.length < 260; tries++){ const x = 11 + R()*31, z = -36 - R()*34; if (near(x, z)) continue; if (trees.some(t => (t.x-x)**2 + (t.z-z)**2 < 1.45)) continue; trees.push({x, z, k:.75 + R()*.6, type:Math.floor(R()*4)}); }
+    const cnt = [0,0,0,0]; trees.forEach(t => cnt[t.type]++);
+    const trunkD = new THREE.InstancedMesh(new THREE.CylinderGeometry(.16,.24,1,6), rmat(0x3b2f2a), trees.length), trunkB = new THREE.InstancedMesh(new THREE.CylinderGeometry(.1,.13,1,6), rmat(0xe8e2d4), cnt[2] + 1);
+    const leafCols = [0x24432f, 0x2c4a3a, 0x35583e, 0x3f5f36, 0x2a3d4a];
+    const blobs = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), rmat(0xffffff), trees.length*3 + clearings.length*3 + Math.ceil(pathPts.length/3) + 2), cols = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), rmat(0xffffff), cnt[1] + 1);
+    const cc = new THREE.Color(); let nd = 0, nb = 0, nbl = 0, nc = 0;
+    const blob = (x, y, z, r, sy, col) => { M4.compose(P4.set(x, y, z), Q4.identity(), S4.set(r, r*sy, r)); blobs.setMatrixAt(nbl, M4); blobs.setColorAt(nbl++, cc.setHex(col)); };
+    trees.forEach((t,i) => { const k = t.k, col = leafCols[i%5];
+      if (t.type === 2){ const h = 3.4*k; M4.compose(P4.set(t.x, h/2, t.z), Q4.identity(), S4.set(k,h,k)); trunkB.setMatrixAt(nb++, M4); blob(t.x, h + .3, t.z, .95*k, 1.2, 0x5f8a4a); blob(t.x + .4*k, h - .3, t.z + .2, .7*k, 1.1, 0x6a9a52); return; }
+      const h = (t.type === 1 ? 1.4 : 2.3)*k; M4.compose(P4.set(t.x, h/2, t.z), Q4.identity(), S4.set(k,h,k)); trunkD.setMatrixAt(nd++, M4);
+      if (t.type === 1){ M4.compose(P4.set(t.x, h + 1.8*k, t.z), Q4.identity(), S4.set(.75*k, 2.4*k, .75*k)); cols.setMatrixAt(nc, M4); cols.setColorAt(nc++, cc.setHex(0x23402e)); return; }
+      if (t.type === 3){ blob(t.x, h + 1.0*k, t.z, 2.1*k, .55, 0x3a5a3a); blob(t.x + .8*k, h + .5*k, t.z - .5*k, 1.3*k, .6, 0x2f4f36); return; }
+      blob(t.x, h + 1.1*k, t.z, 1.45*k, .85, col); blob(t.x + .7*k, h + .7*k, t.z + .3*k, 1.0*k, .8, leafCols[(i+1)%5]); blob(t.x - .6*k, h + .8*k, t.z - .4*k, 1.05*k, .8, leafCols[(i+2)%5]); });
+    // high canopy that closes over each clearing so the sirens stay hidden from above
+    clearings.forEach((c,i) => { blob(c.x, 6.4, c.z, 2.8, .45, 0x2c4a3a); blob(c.x + 1.6, 6.0, c.z - 1, 1.9, .5, 0x24432f); blob(c.x - 1.4, 6.1, c.z + 1.2, 2.0, .5, 0x35583e); });
+    // branches that arch over the paths, so from above the way through stays a mystery
+    for (let i=0;i<pathPts.length;i+=3){ const q = pathPts[i]; blob(q.x + (R()-.5)*.8, 5.2 + R()*.9, q.z + (R()-.5)*.8, 1.5 + R()*.5, .45, leafCols[i%5]); }
+    trunkD.count = nd; trunkB.count = nb; blobs.count = nbl; cols.count = nc; [trunkD, trunkB, blobs, cols].forEach(m => { m.castShadow = false; m.receiveShadow = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; trail.add(m); });
+    // glowing mushrooms along the paths and under the trees
+    const mN = 110, caps = new THREE.InstancedMesh(new THREE.SphereGeometry(.12, 8, 5, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshBasicMaterial({color:0xffffff}), mN), stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(.025,.035,.16,5), rmat(0xf3e6c8), mN);
+    const mcol = [0x8fd6d0, 0xff9fc8, 0xb79ad8, 0xf2a93b, 0x7dffc8];
+    for (let i=0;i<mN;i++){ const q = pathPts[Math.floor(R()*pathPts.length)], a = R()*Math.PI*2, d = .8 + R()*.6, x = q.x + Math.cos(a)*d, z = q.z + Math.sin(a)*d, k = .6 + R()*.9;
+      M4.compose(P4.set(x, .08*k, z), Q4.identity(), S4.set(k,k,k)); stems.setMatrixAt(i, M4); M4.compose(P4.set(x, .16*k, z), Q4.identity(), S4.set(k,k*.8,k)); caps.setMatrixAt(i, M4); caps.setColorAt(i, cc.setHex(mcol[i%5])); }
+    caps.instanceColor.needsUpdate = true; [caps, stems].forEach(m => { m.castShadow = false; trail.add(m); });
+    // fireflies drifting through the woods
+    const fN = 140, fly = new THREE.InstancedMesh(new THREE.SphereGeometry(.035, 6, 4), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false}), fN), fd = [];
+    for (let i=0;i<fN;i++){ const q = pathPts[Math.floor(R()*pathPts.length)]; fd.push({x:q.x + (R()-.5)*3, z:q.z + (R()-.5)*3, y:.6 + R()*1.8, ph:R()*20}); fly.setColorAt(i, cc.setRGB(0,0,0)); }
+    fly.castShadow = false; trail.add(fly);
+    // a siren in each clearing, with a stump to sit on and listen
+    const sCols = [0x8fd6d0, 0xb79ad8, 0xff9fc8, 0x7dffc8, 0xf2a93b], sirens = [];
+    clearings.forEach((c,i) => { const toward = pathPts.reduce((b,q) => { const d = (q.x-c.x)**2 + (q.z-c.z)**2; return d < b.d ? {d, q} : b; }, {d:1e9, q:c}).q;
+      const ang = Math.atan2(toward.x - c.x, toward.z - c.z), sv = pivot(trail, c.x - Math.sin(ang)*.6, 0, c.z - Math.cos(ang)*.6); sv.rotation.y = ang;
       const gm = new THREE.MeshStandardMaterial({color:sCols[i], emissive:sCols[i], emissiveIntensity:.9, transparent:true, opacity:.8, roughness:.4, side:THREE.DoubleSide});
-      rm(sv, new THREE.CylinderGeometry(.16,.52,1.5,16,1,true), gm, 0,.75,0); rm(sv, new THREE.CylinderGeometry(.12,.17,.36,10), gm, 0,1.46,0); rm(sv, new THREE.SphereGeometry(.2,12,10), gm, 0,1.78,0);
+      rm(sv, new THREE.CylinderGeometry(.16,.55,1.5,16,1,true), gm, 0,.75,0); rm(sv, new THREE.CylinderGeometry(.12,.17,.36,10), gm, 0,1.46,0); rm(sv, new THREE.SphereGeometry(.2,12,10), gm, 0,1.78,0);
       for (let k=0;k<6;k++){ const h = rm(sv, new THREE.SphereGeometry(.1,8,6), gm, (k-2.5)*.065, 1.38, -.15 - Math.abs(k-2.5)*.01); h.scale.set(.75, 4.2 - (k%2)*.9, .6); }
       for (const sd of [-1,1]){ const arm = pivot(sv, sd*.17, 1.5, 0); rm(arm, new THREE.CylinderGeometry(.04,.035,.5,6), gm, 0,-.25,0); arm.rotation.z = sd*.55; arm.rotation.x = -.6; }
-      sirens.push({sv, ph:i*2.1}); }
-    const orbs = []; for (let i=0;i<10;i++){ const o = rm(trail, new THREE.SphereGeometry(.07,8,6), new THREE.MeshBasicMaterial({color:[0xf3e6c8,0x8fd6d0,0xf2a93b][i%3]}), C.x, 1.6, C.z); o.castShadow = false; orbs.push({o, ph:i/10}); }
-    const sL = new THREE.PointLight(0xb79ad8, 1.6, 10, 1.5); sL.position.set(C.x, 2.2, C.z); scene.add(sL);
-    YARD.sirenAnim = (t) => { sirens.forEach(S => { S.sv.position.y = .15 + Math.sin(t*.9 + S.ph)*.08; });
-      orbs.forEach(O => { const a = t*.35 + O.ph*Math.PI*2, r = .9 + Math.sin(t*.6 + O.ph*9)*.4; O.o.position.set(C.x + Math.cos(a)*r, 1.4 + Math.sin(t*.8 + O.ph*6)*.5, C.z + Math.sin(a)*r); }); }; }
+      rm(trail, new THREE.CylinderGeometry(.32,.36,.42,10), rmat(0x6e4a32), c.x + Math.sin(ang)*1.3, .21, c.z + Math.cos(ang)*1.3);
+      const orbs = []; for (let k=0;k<4;k++){ const o = rm(trail, new THREE.SphereGeometry(.06,8,6), new THREE.MeshBasicMaterial({color:[0xf3e6c8, sCols[i]][k%2]}), c.x, 1.6, c.z); o.castShadow = false; orbs.push(o); }
+      sirens.push({sv, c, ph:i*2.1, orbs}); });
+    YARD.sirenAnim = (t) => {
+      sirens.forEach(S => { S.sv.position.y = .15 + Math.sin(t*.9 + S.ph)*.08; S.orbs.forEach((o,k) => { const a = t*.4 + k*1.57 + S.ph; o.position.set(S.sv.position.x + Math.cos(a)*.7, 1.5 + Math.sin(t*.8 + k)*.35, S.sv.position.z + Math.sin(a)*.7); }); });
+      for (let i=0;i<fN;i++){ const f = fd[i], b = Math.max(0, Math.sin(t*1.7 + f.ph)); M4.compose(P4.set(f.x + Math.sin(t*.3 + f.ph)*.8, f.y + Math.sin(t*.7 + f.ph*2)*.3, f.z + Math.cos(t*.25 + f.ph)*.8), Q4.identity(), S4.set(1,1,1)); fly.setMatrixAt(i, M4); fly.setColorAt(i, cc.setRGB(b, b*.9, b*.35)); }
+      fly.instanceMatrix.needsUpdate = true; fly.instanceColor.needsUpdate = true; }; }
   /* --- free-roaming yard animals: a dog and two chickens on a slow loop around the house, front yard to backyard --- */
   { const loop = new THREE.CatmullRomCurve3([[0,5.6],[5.6,5.2],[7.1,2.5],[7.0,0],[6.9,-5.9],[5.5,-7.6],[5.4,-9.5],[4.5,-10.0],[0,-10.0],[-4.5,-10.0],[-5.4,-9.5],[-5.5,-7.6],[-6.9,-5.9],[-7.0,0],[-7.1,2.5],[-5.6,5.2]].map(([x,z]) => new THREE.Vector3(x, 0, z)), true);
     const dogM = rmat(0xb5763a), dogD = rmat(0x5a3420), dogL = rmat(0xf3e6c8), blk = rmat(0x111111);
@@ -1552,8 +1610,8 @@ document.getElementById('goBtn').onclick = () => {
   register('backporch', BACK.porch, new THREE.Vector3(-9.8, 1.7, -6.5), [[-8.2,4.6,-15.5],[-.8,1.3,-7.4]]); spots.backporch.anchorIn = new THREE.Vector3(-.4, 3.25, -5.95); spots.backporch.wide = true;
   BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
   register('amphi', YARD.amphi, new THREE.Vector3(0, 5.4, -53.5), [[0,7.5,-38],[0,2,-52]]); spots.amphi.wide = true;
-  register('greenhouse', YARD.greenhouse, new THREE.Vector3(-19, 6.6, -46), [[-11,5,-37],[-19,2,-46]]); spots.greenhouse.wide = true; spots.greenhouse.anim = YARD.ghAnim;
-  register('sirens', YARD.trail, new THREE.Vector3(27.5, 3.4, -57.5), [[18,5.5,-45],[27.5,1.4,-57.5]]); spots.sirens.wide = true; spots.sirens.anim = YARD.sirenAnim;
+  register('greenhouse', YARD.greenhouse, new THREE.Vector3(-21, 8.2, -47), [[-12,6.5,-34],[-21,2.6,-47]]); spots.greenhouse.wide = true; spots.greenhouse.anim = YARD.ghAnim;
+  register('sirens', YARD.trail, new THREE.Vector3(15, 4.2, -36), [[14.4,2.3,-35.2],[16,1.4,-42.5]]); spots.sirens.wide = true; spots.sirens.anim = YARD.sirenAnim;
   YARD.dog.traverse(m => { if (m.isMesh){ m.userData.key = 'dog'; hitList.push(m); } });
   YARD.hens.forEach((h,i) => h.g.traverse(m => { if (m.isMesh){ m.userData.key = 'hen' + i; hitList.push(m); } }));
   YARD.toy.traverse(m => { if (m.isMesh){ m.userData.key = 'toybox'; hitList.push(m); } }); YARD.stick.userData.key = 'stick'; hitList.push(YARD.stick);
@@ -1747,7 +1805,7 @@ document.getElementById('goBtn').onclick = () => {
   /* --- camera moves when a spot opens --- */
   let tween = null;
   const OUT_LIMITS = {minD:3.5, maxD:mobile ? 64 : 60, minA:-1.1, maxA:1.1, minP:.25}, IN_LIMITS = {look:true};
-  let pendingLimits = null; let looking = false;
+  let pendingLimits = null; let looking = false; let viewSlide = 0;
   const setLimits = (L) => {
     if (L.look){ // stand still and turn: the orbit point sits just in front of the eye
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
@@ -1828,9 +1886,10 @@ document.getElementById('goBtn').onclick = () => {
       if (tween.curve) camera.position.copy(tween.curve.getPoint(e));
       else camera.position.lerpVectors(tween.p0, tween.p1, e);
       controls.target.lerpVectors(tween.t0, tween.t1, e); if (k >= 1){ const dn = tween.done; tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } if (dn) dn(); } }
-    if (!tween && !current && !looking){ // zooming way out slides the view back so the whole property, corn to woods, fits on screen
-      const cd = camera.position.distanceTo(controls.target), k = Math.min(1, Math.max(0, (cd - 24)/22)), want = HOME_T.z + (-30 - HOME_T.z)*k, dz = (want - controls.target.z)*.06;
-      if (Math.abs(dz) > .0005){ controls.target.z += dz; camera.position.z += dz; } }
+    if (tween || current || looking) viewSlide = 0;
+    else { // zooming way out slides the view back so the whole property, corn to woods, fits on screen; zooming back in undoes only that slide
+      const cd = camera.position.distanceTo(controls.target), k = Math.min(1, Math.max(0, (cd - 24)/22)), next = viewSlide + ((-30 - HOME_T.z)*k - viewSlide)*.06, dz = next - viewSlide;
+      if (Math.abs(dz) > .0005){ controls.target.z += dz; camera.position.z += dz; viewSlide = next; } }
     controls.update();
     for (const k in spots) if (spots[k].anim) spots[k].anim(t*m);
     if (BACK.doorK !== BACK.doorTo){ BACK.doorK += Math.sign(BACK.doorTo - BACK.doorK)*Math.min(Math.abs(BACK.doorTo - BACK.doorK), .05); BACK.hinge.rotation.y = -1.5*BACK.doorK*BACK.doorK*(3 - 2*BACK.doorK); BACK.outDoor.visible = BACK.doorK < .03; }
