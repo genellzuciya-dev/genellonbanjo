@@ -803,12 +803,12 @@ document.getElementById('goBtn').onclick = () => {
     glow.castShadow = false; glow.renderOrder = 2; scene.add(glow);
     const ph = Float32Array.from({length:n}, () => Math.random()*100); let ripples = [], nextR = 0, fr = 0;
     flowerGlow = (t) => {
-      if (t > nextR){ const i = Math.floor(Math.random()*n); ripples.push({x:FX[i], z:FZ[i], t0:t}); nextR = t + 1.4 + Math.random()*1.8; }
-      if (ripples.length && t - ripples[0].t0 > 10) ripples.shift();
+      if (t > nextR){ const i = Math.floor(Math.random()*n); ripples.push({x:FX[i], z:FZ[i], t0:t}); nextR = t + 2.4 + Math.random()*2.6; }
+      if (ripples.length && t - ripples[0].t0 > 15) ripples.shift();
       if ((fr++) % 2) return;
       for (let i=0;i<n;i++){ let v = 0;
-        for (const r of ripples){ const age = t - r.t0, d = Math.hypot(FX[i] - r.x, FZ[i] - r.z) - age*2.1; if (d > -1.4 && d < 1.4) v += Math.exp(-d*d*2.2)*(1 - age/10); }
-        const tw = Math.sin(t*.5 + ph[i]); if (tw > .992) v += (tw - .992)*90;
+        for (const r of ripples){ const age = t - r.t0, d = Math.hypot(FX[i] - r.x, FZ[i] - r.z) - age*1.35; if (d > -1.4 && d < 1.4) v += Math.exp(-d*d*2.2)*(1 - age/15); }
+        const tw = Math.sin(t*.32 + ph[i]); if (tw > .992) v += (tw - .992)*90;
         v = Math.min(1, v)*.6; const b = base[i]; glow.setColorAt(i, gc.setRGB(b.r*v, b.g*v, b.b*v)); }
       glow.instanceColor.needsUpdate = true; };
   }
@@ -1375,14 +1375,14 @@ document.getElementById('goBtn').onclick = () => {
       rm(br, new THREE.BoxGeometry(.4,.05,.38), wood, 0, .45, 0); for (const [lx,lz] of [[-.16,-.15],[.16,-.15],[-.16,.15],[.16,.15]]) rm(br, new THREE.BoxGeometry(.04,.43,.04), wood, lx, .215, lz);
       const sitter = makeBody({skin:SKIN[1], shirt:0xf2a93b, pants:0x22397a, style:'cornrows', pattern:0xe8502e}); sit(sitter, .5); br.add(sitter.root);
       for (const sd of [-1,1]){ sitter.arm[sd].rotation.x = -.6; sitter.elbow[sd].rotation.x = -.9; }
-      const bd = makeBody({skin:SKIN[3], shirt:0xff6fa8, style:'wrap', wrap:0x6e1f2a, dress:0x8fd6d0, hem:0xff6fa8}); bd.root.position.set(0, 0, -.5); br.add(bd.root);
-      bd.chest.rotation.x = .25; for (const sd of [-1,1]){ bd.arm[sd].rotation.x = -1.6; bd.arm[sd].rotation.z = sd*.25; bd.elbow[sd].rotation.x = -.6; }
+      const bd = makeBody({skin:SKIN[3], shirt:0xff6fa8, style:'wrap', wrap:0x6e1f2a, dress:0x8fd6d0, hem:0xff6fa8}); bd.root.position.set(0, 0, -.66); br.add(bd.root);
+      bd.chest.rotation.x = 0; for (const sd of [-1,1]){ bd.arm[sd].rotation.x = -1.25; bd.arm[sd].rotation.z = sd*.22; bd.elbow[sd].rotation.x = -.5; }
       rm(bd.hand[1], new THREE.BoxGeometry(.015,.12,.04), rmat(0x111111), 0, -.05, .02);
       // a jar of hair grease and a comb on a crate beside them
       rm(br, new THREE.BoxGeometry(.3,.28,.3), woodD, .55, .14, -.15); rm(br, new THREE.CylinderGeometry(.05,.05,.06,10), rmat(0x2a6a8a), .5, .31, -.15); rm(br, new THREE.CylinderGeometry(.052,.052,.015,10), rmat(0xf2a93b), .5, .345, -.15);
       rm(br, new THREE.BoxGeometry(.16,.008,.04), rmat(0xe8502e), .6, .285, -.08);
       { const sl = new THREE.SpotLight(0xffd29a, 3.4, 7, .55, .85, 1.3); sl.position.set(1.7, 4.2, -7.45); sl.target.position.set(1.7, .6, -7.6); sl.castShadow = false; scene.add(sl, sl.target); }
-      YARD.braidAnim = (t) => { const w = Math.sin(t*5); bd.elbow[1].rotation.x = -.6 + w*.18; bd.elbow[-1].rotation.x = -.6 - w*.18; bd.hand[1].rotation.z = w*.4; bd.head.rotation.x = .25; sitter.head.rotation.x = .18 + Math.sin(t*.4)*.04; };
+      YARD.braidAnim = (t) => { const w = Math.sin(t*5); bd.elbow[1].rotation.x = -.5 + w*.15; bd.elbow[-1].rotation.x = -.5 - w*.15; bd.hand[1].rotation.z = w*.4; bd.head.rotation.x = .2; sitter.head.rotation.x = .18 + Math.sin(t*.4)*.04; };
     }
   }
 
@@ -1427,7 +1427,7 @@ document.getElementById('goBtn').onclick = () => {
     const aL = new THREE.PointLight(0xff9fc8, 1.2, 14, 1.4); aL.position.set(0, 4, 0); am.add(aL); }
   { // the magical greenhouse: a central domed pavilion, glass wings, end rotundas and a domed entry
     const gh = pivot(scene, -21, 0, -47); YARD.greenhouse = gh;
-    const glass = new THREE.MeshStandardMaterial({color:0xcff5ec, emissive:0x2a8f7a, emissiveIntensity:.35, transparent:true, opacity:.26, roughness:.1, metalness:.1, side:THREE.DoubleSide, depthWrite:false});
+    const glass = new THREE.MeshStandardMaterial({color:0x5fae7c, emissive:0x1d5f3e, emissiveIntensity:.45, transparent:true, opacity:.62, roughness:.15, metalness:.1, side:THREE.DoubleSide, depthWrite:false});
     const fr2 = rmat(0xf3e6c8, {metalness:.3}), gold = rmat(0xf2a93b, {metalness:.6, roughness:.35}), plinth = rmat(0x9a8c70);
     const G = (geo, x, y, z) => { const m = rm(gh, geo, glass, x, y, z); m.castShadow = false; return m; };
     const dome = (r, x, y, z) => { G(new THREE.SphereGeometry(r, 20, 10, 0, Math.PI*2, 0, Math.PI/2), x, y, z);
@@ -1461,32 +1461,54 @@ document.getElementById('goBtn').onclick = () => {
     for (const sd of [-1,1]){ for (let i=0;i<4;i++) plant(sd*(3.1 + i*.9), (i%2 ? .7 : -.7), pi++); for (let i=0;i<4;i++){ const a = i/4*Math.PI*2; plant(sd*7.6 + Math.cos(a)*.9, Math.sin(a)*.9, pi++); } }
     const vine = new THREE.MeshStandardMaterial({color:0x7dffc8, emissive:0x2fbf8a, emissiveIntensity:.7}); glowMats.push(vine);
     for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; for (let k=0;k<6;k++) rm(gh, new THREE.SphereGeometry(.07,6,4), vine, Math.cos(a)*(2.2 - k*.05), 3.7 - k*.24, Math.sin(a)*(2.2 - k*.05)).scale.set(1,.6,.6); }
+    { // packed with greenery: leafy mounds, tall plants pressing the glass, and vines trailing from every roof
+      const inside = (x, z) => (Math.hypot(x, z) < 2.3) || (Math.abs(x) > 2.4 && Math.abs(x) < 6.1 && Math.abs(z) < 1.35) || (Math.hypot(Math.abs(x) - 7.6, z) < 1.55) || (Math.abs(x) < .75 && z > 2.45 && z < 3.75);
+      const greens = [0x2f6b3a, 0x3f8a46, 0x5aa652, 0x24572f, 0x4f9a5e, 0x6fb86a], N = 320, fol = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), rmat(0xffffff), N), cc2 = new THREE.Color(), M5 = new THREE.Matrix4(), Q5 = new THREE.Quaternion(), P5 = new THREE.Vector3(), S5 = new THREE.Vector3();
+      let n5 = 0; for (let tr2=0; tr2<4000 && n5<N; tr2++){ const x = (Math.random()-.5)*18.4, z = (Math.random()-.5)*3.2 + (Math.random() < .08 ? 3 : 0); if (!inside(x, z)) continue;
+        const roofH = Math.hypot(x, z) < 2.3 ? 4.2 : (Math.abs(x) > 6.5 ? 3.4 : 2.7), y = .6 + Math.random()*(roofH - .9), r = .25 + Math.random()*.45;
+        M5.compose(P5.set(x, y, z), Q5.setFromAxisAngle(P5.clone().set(0,1,0), Math.random()*6), S5.set(r, r*(1 + Math.random()*.5), r)); fol.setMatrixAt(n5, M5); fol.setColorAt(n5++, cc2.setHex(greens[n5%6])); }
+      fol.count = n5; fol.instanceColor.needsUpdate = true; fol.castShadow = false; gh.add(fol);
+      const VS = 70, VK = 9, vines = new THREE.InstancedMesh(new THREE.SphereGeometry(.08, 6, 4), rmat(0x3f8a46), VS*VK); let nv = 0;
+      for (let i=0;i<VS;i++){ let x, z; do { x = (Math.random()-.5)*18; z = (Math.random()-.5)*3; } while (!inside(x, z));
+        const top = Math.hypot(x, z) < 2.3 ? 5.4 : (Math.abs(x) > 6.5 ? 4.3 : 3.9), len = 4 + Math.floor(Math.random()*6);
+        for (let k=0;k<VK;k++){ if (k >= len){ M5.compose(P5.set(0,-50,0), Q5.identity(), S5.set(.001,.001,.001)); vines.setMatrixAt(nv++, M5); continue; }
+          M5.compose(P5.set(x + Math.sin(k*.9 + i)*.06, top - k*.24, z + Math.cos(k*.7 + i)*.06), Q5.setFromAxisAngle(S5.set(0,1,0), k + i), S5.set(1.2, .6, .5)); vines.setMatrixAt(nv++, M5); } }
+      vines.castShadow = false; gh.add(vines); }
     const gL = new THREE.PointLight(0x8fffd8, 2.2, 16, 1.4); gL.position.set(0, 2.8, 0); gh.add(gL);
     YARD.ghAnim = (t) => { glowMats.forEach((mt,i) => { mt.emissiveIntensity = .55 + Math.sin(t*.9 + i*1.3)*.35; }); gL.intensity = 2 + Math.sin(t*.6)*.4; }; }
-  { // the storytelling forest: dense mixed woods with winding hidden paths, glowing mushrooms, fireflies, and a siren in each hidden clearing
-    const trail = pivot(scene); YARD.trail = trail; const stoneM = rmat(0xa89a7c);
-    const R = (() => { let x = 1234567; return () => (x = (x*16807) % 2147483647) / 2147483647; })();
-    const paths = [
-      [[14,-34.5],[15.5,-38],[14.5,-42],[17,-46],[16,-50],[18.5,-54],[17,-58],[19,-63],[22,-66]],
-      [[15,-42],[19,-41.5],[23,-43],[27,-42],[31,-44.5],[35,-43]],
-      [[17,-50],[21,-51],[24.5,-49],[28,-52],[30,-56],[34,-55],[37,-58]],
-      [[18.5,-58],[22,-59],[25,-62],[28.5,-61],[31,-65],[35,-66]],
-      [[27,-42],[26,-46],[28,-52]] ].map(pts => new THREE.CatmullRomCurve3(pts.map(([x,z]) => new THREE.Vector3(x,0,z))));
-    const pathPts = []; paths.forEach(c => { const L = c.getLength(); for (let i=0;i<=L/.5;i++) pathPts.push(c.getPointAt(Math.min(1, i*.5/L))); });
-    const clearings = [[16,-50.5],[35,-43],[37,-58],[22,-66],[35,-66]].map(([x,z]) => new THREE.Vector3(x,0,z));
-    // soft packed-dirt paths with a few stepping stones
-    const dirt = new THREE.InstancedMesh(new THREE.CircleGeometry(.55, 10), rmat(0x5a4632, {flatShading:false}), pathPts.length), M4 = new THREE.Matrix4(), Q4 = new THREE.Quaternion(), E4 = new THREE.Euler(), P4 = new THREE.Vector3(), S4 = new THREE.Vector3();
+  { // the storytelling woods: an organic band of mixed forest that swoops behind the amphitheater and the greenhouse, with a winding hiking path you walk by tapping stepping stones
+    const trail = pivot(scene); YARD.trail = trail; const stoneM = rmat(0xb8ab8c);
+    const R = (() => { let x = 2468013; return () => (x = (x*16807) % 2147483647) / 2147483647; })();
+    const spine = new THREE.CatmullRomCurve3([[23,-37],[31,-44],[33,-53],[28,-62],[17,-69],[3,-72],[-11,-70],[-23,-64],[-33,-57],[-37,-48],[-34,-39]].map(([x,z]) => new THREE.Vector3(x,0,z)));
+    const SP = spine.getSpacedPoints(400), halfW = (u) => 7.5 + 2.6*Math.sin(u*17 + .6) + 1.4*Math.sin(u*41 + 2.1);
+    const spineInfo = (x, z) => { let bd = 1e9, bi = 0; for (let i=0;i<SP.length;i+=2){ const d = (SP[i].x-x)**2 + (SP[i].z-z)**2; if (d < bd){ bd = d; bi = i; } } return {d:Math.sqrt(bd), u:bi/400}; };
+    const blocked = (x, z) => z > -35.5 || Math.hypot(x, z + 51.5) < 11.8 || (x > -32.5 && x < -9.5 && z > -52.5 && z < -41) || Math.hypot(x, z) > 86;
+    const inBand = (x, z) => { const q = spineInfo(x, z); return q.d < halfW(q.u) && !blocked(x, z); };
+    // the main trail wanders back and forth across the band; short spurs lead off it, some to sirens, some to dead ends
+    const wig = (u, amp, f, ph) => { const pt = spine.getPointAt(u), tg = spine.getTangentAt(u); return new THREE.Vector3(pt.x - tg.z*amp*Math.sin(u*f + ph), 0, pt.z + tg.x*amp*Math.sin(u*f + ph)); };
+    const mainPts = []; for (let i=0;i<=60;i++) mainPts.push(wig(i/60, 3.2, 38, .4));
+    const curves = [new THREE.CatmullRomCurve3(mainPts)];
+    const sirenU = [.12, .31, .5, .69, .9], spurU = [.22, .41, .6, .79], clearings = [];
+    const spur = (u, side, len, toClear) => { const st = wig(u, 3.2, 38, .4), tg = spine.getTangentAt(u), nx = -tg.z*side, nz = tg.x*side, pts = [st];
+      for (let k=1;k<=4;k++){ const f = k/4; pts.push(new THREE.Vector3(st.x + nx*len*f + tg.x*Math.sin(f*3 + u*9)*1.6, 0, st.z + nz*len*f + tg.z*Math.sin(f*3 + u*9)*1.6)); }
+      let end = pts[pts.length-1], tries = 0; while (!inBand(end.x, end.z) && tries++ < 6){ pts.forEach((q,k) => { if (k) { q.x = st.x + (q.x - st.x)*.8; q.z = st.z + (q.z - st.z)*.8; } }); end = pts[pts.length-1]; }
+      curves.push(new THREE.CatmullRomCurve3(pts)); if (toClear) clearings.push(end.clone()); };
+    sirenU.forEach((u,i) => spur(u, i%2 ? 1 : -1, 5.5 + R()*1.5, true)); spurU.forEach((u,i) => spur(u, i%2 ? -1 : 1, 3.5 + R()*1.5, false));
+    const pathPts = []; curves.forEach(c => { const L = c.getLength(); for (let i=0;i<=L/.5;i++) pathPts.push(c.getPointAt(Math.min(1, i*.5/L))); });
+    const M4 = new THREE.Matrix4(), Q4 = new THREE.Quaternion(), E4 = new THREE.Euler(), P4 = new THREE.Vector3(), S4 = new THREE.Vector3(), cc = new THREE.Color();
+    const dirt = new THREE.InstancedMesh(new THREE.CircleGeometry(.6, 10), rmat(0x5a4632, {flatShading:false}), pathPts.length);
     pathPts.forEach((q,i) => { E4.set(-Math.PI/2, 0, 0); Q4.setFromEuler(E4); M4.compose(P4.set(q.x, .02, q.z), Q4, S4.set(1,1,1)); dirt.setMatrixAt(i, M4); }); dirt.receiveShadow = true; trail.add(dirt);
-    for (let i=0;i<pathPts.length;i+=5){ const q = pathPts[i], st2 = rm(trail, new THREE.CylinderGeometry(.24,.28,.05,7), stoneM, q.x + (R()-.5)*.3, .04, q.z + (R()-.5)*.3); st2.rotation.y = i; st2.castShadow = false; }
+    // stepping stones: tap one to walk to it
+    const stones = []; curves.forEach((c, ci) => { const L = c.getLength(), n = Math.max(2, Math.round(L/2.2)); for (let i=0;i<=n;i++){ const u = i/n, q = c.getPointAt(u), tg = c.getTangentAt(Math.min(.999, u));
+      const st2 = rm(trail, new THREE.CylinderGeometry(.36,.4,.07,8), stoneM, q.x, .045, q.z); st2.rotation.y = R()*3; st2.castShadow = false; stones.push({m:st2, p:q.clone(), tg:tg.clone(), ci, u}); } });
     clearings.forEach(c => { const g = rm(trail, new THREE.CircleGeometry(2.3, 18), rmat(0x4f5a34, {flatShading:false}), c.x, .025, c.z); g.rotation.x = -Math.PI/2; g.castShadow = false; });
-    // a dense mix of trees placed off the paths and clearings
-    const near = (x, z) => { for (const q of pathPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.6) return true; for (const c of clearings) if ((c.x-x)**2 + (c.z-z)**2 < 7.3) return true; return false; };
-    const trees = []; for (let tries=0; tries<6000 && trees.length < 260; tries++){ const x = 11 + R()*31, z = -36 - R()*34; if (near(x, z)) continue; if (trees.some(t => (t.x-x)**2 + (t.z-z)**2 < 1.45)) continue; trees.push({x, z, k:.75 + R()*.6, type:Math.floor(R()*4)}); }
+    const near = (x, z) => { for (const q of pathPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.7) return true; for (const c of clearings) if ((c.x-x)**2 + (c.z-z)**2 < 7.3) return true; return false; };
+    const trees = []; for (let tries=0; tries<16000 && trees.length < 520; tries++){ const x = -46 + R()*86, z = -34 - R()*44; if (!inBand(x, z) || near(x, z)) continue; if (trees.some(t => (t.x-x)**2 + (t.z-z)**2 < 1.5)) continue; trees.push({x, z, k:.75 + R()*.6, type:Math.floor(R()*4)}); }
     const cnt = [0,0,0,0]; trees.forEach(t => cnt[t.type]++);
     const trunkD = new THREE.InstancedMesh(new THREE.CylinderGeometry(.16,.24,1,6), rmat(0x3b2f2a), trees.length), trunkB = new THREE.InstancedMesh(new THREE.CylinderGeometry(.1,.13,1,6), rmat(0xe8e2d4), cnt[2] + 1);
     const leafCols = [0x24432f, 0x2c4a3a, 0x35583e, 0x3f5f36, 0x2a3d4a];
     const blobs = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), rmat(0xffffff), trees.length*3 + clearings.length*3 + Math.ceil(pathPts.length/3) + 2), cols = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), rmat(0xffffff), cnt[1] + 1);
-    const cc = new THREE.Color(); let nd = 0, nb = 0, nbl = 0, nc = 0;
+    let nd = 0, nb = 0, nbl = 0, nc = 0;
     const blob = (x, y, z, r, sy, col) => { M4.compose(P4.set(x, y, z), Q4.identity(), S4.set(r, r*sy, r)); blobs.setMatrixAt(nbl, M4); blobs.setColorAt(nbl++, cc.setHex(col)); };
     trees.forEach((t,i) => { const k = t.k, col = leafCols[i%5];
       if (t.type === 2){ const h = 3.4*k; M4.compose(P4.set(t.x, h/2, t.z), Q4.identity(), S4.set(k,h,k)); trunkB.setMatrixAt(nb++, M4); blob(t.x, h + .3, t.z, .95*k, 1.2, 0x5f8a4a); blob(t.x + .4*k, h - .3, t.z + .2, .7*k, 1.1, 0x6a9a52); return; }
@@ -1494,36 +1516,32 @@ document.getElementById('goBtn').onclick = () => {
       if (t.type === 1){ M4.compose(P4.set(t.x, h + 1.8*k, t.z), Q4.identity(), S4.set(.75*k, 2.4*k, .75*k)); cols.setMatrixAt(nc, M4); cols.setColorAt(nc++, cc.setHex(0x23402e)); return; }
       if (t.type === 3){ blob(t.x, h + 1.0*k, t.z, 2.1*k, .55, 0x3a5a3a); blob(t.x + .8*k, h + .5*k, t.z - .5*k, 1.3*k, .6, 0x2f4f36); return; }
       blob(t.x, h + 1.1*k, t.z, 1.45*k, .85, col); blob(t.x + .7*k, h + .7*k, t.z + .3*k, 1.0*k, .8, leafCols[(i+1)%5]); blob(t.x - .6*k, h + .8*k, t.z - .4*k, 1.05*k, .8, leafCols[(i+2)%5]); });
-    // high canopy that closes over each clearing so the sirens stay hidden from above
-    clearings.forEach((c,i) => { blob(c.x, 6.4, c.z, 2.8, .45, 0x2c4a3a); blob(c.x + 1.6, 6.0, c.z - 1, 1.9, .5, 0x24432f); blob(c.x - 1.4, 6.1, c.z + 1.2, 2.0, .5, 0x35583e); });
-    // branches that arch over the paths, so from above the way through stays a mystery
-    for (let i=0;i<pathPts.length;i+=3){ const q = pathPts[i]; blob(q.x + (R()-.5)*.8, 5.2 + R()*.9, q.z + (R()-.5)*.8, 1.5 + R()*.5, .45, leafCols[i%5]); }
+    clearings.forEach(c => { blob(c.x, 6.4, c.z, 2.8, .45, 0x2c4a3a); blob(c.x + 1.6, 6.0, c.z - 1, 1.9, .5, 0x24432f); blob(c.x - 1.4, 6.1, c.z + 1.2, 2.0, .5, 0x35583e); });
+    for (let i=0;i<pathPts.length;i+=3){ const q = pathPts[i]; blob(q.x + (R()-.5)*.8, 5.3 + R()*.9, q.z + (R()-.5)*.8, 1.5 + R()*.5, .45, leafCols[i%5]); }
     trunkD.count = nd; trunkB.count = nb; blobs.count = nbl; cols.count = nc; [trunkD, trunkB, blobs, cols].forEach(m => { m.castShadow = false; m.receiveShadow = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; trail.add(m); });
-    // glowing mushrooms along the paths and under the trees
-    const mN = 110, caps = new THREE.InstancedMesh(new THREE.SphereGeometry(.12, 8, 5, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshBasicMaterial({color:0xffffff}), mN), stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(.025,.035,.16,5), rmat(0xf3e6c8), mN);
+    const mN = 170, caps = new THREE.InstancedMesh(new THREE.SphereGeometry(.12, 8, 5, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshBasicMaterial({color:0xffffff}), mN), stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(.025,.035,.16,5), rmat(0xf3e6c8), mN);
     const mcol = [0x8fd6d0, 0xff9fc8, 0xb79ad8, 0xf2a93b, 0x7dffc8];
-    for (let i=0;i<mN;i++){ const q = pathPts[Math.floor(R()*pathPts.length)], a = R()*Math.PI*2, d = .8 + R()*.6, x = q.x + Math.cos(a)*d, z = q.z + Math.sin(a)*d, k = .6 + R()*.9;
+    for (let i=0;i<mN;i++){ const q = pathPts[Math.floor(R()*pathPts.length)], a = R()*Math.PI*2, d = .9 + R()*.7, x = q.x + Math.cos(a)*d, z = q.z + Math.sin(a)*d, k = .6 + R()*.9;
       M4.compose(P4.set(x, .08*k, z), Q4.identity(), S4.set(k,k,k)); stems.setMatrixAt(i, M4); M4.compose(P4.set(x, .16*k, z), Q4.identity(), S4.set(k,k*.8,k)); caps.setMatrixAt(i, M4); caps.setColorAt(i, cc.setHex(mcol[i%5])); }
     caps.instanceColor.needsUpdate = true; [caps, stems].forEach(m => { m.castShadow = false; trail.add(m); });
-    // fireflies drifting through the woods
-    const fN = 140, fly = new THREE.InstancedMesh(new THREE.SphereGeometry(.035, 6, 4), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false}), fN), fd = [];
+    const fN = 200, fly = new THREE.InstancedMesh(new THREE.SphereGeometry(.035, 6, 4), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false}), fN), fd = [];
     for (let i=0;i<fN;i++){ const q = pathPts[Math.floor(R()*pathPts.length)]; fd.push({x:q.x + (R()-.5)*3, z:q.z + (R()-.5)*3, y:.6 + R()*1.8, ph:R()*20}); fly.setColorAt(i, cc.setRGB(0,0,0)); }
     fly.castShadow = false; trail.add(fly);
-    // a siren in each clearing, with a stump to sit on and listen
-    const sCols = [0x8fd6d0, 0xb79ad8, 0xff9fc8, 0x7dffc8, 0xf2a93b], sirens = [];
-    clearings.forEach((c,i) => { const toward = pathPts.reduce((b,q) => { const d = (q.x-c.x)**2 + (q.z-c.z)**2; return d < b.d ? {d, q} : b; }, {d:1e9, q:c}).q;
+    const sCols = [0x8fd6d0, 0xb79ad8, 0xff9fc8, 0x7dffc8, 0xf2a93b], sirens = [], sirenMeshes = [];
+    clearings.forEach((c,i) => { const toward = pathPts.reduce((bst,q) => { const d = (q.x-c.x)**2 + (q.z-c.z)**2; return d > 4 && d < bst.d ? {d, q} : bst; }, {d:1e9, q:new THREE.Vector3(c.x, 0, c.z + 3)}).q;
       const ang = Math.atan2(toward.x - c.x, toward.z - c.z), sv = pivot(trail, c.x - Math.sin(ang)*.6, 0, c.z - Math.cos(ang)*.6); sv.rotation.y = ang;
       const gm = new THREE.MeshStandardMaterial({color:sCols[i], emissive:sCols[i], emissiveIntensity:.9, transparent:true, opacity:.8, roughness:.4, side:THREE.DoubleSide});
       rm(sv, new THREE.CylinderGeometry(.16,.55,1.5,16,1,true), gm, 0,.75,0); rm(sv, new THREE.CylinderGeometry(.12,.17,.36,10), gm, 0,1.46,0); rm(sv, new THREE.SphereGeometry(.2,12,10), gm, 0,1.78,0);
       for (let k=0;k<6;k++){ const h = rm(sv, new THREE.SphereGeometry(.1,8,6), gm, (k-2.5)*.065, 1.38, -.15 - Math.abs(k-2.5)*.01); h.scale.set(.75, 4.2 - (k%2)*.9, .6); }
       for (const sd of [-1,1]){ const arm = pivot(sv, sd*.17, 1.5, 0); rm(arm, new THREE.CylinderGeometry(.04,.035,.5,6), gm, 0,-.25,0); arm.rotation.z = sd*.55; arm.rotation.x = -.6; }
-      rm(trail, new THREE.CylinderGeometry(.32,.36,.42,10), rmat(0x6e4a32), c.x + Math.sin(ang)*1.3, .21, c.z + Math.cos(ang)*1.3);
+      const stump = new THREE.Vector3(c.x + Math.sin(ang)*1.3, 0, c.z + Math.cos(ang)*1.3); rm(trail, new THREE.CylinderGeometry(.32,.36,.42,10), rmat(0x6e4a32), stump.x, .21, stump.z);
       const orbs = []; for (let k=0;k<4;k++){ const o = rm(trail, new THREE.SphereGeometry(.06,8,6), new THREE.MeshBasicMaterial({color:[0xf3e6c8, sCols[i]][k%2]}), c.x, 1.6, c.z); o.castShadow = false; orbs.push(o); }
-      sirens.push({sv, c, ph:i*2.1, orbs}); });
+      sirens.push({sv, c, ph:i*2.1, orbs, stump, ang}); sirenMeshes.push(sv); });
     YARD.sirenAnim = (t) => {
       sirens.forEach(S => { S.sv.position.y = .15 + Math.sin(t*.9 + S.ph)*.08; S.orbs.forEach((o,k) => { const a = t*.4 + k*1.57 + S.ph; o.position.set(S.sv.position.x + Math.cos(a)*.7, 1.5 + Math.sin(t*.8 + k)*.35, S.sv.position.z + Math.sin(a)*.7); }); });
-      for (let i=0;i<fN;i++){ const f = fd[i], b = Math.max(0, Math.sin(t*1.7 + f.ph)); M4.compose(P4.set(f.x + Math.sin(t*.3 + f.ph)*.8, f.y + Math.sin(t*.7 + f.ph*2)*.3, f.z + Math.cos(t*.25 + f.ph)*.8), Q4.identity(), S4.set(1,1,1)); fly.setMatrixAt(i, M4); fly.setColorAt(i, cc.setRGB(b, b*.9, b*.35)); }
-      fly.instanceMatrix.needsUpdate = true; fly.instanceColor.needsUpdate = true; }; }
+      for (let i=0;i<fN;i++){ const f = fd[i], bb = Math.max(0, Math.sin(t*1.7 + f.ph)); M4.compose(P4.set(f.x + Math.sin(t*.3 + f.ph)*.8, f.y + Math.sin(t*.7 + f.ph*2)*.3, f.z + Math.cos(t*.25 + f.ph)*.8), Q4.identity(), S4.set(1,1,1)); fly.setMatrixAt(i, M4); fly.setColorAt(i, cc.setRGB(bb, bb*.9, bb*.35)); }
+      fly.instanceMatrix.needsUpdate = true; fly.instanceColor.needsUpdate = true; };
+    YARD.stones = stones; YARD.sirens = sirens; YARD.trailStart = stones[0].p.clone(); YARD.trailDir = stones[0].tg.clone(); }
   /* --- free-roaming yard animals: a dog and two chickens on a slow loop around the house, front yard to backyard --- */
   { const loop = new THREE.CatmullRomCurve3([[0,5.6],[5.6,5.2],[7.1,2.5],[7.0,0],[6.9,-5.9],[5.5,-7.6],[5.4,-9.5],[4.5,-10.0],[0,-10.0],[-4.5,-10.0],[-5.4,-9.5],[-5.5,-7.6],[-6.9,-5.9],[-7.0,0],[-7.1,2.5],[-5.6,5.2]].map(([x,z]) => new THREE.Vector3(x, 0, z)), true);
     const dogM = rmat(0xb5763a), dogD = rmat(0x5a3420), dogL = rmat(0xf3e6c8), blk = rmat(0x111111);
@@ -1543,6 +1561,14 @@ document.getElementById('goBtn').onclick = () => {
       for (const s of [-1,1]) rm(hd, new THREE.SphereGeometry(.01,4,3), blk, s*.05,.06,.04);
       const legs = []; for (const s of [-1,1]){ const lg = pivot(c, s*.045, .16, 0); rm(lg, new THREE.CylinderGeometry(.01,.01,.16,4), yel, 0,-.08,0); rm(lg, new THREE.BoxGeometry(.05,.01,.06), yel, 0,-.16,.02); legs.push(lg); }
       c.userData = {head:hd, legs}; return c; };
+    { // stepping stones all the way around the house, with spurs to the chicken coop and down the corn path into the backyard
+      const ys = [], sm = rmat(0xa89a7c), add = (x, z, tx, tz) => { const m = rm(scene, new THREE.CylinderGeometry(.4,.44,.06,7), sm, x, .035, z); m.rotation.y = x*3 + z; m.castShadow = false; const tg = new THREE.Vector3(tx, 0, tz).normalize(); ys.push({m, p:new THREE.Vector3(x, 0, z), tg, back:z < -6.4}); };
+      const L = loop.getLength(), n = Math.round(L/2.1);
+      for (let i=0;i<n;i++){ const u = i/n, q = loop.getPointAt(u), tg = loop.getTangentAt(u); if (Math.abs(q.x) < 1.2 && q.z > 4.4) continue; add(q.x, q.z, tg.x, tg.z); }
+      [[-7.7,.9],[-8.1,-.1]].forEach(([x,z]) => add(x, z, -9.6 - x, -3.0 - z));
+      for (let z = -12.2; z >= -19.6; z -= 2.1) add(0, z, 0, -1);
+      for (const sd of [-1,1]) for (let x = 2.1; x <= 8.4; x += 2.1) add(sd*x, -20, sd, 0);
+      YARD.yardStones = ys; }
     const hens = [{g:chicken(0xf3e6c8), u:.3, per:150, off:.55, ph:0}, {g:chicken(0x8a4a24), u:.36, per:175, off:.95, ph:2.1}];
     const place = (g, u, off, bob) => { const p = loop.getPointAt(u), tg = loop.getTangentAt(u); g.position.set(p.x - tg.z*off, bob, p.z + tg.x*off); g.rotation.y = Math.atan2(tg.x, tg.z); };
     let lastT = null;
@@ -1611,7 +1637,21 @@ document.getElementById('goBtn').onclick = () => {
   BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
   register('amphi', YARD.amphi, new THREE.Vector3(0, 5.4, -53.5), [[0,7.5,-38],[0,2,-52]]); spots.amphi.wide = true;
   register('greenhouse', YARD.greenhouse, new THREE.Vector3(-21, 8.2, -47), [[-12,6.5,-34],[-21,2.6,-47]]); spots.greenhouse.wide = true; spots.greenhouse.anim = YARD.ghAnim;
-  register('sirens', YARD.trail, new THREE.Vector3(15, 4.2, -36), [[14.4,2.3,-35.2],[16,1.4,-42.5]]); spots.sirens.wide = true; spots.sirens.anim = YARD.sirenAnim;
+  { const s0 = YARD.trailStart, d0 = YARD.trailDir; register('sirens', YARD.trail, new THREE.Vector3(s0.x, 4.2, s0.z), [[s0.x - d0.x*4, 2.4, s0.z - d0.z*4],[s0.x + d0.x*5, 1.3, s0.z + d0.z*5]]); }
+  spots.sirens.wide = true; spots.sirens.anim = YARD.sirenAnim;
+  YARD.stones.forEach((st,i) => { st.m.userData.key = 'hike' + i; hitList.push(st.m); });
+  YARD.yardStones.forEach((st,i) => { st.m.userData.key = 'walk' + i; hitList.push(st.m); });
+  YARD.walk = (i) => { const st = YARD.yardStones[i]; if (!st) return; if (st.back && LOCKED('backporch')){ openSpot('backporch'); return; }
+    if (current){ card.classList.remove('open'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
+    const cam = camera.position, fwd = st.tg.clone(), toCam = new THREE.Vector3(cam.x - st.p.x, 0, cam.z - st.p.z); if (toCam.dot(fwd) > 0) fwd.negate();
+    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 5 ? [] : undefined); };
+  YARD.sirens.forEach((S,i) => S.sv.traverse(m => { if (m.isMesh) m.userData.key = 'siren' + i; }));
+  // walk the trail: a tapped stone carries you there at eye height, facing on down the path; tap a siren to sit on her stump
+  YARD.hike = (i) => { const st = YARD.stones[i]; if (!st) return; if (LOCKED('sirens')){ openSpot('sirens'); return; }
+    if (current){ card.classList.remove('open'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
+    const cam = camera.position, fwd = st.tg.clone(), toCam = new THREE.Vector3(cam.x - st.p.x, 0, cam.z - st.p.z); if (toCam.dot(fwd) > 0) fwd.negate();
+    flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 30 ? [] : undefined); };
+  YARD.sitWithSiren = (i) => { const S = YARD.sirens[i]; if (!S) return; spots.sirens.view = [[S.stump.x, 1.15, S.stump.z],[S.c.x, 1.5, S.c.z]]; openSpot('sirens'); };
   YARD.dog.traverse(m => { if (m.isMesh){ m.userData.key = 'dog'; hitList.push(m); } });
   YARD.hens.forEach((h,i) => h.g.traverse(m => { if (m.isMesh){ m.userData.key = 'hen' + i; hitList.push(m); } }));
   YARD.toy.traverse(m => { if (m.isMesh){ m.userData.key = 'toybox'; hitList.push(m); } }); YARD.stick.userData.key = 'stick'; hitList.push(YARD.stick);
@@ -1847,7 +1887,7 @@ document.getElementById('goBtn').onclick = () => {
   const canvas = renderer.domElement;
   function pick(e){ const r = canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1, -((e.clientY-r.top)/r.height)*2+1); ray.setFromCamera(ptr, camera); const h = ray.intersectObjects(hitList, false)[0]; return h ? h.object.userData.key : null; }
   canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; if (tween){ camera.position.copy(tween.p1); controls.target.copy(tween.t1); tween = null; if (pendingLimits){ setLimits(pendingLimits); pendingLimits = null; } } });
-  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k === 'tvnext' || k === 'tvprev') tvSkip(k === 'tvnext' ? 1 : -1); else if (k === 'teacup0' || k === 'teacup1'){ const c = ROOM.tea.cups[+k[6]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.tea.s < 0) drinkCup(c); else if (current !== 'tea') openSpot('tea'); else pourTea(); } else if (k === 'cup0' || k === 'cup1'){ const c = ROOM.pour.cups[+k[3]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.pour.s < 0) drinkCup(c); else if (current !== 'coffee') openSpot('coffee'); else repour(); } else if (k === 'onion'){ if (LOCKED('stove')) openSpot('stove'); else chopOnion(); } else if (k === 'dog') YARD.petDog(); else if (k === 'toybox' || k === 'stick') YARD.throwStick(); else if (k === 'hen0' || k === 'hen1') YARD.cluck(+k[3]); else if (k === 'mappaper'){ if (current !== 'songs') openSpot('songs'); flyToMap('wellerman'); } else if (k) openSpot(k); });
+  canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX-down[0], e.clientY-down[1]); down = null; if (moved > 6) return; const k = pick(e); if (k === 'exit') goOutside(); else if (k === 'tvnext' || k === 'tvprev') tvSkip(k === 'tvnext' ? 1 : -1); else if (k === 'teacup0' || k === 'teacup1'){ const c = ROOM.tea.cups[+k[6]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.tea.s < 0) drinkCup(c); else if (current !== 'tea') openSpot('tea'); else pourTea(); } else if (k === 'cup0' || k === 'cup1'){ const c = ROOM.pour.cups[+k[3]]; if (c.fill.visible && c.fill.position.y > c.hotY && ROOM.pour.s < 0) drinkCup(c); else if (current !== 'coffee') openSpot('coffee'); else repour(); } else if (k === 'onion'){ if (LOCKED('stove')) openSpot('stove'); else chopOnion(); } else if (k && k.startsWith('hike')) YARD.hike(+k.slice(4)); else if (k && k.startsWith('walk')) YARD.walk(+k.slice(4)); else if (k && k.startsWith('siren') && k !== 'sirens') YARD.sitWithSiren(+k.slice(5)); else if (k === 'dog') YARD.petDog(); else if (k === 'toybox' || k === 'stick') YARD.throwStick(); else if (k === 'hen0' || k === 'hen1') YARD.cluck(+k[3]); else if (k === 'mappaper'){ if (current !== 'songs') openSpot('songs'); flyToMap('wellerman'); } else if (k) openSpot(k); });
   canvas.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const k = pick(e); if (k !== hoverKey){ hoverKey = k; canvas.classList.toggle('hovering', !!k); Object.entries(tags).forEach(([kk,t]) => t.classList.toggle('on', kk === k || kk === current)); } });
 
   /* --- porch TV: YouTube's own player sits over the screen while you're in the parlor --- */
