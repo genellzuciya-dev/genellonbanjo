@@ -1541,7 +1541,7 @@ document.getElementById('goBtn').onclick = () => {
       sirens.forEach(S => { S.sv.position.y = .15 + Math.sin(t*.9 + S.ph)*.08; S.orbs.forEach((o,k) => { const a = t*.4 + k*1.57 + S.ph; o.position.set(S.sv.position.x + Math.cos(a)*.7, 1.5 + Math.sin(t*.8 + k)*.35, S.sv.position.z + Math.sin(a)*.7); }); });
       for (let i=0;i<fN;i++){ const f = fd[i], bb = Math.max(0, Math.sin(t*1.7 + f.ph)); M4.compose(P4.set(f.x + Math.sin(t*.3 + f.ph)*.8, f.y + Math.sin(t*.7 + f.ph*2)*.3, f.z + Math.cos(t*.25 + f.ph)*.8), Q4.identity(), S4.set(1,1,1)); fly.setMatrixAt(i, M4); fly.setColorAt(i, cc.setRGB(bb, bb*.9, bb*.35)); }
       fly.instanceMatrix.needsUpdate = true; fly.instanceColor.needsUpdate = true; };
-    YARD.stones = stones; YARD.sirens = sirens; YARD.trailStart = stones[0].p.clone(); YARD.trailDir = stones[0].tg.clone(); }
+    YARD.stones = stones; YARD.sirens = sirens; YARD.trailStart = stones[0].p.clone(); YARD.trailDir = stones[3].p.clone().sub(stones[0].p).setY(0).normalize(); }
   /* --- free-roaming yard animals: a dog and two chickens on a slow loop around the house, front yard to backyard --- */
   { const loop = new THREE.CatmullRomCurve3([[0,5.6],[5.6,5.2],[7.1,2.5],[7.0,0],[6.9,-5.9],[5.5,-7.6],[5.4,-9.5],[4.5,-10.0],[0,-10.0],[-4.5,-10.0],[-5.4,-9.5],[-5.5,-7.6],[-6.9,-5.9],[-7.0,0],[-7.1,2.5],[-5.6,5.2]].map(([x,z]) => new THREE.Vector3(x, 0, z)), true);
     const dogM = rmat(0xb5763a), dogD = rmat(0x5a3420), dogL = rmat(0xf3e6c8), blk = rmat(0x111111);
@@ -1637,8 +1637,8 @@ document.getElementById('goBtn').onclick = () => {
   BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
   register('amphi', YARD.amphi, new THREE.Vector3(0, 5.4, -53.5), [[0,7.5,-38],[0,2,-52]]); spots.amphi.wide = true;
   register('greenhouse', YARD.greenhouse, new THREE.Vector3(-21, 8.2, -47), [[-12,6.5,-34],[-21,2.6,-47]]); spots.greenhouse.wide = true; spots.greenhouse.anim = YARD.ghAnim;
-  { const s0 = YARD.trailStart, d0 = YARD.trailDir; register('sirens', YARD.trail, new THREE.Vector3(s0.x, 4.2, s0.z), [[s0.x - d0.x*4, 2.4, s0.z - d0.z*4],[s0.x + d0.x*5, 1.3, s0.z + d0.z*5]]); }
-  spots.sirens.wide = true; spots.sirens.anim = YARD.sirenAnim;
+  { const s0 = YARD.trailStart, d0 = YARD.trailDir; register('sirens', YARD.trail, new THREE.Vector3(s0.x, 4.2, s0.z), [[s0.x, 1.6, s0.z],[s0.x + d0.x*3, 1.35, s0.z + d0.z*3]]); }
+  spots.sirens.inside = true; spots.sirens.homeView = spots.sirens.view; spots.sirens.anim = YARD.sirenAnim;
   YARD.stones.forEach((st,i) => { st.m.userData.key = 'hike' + i; hitList.push(st.m); });
   YARD.yardStones.forEach((st,i) => { st.m.userData.key = 'walk' + i; hitList.push(st.m); });
   YARD.walk = (i) => { const st = YARD.yardStones[i]; if (!st) return; if (st.back && LOCKED('backporch')){ openSpot('backporch'); return; }
@@ -1651,7 +1651,7 @@ document.getElementById('goBtn').onclick = () => {
     if (current){ card.classList.remove('open'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
     const cam = camera.position, fwd = st.tg.clone(), toCam = new THREE.Vector3(cam.x - st.p.x, 0, cam.z - st.p.z); if (toCam.dot(fwd) > 0) fwd.negate();
     flyTo(new THREE.Vector3(st.p.x, 1.6, st.p.z), new THREE.Vector3(st.p.x + fwd.x*3, 1.35, st.p.z + fwd.z*3), IN_LIMITS, null, cam.distanceTo(st.p) < 30 ? [] : undefined); };
-  YARD.sitWithSiren = (i) => { const S = YARD.sirens[i]; if (!S) return; spots.sirens.view = [[S.stump.x, 1.15, S.stump.z],[S.c.x, 1.5, S.c.z]]; openSpot('sirens'); };
+  YARD.sitWithSiren = (i) => { const S = YARD.sirens[i]; if (!S) return; spots.sirens.view = [[S.stump.x, 1.15, S.stump.z],[S.c.x, 1.5, S.c.z]]; openSpot('sirens'); spots.sirens.view = spots.sirens.homeView; };
   YARD.dog.traverse(m => { if (m.isMesh){ m.userData.key = 'dog'; hitList.push(m); } });
   YARD.hens.forEach((h,i) => h.g.traverse(m => { if (m.isMesh){ m.userData.key = 'hen' + i; hitList.push(m); } }));
   YARD.toy.traverse(m => { if (m.isMesh){ m.userData.key = 'toybox'; hitList.push(m); } }); YARD.stick.userData.key = 'stick'; hitList.push(YARD.stick);
