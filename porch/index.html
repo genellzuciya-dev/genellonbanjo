@@ -44,6 +44,21 @@ body{background:var(--indigo-0);color:var(--ink);font-family:var(--mono);font-si
 .grain::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(34,57,122,.55) .8px,transparent 1.3px) 0 0/4px 4px;mix-blend-mode:multiply;opacity:.22}
 .mapview{position:fixed;inset:0;z-index:6;display:grid;place-items:center;background:rgba(7,11,34,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:16px}
 .mapview[hidden]{display:none}
+.mazeview{position:fixed;inset:0;z-index:7;display:grid;place-items:center;background:rgba(7,11,34,.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:12px}
+.mazeview[hidden]{display:none}
+.mazebox{width:min(780px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px 18px;position:relative}
+.mazebox .close{position:static;flex:none;font:inherit;font-size:18px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.mazestage{position:relative;display:flex;justify-content:center;border-radius:12px;overflow:hidden;box-shadow:0 0 0 3px var(--cream),8px 8px 0 3px var(--marigold);margin:4px 10px 4px 0;background:#2c4f26}
+#mazeCanvas{display:block;touch-action:none}
+.mazemsg{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;gap:6px;background:rgba(7,11,34,.6);padding:20px}
+.mazemsg[hidden]{display:none}
+.mazemsg h3{font-family:var(--display);font-weight:700;font-size:clamp(22px,4vw,34px);margin:0;color:var(--cream);max-width:18ch;line-height:1.1}
+.mazemsg p{margin:0 0 10px;max-width:40ch;color:#e9e2f7}
+.mazemsg .act{min-width:230px}
+.dpad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,46px);gap:6px;justify-content:center;margin-top:14px}
+.dpad button{font:inherit;font-size:18px;border-radius:12px;border:1px solid var(--line);background:rgba(243,230,200,.12);color:var(--ink);touch-action:none}
+.dpad [data-d="0,-1"]{grid-column:2;grid-row:1}.dpad [data-d="-1,0"]{grid-column:1;grid-row:2}.dpad [data-d="1,0"]{grid-column:3;grid-row:2}.dpad [data-d="0,1"]{grid-column:2;grid-row:2}
+@media (pointer:coarse){.dpad{display:grid}}
 .mapbox{width:min(1100px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px 20px;position:relative}
 .maphead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
 .maphead .eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--marigold)}
@@ -183,6 +198,15 @@ header.top{position:fixed;top:14px;left:16px;right:16px;display:flex;justify-con
     <div class="maplinks" id="mapLinks"></div>
   </div>
 </div>
+<div class="mazeview" id="mazeView" role="dialog" aria-modal="true" aria-labelledby="mazeTitle" hidden>
+  <div class="mazebox">
+    <div class="maphead"><div><div class="eyebrow" id="mazeLevel">Field 1</div><h2 id="mazeTitle">Gone like a turkey <em>through the corn</em></h2></div><button class="close" id="mazeClose" type="button" aria-label="Close the corn maze">×</button></div>
+    <p class="mapnote">Help the turkey get out the far side of the cornfield before the farmers catch it. Arrow keys or WASD to run, or swipe.</p>
+    <div class="mazestage"><canvas id="mazeCanvas" aria-label="Corn maze seen from above"></canvas>
+      <div class="mazemsg" id="mazeMsg" hidden><h3 id="mazeMsgTitle"></h3><p id="mazeMsgText"></p><button class="act warm" id="mazeGo" type="button">Start</button></div></div>
+    <div class="dpad"><button type="button" data-d="0,-1" aria-label="Up">▲</button><button type="button" data-d="-1,0" aria-label="Left">◀</button><button type="button" data-d="1,0" aria-label="Right">▶</button><button type="button" data-d="0,1" aria-label="Down">▼</button></div>
+  </div>
+</div>
 <button class="outbtn" id="outBtn" type="button">← Back out to the porch</button>
 
 <header class="top">
@@ -236,6 +260,7 @@ const LINKS = {
   wellermanLearn: 'https://www.youtube.com/watch?v=10OMLL_pG2Q',       // song bubble map links
   littleSadie: '',
   shadyGrove: '',
+  market: [],          // porch market tables, e.g. {name:'Maker or musician', sells:'Records', url:'https://their-shop.com'}
   catHoller: '',       // audio file of the cat holler, e.g. 'audio/cat-holler.m4a'
   memberApi: 'https://porch-login.genellzuciya.workers.dev',       // the Log in with Patreon service, e.g. 'https://porch-login.yourname.workers.dev'
   tvPlaylist: 'https://www.youtube.com/playlist?list=PLOSrLODL1vG4'       // YouTube playlist link or ID for the parlor TV, e.g. 'https://www.youtube.com/playlist?list=PL...'
@@ -304,8 +329,8 @@ const SPOTS = {
       <div class="acts">${act('Practice sessions', '', '')}${act('More recipes in the kitchen', '', '')}${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
   corn: {name:'Corn maze', members:true, eyebrow:'Members · Out back', title:'Gone like a turkey through the corn',
     body:()=>`<p>My grandfather used to say I was gone like a turkey through the corn. Out back, past the back porch, there's a corn maze where you help a turkey outrun the farmer.</p>
-      <p>${MEMBER ? 'The corn maze game is almost ready. You will be among the first to play.' : 'The corn maze game is for members of the Virtual Porch.'}</p>
-      <div class="acts">${act('Play the corn maze', '', '')}${MEMBER ? '' : act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
+      <p>Help the turkey slip past the two farmers and out the far side of the field. Every field you clear gets bigger, and the farmers get quicker.</p>
+      <div class="acts">${MEMBER ? '<button class="act warm" type="button" id="mazeBtn">Play the corn maze<span>Start</span></button>' : act('Play the corn maze', '', '') + act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
   coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Take some coffee, leave some coffee',
     body:()=>`<p>There's always a pot on. Take what you need, and if you can, leave a little for the next person.</p>
       <div class="split"><h3>Take some coffee</h3></div>
@@ -321,10 +346,21 @@ const SPOTS = {
   banjo: {name:'Gourd banjo', eyebrow:'On the wall', title:'The gourd banjo',
     body:()=>`<p>The banjo's story starts long before porches like this one, and I tell it on the main site.</p>
       <div class="acts">${act('Read the banjo\'s story', LINKS.site + '/#materiality', 'Banjo timeline', 'warm')}</div>`},
+  braids: {name:'Getting braided', members:true, yard:true, eyebrow:'Members · The back porch', title:'Cornrows on the back porch',
+    body:()=>`<p>Out on the back porch, somebody's getting their hair cornrowed. Cornrows, braided flat to the scalp in rows, came to the Americas with Africans who already carried long braiding traditions. Under slavery, Sunday was often the only time there was to do hair, so braiding was time spent together.</p>
+      <p>Maroon communities in Suriname, French Guiana and Brazil, descended from people who escaped slavery, tell of an enslaved woman who hid rice grains in her hair and planted them in freedom. Geographer Judith Carney has written about these oral histories.</p>`},
+  market: {name:'Porch market', members:true, yard:true, eyebrow:'Members · Out back', title:'The porch market',
+    body:()=>`<p>Musicians and makers set up their tables back here: records, jewelry, herbal teas, crochet blankets and more. Every table leads straight to the maker's own shop. Your membership keeps the porch going, and the market is how the porch gives back.</p>
+      <div class="acts">${(LINKS.market || []).length ? LINKS.market.map(v => act(v.name, v.url, v.sells || 'Shop')).join('') : '<span class="act soon">Vendor tables<span>Opening soon</span></span>'}</div>`},
+  indigo: {name:'Indigo dyeing', members:true, yard:true, eyebrow:'Members · Out back', title:'Three aunties and an indigo vat',
+    body:()=>`<p>Three aunties are dyeing cloth in an indigo vat, folding and tying it first so the blue takes in patterns.</p>
+      <p>In the 1700s, indigo was one of colonial South Carolina's biggest cash crops. Enslaved Africans grew it and did the hard work of turning the leaves into dye, and indigo dyeing already had deep roots in West Africa. Along the Gullah Geechee Cultural Heritage Corridor, from North Carolina to Florida, that memory lives on. So does haint blue, the pale blue painted on porch ceilings to keep haints away, like the ceiling on my front porch.</p>`},
+  musicwall: {name:'Music wall', room:true, members:true, eyebrow:'The parlor', title:'The music wall',
+    body:()=>`<p>The front wall of the parlor is a little music museum: a fiddle, an open-back banjo, a closed-back banjo, a guitar, an accordion and a washboard, the kind of instruments you hear at old-time jams and folk gatherings.</p>`},
   inside: {name:'Step inside', room:true, members:true, eyebrow:'The parlor', title:'Come on in',
     body:()=>`<p>Make yourself at home. The porch TV plays old-time musicians, dancers and cloggers on a loop. Press play on the TV and sit a while.</p>
       ${!PLAYLIST ? '' : CAN_EMBED ? '' : '<p style="color:var(--muted)">The TV plays on genellonbanjo.com. In this preview it shows a test screen.</p>'}
-      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
+      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="musicwall">See the music wall<span>Instruments</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
   couch: {name:'Sit on couch', room:true, members:true, eyebrow:'The couch', title:'Have a seat',
     body:()=>`<p>Kick back and watch a while.${PLAYLIST && CAN_EMBED ? ' Press play on the TV.' : ''}</p>
       <div class="acts">${PLAYLIST && CAN_EMBED ? '<button class="act" type="button" id="tvPrev">◀ Previous video<span>Bottom dial</span></button><button class="act" type="button" id="tvNext">Next video ▶<span>Top dial</span></button>' : ''}<button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
@@ -341,7 +377,7 @@ const SPOTS = {
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','songs','stove','coffee','backporch','corn','jambud','porchbud','chair','tea','banjo','cats'];
+const ORDER = ['inside','couch','songs','musicwall','stove','coffee','backporch','braids','market','indigo','corn','jambud','porchbud','chair','tea','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
@@ -365,6 +401,7 @@ function openSpot(key){
   const pb = document.getElementById('pourBtn'); if (pb) pb.onclick = () => repour();
   const hb = document.getElementById('hollerBtn'); if (hb) hb.onclick = () => new Audio(LINKS.catHoller).play();
   const tb = document.getElementById('teaBtn'); if (tb) tb.onclick = () => pourTea();
+  const mz = document.getElementById('mazeBtn'); if (mz) mz.onclick = () => MAZE.open();
   focusSpot(lock ? 'door' : key);
   if (key === 'cats') meowCats();
 }
@@ -386,7 +423,7 @@ function closeMap(){ document.getElementById('mapView').hidden = true; const b =
 function goOutside(){ current = 'inside'; closeCard(); }
 function closeCard(){ if (current && current !== 'inside' && SPOTS[current].room && !LOCKED(current)){ openSpot('inside'); return; } card.classList.remove('open'); card.setAttribute('aria-hidden','true'); current = null; document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); focusSpot(null); }
 document.getElementById('cardClose').onclick = closeCard;
-addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mazeView').hidden){ MAZE.close(); return; } if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 [['On the porch · free', k => !SPOTS[k].room && !SPOTS[k].members], ['Inside the house', k => SPOTS[k].room], ['Out back', k => SPOTS[k].members && !SPOTS[k].room]].forEach(([h, f]) => {
   const t = document.createElement('h3'); t.textContent = h; list.appendChild(t);
   ORDER.filter(f).forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; if (SPOTS[k].members){ const m = document.createElement('span'); m.className = 'm'; m.textContent = 'MEMBERS'; b.appendChild(m); } b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
@@ -470,6 +507,178 @@ function sip(){ [1.0, 1.35, 1.7].forEach(d => blip(260, 140, .14, .09, 'sine', d
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; if (master) master.gain.value = soundOn ? .9 : 0; };
 onStrum = bumDitty;
+
+/* ===== Corn maze: gone like a turkey through the corn =====
+   Top-down. The turkey starts by the back steps (bottom) and runs for the gap on the far side of the field (top).
+   Two farmers start in the clearing in the middle: the woman (shawl over her head, long dress) heads straight for the turkey,
+   the man (cowboy hat) cuts ahead of where it is running. Each field is bigger, with fewer shortcuts and quicker farmers. */
+const MAZE = (() => {
+  const view = document.getElementById('mazeView'), cv = document.getElementById('mazeCanvas'), g = cv.getContext('2d');
+  const msg = document.getElementById('mazeMsg'), msgT = document.getElementById('mazeMsgTitle'), msgP = document.getElementById('mazeMsgText'), goB = document.getElementById('mazeGo'), lvlEl = document.getElementById('mazeLevel');
+  let level = 1, grid = [[1]], W = 1, H = 1, S = 20, tk = null, farmers = [], state = 'idle', raf = 0, last = 0, clock = 0, want = null, exitX = 1, startX = 1;
+  let layer = null, parts = [], wonAt = 0, nextLeaf = 0;
+  const open = (x, y) => y >= 0 && y < H && x >= 0 && x < W && grid[y][x] === 0;
+  const fopen = (x, y) => y > 0 && open(x, y); // farmers stay in the field
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+  function build(n){
+    const w = 2*n+1, h = 2*n+1, m = Array.from({length:h}, () => new Array(w).fill(1));
+    const sx = Math.floor(n/2), sy = n-1, stack = [[sx, sy]], seen = new Set([sx + ',' + sy]); m[2*sy+1][2*sx+1] = 0;
+    while (stack.length){ const [cx, cy] = stack[stack.length-1];
+      const nb = DIRS.map(([dx,dy]) => [cx+dx, cy+dy, dx, dy]).filter(([x,y]) => x >= 0 && y >= 0 && x < n && y < n && !seen.has(x + ',' + y));
+      if (!nb.length){ stack.pop(); continue; }
+      const [x, y, dx, dy] = nb[Math.floor(Math.random()*nb.length)]; seen.add(x + ',' + y);
+      m[2*cy+1+dy][2*cx+1+dx] = 0; m[2*y+1][2*x+1] = 0; stack.push([x, y]); }
+    // shortcuts: open some walls between two paths so the turkey has room to dodge (fewer on later fields)
+    const frac = Math.max(.07, .2 - level*.025);
+    for (let y=1;y<h-1;y++) for (let x=1;x<w-1;x++){ if (m[y][x] !== 1) continue;
+      const hz = m[y][x-1] === 0 && m[y][x+1] === 0 && m[y-1][x] === 1 && m[y+1][x] === 1, vt = m[y-1][x] === 0 && m[y+1][x] === 0 && m[y][x-1] === 1 && m[y][x+1] === 1;
+      if ((hz || vt) && Math.random() < frac) m[y][x] = 0; }
+    // a clearing in the middle where the farmers start
+    const c = 2*Math.floor(n/2)+1; for (let y=c-1;y<=c+1;y++) for (let x=c-1;x<=c+1;x++) m[y][x] = 0;
+    // the gap out of the field, on the far side, away from the start column
+    let ex; do { ex = Math.floor(Math.random()*n); } while (n > 3 && Math.abs(ex - sx) < Math.floor(n/3));
+    m[0][2*ex+1] = 0;
+    return {m, start:[2*sx+1, 2*sy+1], exit:2*ex+1, center:c};
+  }
+  const ent = (x, y, o={}) => Object.assign({x, y, tx:x, ty:y, dx:0, dy:0, ang:-Math.PI/2, moving:false}, o);
+  function bfs(sx, sy, gx, gy){
+    if (sx === gx && sy === gy) return null;
+    const prev = new Map(), q = [[sx, sy]], key = (x, y) => y*W + x; prev.set(key(sx, sy), null);
+    while (q.length){ const [x, y] = q.shift(); if (x === gx && y === gy) break;
+      for (const [dx, dy] of DIRS){ const nx = x+dx, ny = y+dy, k = key(nx, ny); if (!fopen(nx, ny) || prev.has(k)) continue; prev.set(k, [x, y]); q.push([nx, ny]); } }
+    if (!prev.has(key(gx, gy))) return null;
+    let cur = [gx, gy]; while (true){ const p = prev.get(key(cur[0], cur[1])); if (!p || (p[0] === sx && p[1] === sy)) return [cur[0]-sx, cur[1]-sy]; cur = p; }
+  }
+  function move(e, speed, dt, choose){
+    let rem = speed*dt; e.moving = false;
+    for (let guard = 0; rem > 1e-6 && guard < 8; guard++){
+      const ddx = e.tx - e.x, ddy = e.ty - e.y, d = Math.abs(ddx) + Math.abs(ddy);
+      if (d < 1e-6){ e.x = e.tx; e.y = e.ty; const nd = choose(e); if (!nd) return; e.dx = nd[0]; e.dy = nd[1]; e.tx = e.x + nd[0]; e.ty = e.y + nd[1]; e.ang = Math.atan2(nd[1], nd[0]); continue; }
+      const s = Math.min(rem, d); e.x += Math.sign(ddx)*s; e.y += Math.sign(ddy)*s; rem -= s; e.moving = true;
+      if (s >= d){ e.x = e.tx; e.y = e.ty; } }
+  }
+  const turkeyChoice = (e) => { if (want && open(e.x + want[0], e.y + want[1])) return want; if ((e.dx || e.dy) && open(e.x + e.dx, e.y + e.dy)) return [e.dx, e.dy]; return null; };
+  const wander = (e) => { const opts = DIRS.filter(([dx,dy]) => fopen(e.x+dx, e.y+dy)); const fwd = opts.filter(([dx,dy]) => !(dx === -e.dx && dy === -e.dy)); const pool = fwd.length ? fwd : opts; return pool.length ? pool[Math.floor(Math.random()*pool.length)] : null; };
+  const farmerChoice = (f) => (e) => {
+    if (Math.random() < Math.max(.05, .32 - level*.06)) return wander(e);
+    let gx = Math.round(tk.x), gy = Math.max(1, Math.round(tk.y));
+    if (f.kind === 'man' && (tk.dx || tk.dy)){ let ax = gx, ay = gy; for (let i=0;i<4;i++){ if (fopen(ax + tk.dx, ay + tk.dy)){ ax += tk.dx; ay += tk.dy; } else break; } gx = ax; gy = ay;
+      if (Math.abs(gx - e.x) + Math.abs(gy - e.y) < 2){ gx = Math.round(tk.x); gy = Math.max(1, Math.round(tk.y)); } }
+    return bfs(e.x, e.y, gx, gy) || wander(e);
+  };
+
+  function sizeCanvas(){
+    const box = view.querySelector('.mazebox'), availW = Math.max(240, Math.min(740, (box.clientWidth || 700) - 50)), availH = Math.max(240, innerHeight - (matchMedia('(pointer:coarse)').matches ? 330 : 250));
+    S = Math.max(8, Math.floor(Math.min(availW / W, availH / H)));
+    const dpr = Math.min(2, devicePixelRatio || 1); cv.width = W*S*dpr; cv.height = H*S*dpr; cv.style.width = W*S + 'px'; cv.style.height = H*S + 'px'; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    layer = document.createElement('canvas'); layer.width = cv.width; layer.height = cv.height; const L = layer.getContext('2d'); L.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++){ const X = x*S, Y = y*S;
+      if (grid[y][x] === 0){ L.fillStyle = (x + y) % 2 ? '#6b4a2a' : '#674727'; L.fillRect(X, Y, S, S);
+        for (let k=0;k<4;k++){ L.fillStyle = Math.random() < .5 ? 'rgba(40,24,10,.35)' : 'rgba(220,180,120,.18)'; L.fillRect(X + Math.random()*S, Y + Math.random()*S, 1.5, 1.5); } }
+      else { L.fillStyle = '#2c4f26'; L.fillRect(X, Y, S, S); } }
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++){ if (grid[y][x] !== 1) continue; const X = x*S, Y = y*S;
+      for (let k=0;k<3;k++){ const px = X + S*(.25 + Math.random()*.5), py = Y + S*(.25 + Math.random()*.5), r = S*(.26 + Math.random()*.1);
+        L.fillStyle = ['#3f7a32','#4f8a3a','#5f9a42'][k]; L.beginPath(); for (let i=0;i<6;i++){ const a = i/6*Math.PI*2 + k; L.ellipse(px + Math.cos(a)*r*.45, py + Math.sin(a)*r*.45, r*.55, r*.22, a, 0, Math.PI*2); } L.fill();
+        L.fillStyle = '#e8c25a'; L.beginPath(); L.arc(px, py, Math.max(1, S*.06), 0, 7); L.fill(); } }
+    // the back steps where the turkey starts
+    L.fillStyle = '#9fb4ae'; for (let i=0;i<3;i++) L.fillRect((startX - .5)*S, (H - 1 + i*.3)*S, S*2, S*.22);
+  }
+  function newField(){
+    const n = Math.min(14, 5 + level*2), B = build(n); grid = B.m; W = grid[0].length; H = grid.length; exitX = B.exit; startX = B.start[0];
+    tk = ent(B.start[0], B.start[1]); want = null;
+    const sp = Math.min(4.6, 2.7 + level*.38);
+    farmers = [ent(B.center - 1, B.center, {kind:'woman', speed:sp, release:1.2}), ent(B.center + 1, B.center, {kind:'man', speed:sp*.96, release:3.2})];
+    farmers.forEach(f => f.choose = farmerChoice(f));
+    parts = []; clock = 0; lvlEl.textContent = 'Field ' + level; sizeCanvas();
+  }
+  function show(title, text, btn, fn){ msgT.textContent = title; msgP.textContent = text; goB.innerHTML = btn; goB.onclick = fn; msg.hidden = false; setTimeout(() => goB.focus(), 50); }
+  function start(){ msg.hidden = true; state = 'run'; clock = 0; }
+
+  // ---- drawing (sprites face up, toward -y, before rotation)
+  function turkey(e){ const u = S*.46, bob = e.moving ? Math.sin(clock*22)*.06 : 0;
+    g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(2, 3, u*.7, u*.8, 0, 0, 7); g.fill();
+    const cs = ['#f2a93b','#e8502e','#8fd6d0','#f3e6c8','#6e1f2a'];
+    for (let i=0;i<9;i++){ const a = Math.PI*.12 + i*(Math.PI*.76/8); g.save(); g.rotate(a - Math.PI/2); g.fillStyle = cs[i%5]; g.beginPath(); g.ellipse(u*(.62 + bob), 0, u*.42, u*.13, 0, 0, 7); g.fill(); g.fillStyle = '#2a1a10'; g.beginPath(); g.arc(u*(.98 + bob), 0, u*.07, 0, 7); g.fill(); g.restore(); }
+    g.fillStyle = '#5a3a26'; g.beginPath(); g.ellipse(0, 0, u*.42, u*.52, 0, 0, 7); g.fill();
+    g.strokeStyle = '#8a5a36'; g.lineWidth = Math.max(1, S*.04); for (const sd of [-1,1]){ g.beginPath(); g.ellipse(sd*u*.2, u*.05, u*.16, u*.32, 0, 0, 7); g.stroke(); }
+    g.fillStyle = '#8fa7ff'; g.beginPath(); g.arc(0, -u*.62, u*.17, 0, 7); g.fill();
+    g.fillStyle = '#f2a93b'; g.beginPath(); g.moveTo(-u*.06, -u*.76); g.lineTo(u*.06, -u*.76); g.lineTo(0, -u*.9); g.fill();
+    g.fillStyle = '#e8502e'; g.beginPath(); g.arc(u*.08, -u*.74, u*.06, 0, 7); g.fill(); }
+  function woman(e){ const u = S*.5, sw = e.moving ? Math.sin(clock*14) : 0;
+    g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(2, 4, u*.55, u*.8, 0, 0, 7); g.fill();
+    g.fillStyle = '#22397a'; g.beginPath(); g.moveTo(-u*.4, -u*.05); g.quadraticCurveTo(-u*.62 + sw*u*.06, u*.75, 0, u*.9); g.quadraticCurveTo(u*.62 + sw*u*.06, u*.75, u*.4, -u*.05); g.fill();
+    g.fillStyle = '#f3e6c8'; for (let i=0;i<7;i++){ g.beginPath(); g.arc(-u*.42 + i*u*.14, u*.7 + Math.abs(i-3)*-u*.04, u*.035, 0, 7); g.fill(); }
+    g.fillStyle = '#8d5524'; for (const sd of [-1,1]){ g.beginPath(); g.arc(sd*u*.46, -u*.05 + sd*sw*u*.12, u*.1, 0, 7); g.fill(); }
+    g.fillStyle = '#c4623a'; g.beginPath(); g.ellipse(0, -u*.08, u*.48, u*.34, 0, 0, 7); g.fill();
+    g.strokeStyle = '#f2a93b'; g.lineWidth = Math.max(1, S*.05); g.beginPath(); g.ellipse(0, -u*.08, u*.38, u*.26, 0, 0, 7); g.stroke();
+    g.fillStyle = '#f3e6c8'; for (let i=0;i<10;i++){ const a = Math.PI*.15 + i*(Math.PI*.7/9); g.beginPath(); g.arc(Math.cos(a)*u*.5, -u*.08 + Math.sin(a)*u*.36, u*.035, 0, 7); g.fill(); }
+    g.fillStyle = '#a24a2a'; g.beginPath(); g.arc(0, -u*.18, u*.22, 0, 7); g.fill(); }
+  function man(e){ const u = S*.5, sw = e.moving ? Math.sin(clock*14) : 0;
+    g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(2, 4, u*.65, u*.6, 0, 0, 7); g.fill();
+    g.fillStyle = '#8d5524'; for (const sd of [-1,1]){ g.beginPath(); g.ellipse(sd*u*.58, -u*.1 - sd*sw*u*.2, u*.12, u*.2, 0, 0, 7); g.fill(); }
+    g.fillStyle = '#f3e6c8'; g.beginPath(); g.ellipse(0, u*.05, u*.55, u*.3, 0, 0, 7); g.fill();
+    g.strokeStyle = '#22397a'; g.lineWidth = Math.max(1.5, S*.08); for (const sd of [-1,1]){ g.beginPath(); g.moveTo(sd*u*.2, -u*.2); g.lineTo(sd*u*.24, u*.32); g.stroke(); }
+    g.fillStyle = '#c9a26a'; g.beginPath(); g.ellipse(0, -u*.02, u*.5, u*.44, 0, 0, 7); g.fill(); g.strokeStyle = '#8a6a3a'; g.lineWidth = 1; g.stroke();
+    g.fillStyle = '#e8502e'; g.beginPath(); g.ellipse(0, -u*.02, u*.3, u*.32, 0, 0, 7); g.fill();
+    g.fillStyle = '#b08850'; g.beginPath(); g.ellipse(0, -u*.02, u*.25, u*.28, 0, 0, 7); g.fill();
+    g.strokeStyle = '#8a6a3a'; g.beginPath(); g.moveTo(0, -u*.26); g.lineTo(0, u*.2); g.stroke(); }
+  function sprite(e, fn){ g.save(); g.translate((e.x + .5)*S, (e.y + .5)*S); g.rotate(e.ang + Math.PI/2); fn(e); g.restore(); }
+  function draw(){
+    g.drawImage(layer, 0, 0, W*S, H*S);
+    const ex = (exitX + .5)*S, glow = g.createRadialGradient(ex, 0, 1, ex, 0, S*2.2); glow.addColorStop(0, 'rgba(242,169,59,.75)'); glow.addColorStop(1, 'rgba(242,169,59,0)'); g.fillStyle = glow; g.fillRect(ex - S*2.2, 0, S*4.4, S*2.2);
+    g.fillStyle = '#f3e6c8'; g.font = `bold ${Math.max(10, S*.7)}px monospace`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('↑', ex, S*.5);
+    // corn rustles where the farmers push through
+    for (const f of farmers){ if (!f.moving) continue; for (const [dx,dy] of DIRS){ const x = Math.round(f.x) + dx, y = Math.round(f.y) + dy; if (y < 0 || y >= H || x < 0 || x >= W || grid[y][x] !== 1) continue;
+      g.strokeStyle = 'rgba(120,180,80,.8)'; g.lineWidth = Math.max(1, S*.06); g.beginPath(); const j = Math.sin(clock*30 + x + y)*S*.12; g.moveTo((x + .5)*S + j, (y + .2)*S); g.lineTo((x + .5)*S - j, (y + .8)*S); g.stroke(); } }
+    for (const p of parts){ g.save(); g.translate(p.x, p.y); g.rotate(p.r);
+      if (p.k === 'leaf'){ g.fillStyle = `rgba(111,160,74,${p.life})`; g.beginPath(); g.ellipse(0, 0, S*.18, S*.06, 0, 0, 7); g.fill(); }
+      else if (p.k === 'pop'){ g.fillStyle = '#fbf3e0'; for (const [ox,oy,r] of [[0,0,1],[.7,-.4,.75],[-.6,-.5,.7],[.1,.7,.65]]){ g.beginPath(); g.arc(ox*p.s, oy*p.s, r*p.s, 0, 7); g.fill(); } g.fillStyle = '#f2c25a'; g.beginPath(); g.arc(.2*p.s, .2*p.s, .35*p.s, 0, 7); g.fill(); }
+      else { g.fillStyle = p.c; g.fillRect(-p.s, -p.s*.45, p.s*2, p.s*.9); }
+      g.restore(); }
+    farmers.forEach(f => sprite(f, f.kind === 'man' ? man : woman));
+    if (tk.y > -2) sprite(tk, turkey);
+    if (state === 'won' && clock - wonAt > .3){ const a = Math.min(1, (clock - wonAt - .3)*2); g.fillStyle = `rgba(7,11,34,${.45*a})`; g.fillRect(0, H*S*.36, W*S, H*S*.2);
+      g.fillStyle = `rgba(251,243,224,${a})`; g.font = `700 ${Math.max(16, Math.min(W*S/14, 40))}px Fraunces, Georgia, serif`; g.fillText('Gone like a turkey', W*S/2, H*S*.42); g.fillStyle = `rgba(242,169,59,${a})`; g.font = `italic 600 ${Math.max(16, Math.min(W*S/14, 40))}px Fraunces, Georgia, serif`; g.fillText('through the corn!', W*S/2, H*S*.5); }
+  }
+  function celebrate(){
+    const cs = ['#f2a93b','#e8502e','#ff6fa8','#8fd6d0','#f3e6c8','#22397a'], ex = (exitX + .5)*S;
+    for (let i=0;i<120;i++) parts.push({k:'conf', x:ex, y:S*.6, vx:(Math.random()-.5)*W*S*1.1, vy:-Math.random()*H*S*.9 - 80, r:Math.random()*6, vr:(Math.random()-.5)*14, s:3 + Math.random()*3, c:cs[i%cs.length], life:1, g:520});
+    for (let i=0;i<60;i++){ const fromL = i%2 === 0; parts.push({k:'pop', x:fromL ? S : W*S - S, y:H*S - S, vx:(fromL ? 1 : -1)*(60 + Math.random()*W*S*.5), vy:-(H*S*.6 + Math.random()*H*S*.7), r:0, vr:(Math.random()-.5)*8, s:2.5 + Math.random()*2.5, life:1, g:700, t0:Math.random()*.9}); }
+    if (typeof blip === 'function'){ for (let i=0;i<7;i++) blip(720 - (i%2)*180, 420, .07, .07, 'sawtooth', .1 + i*.075); for (let i=0;i<18;i++) blip(1400 + Math.random()*600, 300, .03, .05, 'square', .3 + Math.random()*1.4); }
+  }
+  function tick(now){
+    raf = requestAnimationFrame(tick);
+    const dt = Math.min(.05, (now - last)/1000 || 0); last = now; clock += dt;
+    if (state === 'run'){
+      if (want && (tk.dx || tk.dy) && want[0] === -tk.dx && want[1] === -tk.dy && (tk.x !== tk.tx || tk.y !== tk.ty)){ tk.tx -= tk.dx; tk.ty -= tk.dy; tk.dx = want[0]; tk.dy = want[1]; tk.ang = Math.atan2(tk.dy, tk.dx); }
+      move(tk, 5.2, dt, turkeyChoice);
+      for (const f of farmers){ if (clock < f.release){ f.ang = -Math.PI/2 + Math.sin(clock*3 + f.x)*.4; continue; } move(f, f.speed, dt, f.choose);
+        if (f.kind === 'man' && f.moving && clock > nextLeaf){ nextLeaf = clock + .12; parts.push({k:'leaf', x:(f.x + .5)*S + (Math.random()-.5)*S, y:(f.y + .5)*S + (Math.random()-.5)*S, vx:(Math.random()-.5)*30, vy:(Math.random()-.5)*30, r:Math.random()*3, vr:(Math.random()-.5)*6, life:1, g:0}); }
+        if (Math.hypot(f.x - tk.x, f.y - tk.y) < .62){ state = 'caught'; if (typeof blip === 'function') blip(320, 90, .45, .1, 'triangle');
+          setTimeout(() => show(f.kind === 'man' ? 'The farmer caught up!' : 'She caught you!', 'Shake your feathers off and try this field again.', 'Try again<span>Field ' + level + '</span>', () => { newField(); start(); }), 700); break; } }
+      if (tk.y <= 0 && tk.x === exitX){ state = 'won'; wonAt = clock; celebrate();
+        setTimeout(() => show('The turkey is free!', 'The next field is bigger, and the farmers are quicker.', 'Next field<span>Field ' + (level + 1) + '</span>', () => { level++; newField(); start(); }), 2600); }
+    } else if (state === 'won'){ tk.y -= dt*5; tk.ang = -Math.PI/2; tk.moving = true; }
+    parts = parts.filter(p => { if (p.t0 && p.t0 > 0){ p.t0 -= dt; return true; } p.vy += (p.g || 0)*dt; p.x += p.vx*dt; p.y += p.vy*dt; p.r += p.vr*dt; if (p.k === 'leaf'){ p.life -= dt*1.6; p.vx *= .96; p.vy *= .96; } else if (p.k === 'conf') p.vx *= .99; return p.life > 0 && p.y < H*S + 40; });
+    draw();
+  }
+  const setWant = (d) => { want = d; };
+  addEventListener('keydown', e => { if (view.hidden) return; const k = e.key.toLowerCase();
+    const d = {arrowup:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1], arrowleft:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0]}[k];
+    if (d){ e.preventDefault(); setWant(d); if (state === 'idle' && !msg.hidden) return; } });
+  let sw = null;
+  cv.addEventListener('pointerdown', e => { sw = [e.clientX, e.clientY]; });
+  cv.addEventListener('pointermove', e => { if (!sw) return; const dx = e.clientX - sw[0], dy = e.clientY - sw[1]; if (Math.hypot(dx, dy) < 18) return; setWant(Math.abs(dx) > Math.abs(dy) ? [Math.sign(dx), 0] : [0, Math.sign(dy)]); sw = [e.clientX, e.clientY]; });
+  addEventListener('pointerup', () => { sw = null; });
+  view.querySelectorAll('.dpad button').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); setWant(b.dataset.d.split(',').map(Number)); }));
+  function openMaze(){ view.hidden = false; newField(); state = 'idle'; last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+    show('Field ' + level, 'Get the turkey out the far side of the cornfield before the farmers catch it. She heads straight for you; he tries to cut you off.', 'Start running<span>Field ' + level + '</span>', start); }
+  function closeMaze(){ view.hidden = true; cancelAnimationFrame(raf); state = 'idle'; }
+  document.getElementById('mazeClose').onclick = closeMaze;
+  addEventListener('resize', () => { if (!view.hidden) sizeCanvas(); });
+  return {open:openMaze, close:closeMaze};
+})();
+
 
 if (/(^#|&)(t|login)=/.test(location.hash)){ document.getElementById('welcome').classList.add('gone'); if (/login=/.test(location.hash)) setTimeout(() => openSpot('chair'), 1500); }
 memberStart();
@@ -715,6 +924,76 @@ document.getElementById('goBtn').onclick = () => {
       else { for (let k=0;k<6;k++){ const a = k/6*Math.PI*2; g.beginPath(); g.arc(48+Math.cos(a)*16, 56+Math.sin(a)*16, 12, 0, 7); g.fill(); } g.fillStyle = '#f3e6c8'; g.beginPath(); g.arc(48,56,8,0,7); g.fill(); g.fillStyle = fg; g.fillRect(46,70,4,50); }
       const fr = pivot(P, 6.04, 2.55, -1.6 - i*1.25); fr.rotation.y = -Math.PI/2;
       rm(fr, new THREE.BoxGeometry(.8,1.02,.04), rmat(0x2b1a10)); rm(fr, new THREE.PlaneGeometry(.68,.9), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c)}), 0,0,.025).castShadow = false; });
+    // ---- music wall: old-time and folk instruments hung on the inside of the front wall
+    { const mwT = new THREE.CanvasTexture(wp); mwT.wrapS = mwT.wrapT = THREE.RepeatWrapping; mwT.repeat.set(20*5.46/12.1, 6.4);
+      const mwp = rm(P, new THREE.PlaneGeometry(5.46, 3.85), new THREE.MeshStandardMaterial({map:mwT, roughness:.95, emissive:0x0a0204}), 3.35, 2.53, -.09); mwp.rotation.y = Math.PI; mwp.castShadow = false;
+      rm(P, new THREE.BoxGeometry(5.46, .9, .04), rmat(0x3b2418), 3.35, 1.07, -.11); rm(P, new THREE.BoxGeometry(5.46, .06, .07), rmat(0xf2a93b), 3.35, 1.54, -.12);
+      const MW = pivot(P); ROOM.musicwall = MW;
+      const metal = rmat(0xd8dce4, {metalness:.8, roughness:.25}), dark = rmat(0x1a120c);
+      const hang = (x, y) => { const g = pivot(MW, x, y, -.15); g.rotation.y = Math.PI; return g; };
+      const peg = (g, y) => { rm(g, new THREE.CylinderGeometry(.018,.018,.09,6), rmat(0x2b1a10), 0, y, -.03).rotation.x = Math.PI/2; };
+      const disc = (g, r, d, mat, x, y, z) => { const m = rm(g, new THREE.CylinderGeometry(r, r, d, 24), mat, x, y, z); m.rotation.x = Math.PI/2; return m; };
+      const flowers = (g, pts, z) => pts.forEach(([x,y],i) => { rm(g, new THREE.SphereGeometry(.022,6,4), rmat([0xe8502e,0xf2a93b,0xff6fa8,0xf3e6c8][i%4]), x, y, z).castShadow = false; });
+      const strings = (g, x0, x1, n, yb, yt, z) => { for (let i=0;i<n;i++){ const x = x0 + (x1-x0)*i/(n-1); rm(g, new THREE.BoxGeometry(.003, yt-yb, .003), metal, x, (yb+yt)/2, z).castShadow = false; } };
+      // guitar, with painted flowers like an old parlor guitar
+      { const g = hang(1.35, 2.5), body = rmat(0x7a5a3a), face = rmat(0xa98457);
+        disc(g, .25, .1, body, 0, -.28, 0); disc(g, .19, .1, body, 0, .06, 0); rm(g, new THREE.BoxGeometry(.3,.22,.1), body, 0, -.1, 0);
+        disc(g, .245, .012, face, 0, -.28, .052); disc(g, .185, .012, face, 0, .06, .052); rm(g, new THREE.BoxGeometry(.29,.2,.012), face, 0, -.1, .052);
+        disc(g, .062, .014, dark, 0, -.05, .056); rm(g, new THREE.TorusGeometry(.076,.008,5,20), rmat(0xf2a93b), 0, -.05, .06);
+        rm(g, new THREE.BoxGeometry(.15,.03,.02), rmat(0x2b1a10), 0, -.36, .066);
+        rm(g, new THREE.BoxGeometry(.065,.62,.04), rmat(0x5a3a22), 0, .55, .01); rm(g, new THREE.BoxGeometry(.055,.62,.012), dark, 0, .55, .036);
+        rm(g, new THREE.BoxGeometry(.1,.17,.03), rmat(0x5a3a22), 0, .94, 0);
+        for (const sd of [-1,1]) for (let i=0;i<3;i++) rm(g, new THREE.SphereGeometry(.014,5,4), metal, sd*.065, .88 + i*.05, 0);
+        strings(g, -.022, .022, 6, -.36, .86, .07);
+        flowers(g, [[-.17,-.36],[-.12,-.45],[.15,-.4],[.18,-.3],[-.1,.15],[.12,.12],[0,-.47],[-.19,-.22]], .062);
+        peg(g, 1.03); }
+      // fiddle and bow
+      { const g = hang(2.2, 2.75), wd = rmat(0x8a3c1e), tp = rmat(0xa24a24);
+        disc(g, .13, .06, wd, 0, -.14, 0); disc(g, .105, .06, wd, 0, .1, 0); rm(g, new THREE.BoxGeometry(.13,.14,.06), wd, 0, -.02, 0);
+        disc(g, .125, .01, tp, 0, -.14, .032); disc(g, .1, .01, tp, 0, .1, .032); rm(g, new THREE.BoxGeometry(.12,.14,.01), tp, 0, -.02, .032);
+        for (const sd of [-1,1]) rm(g, new THREE.BoxGeometry(.01,.09,.01), rmat(0x1a0c06), sd*.045, -.03, .04);
+        rm(g, new THREE.BoxGeometry(.035,.3,.02), rmat(0x111111), 0, .16, .045); rm(g, new THREE.BoxGeometry(.05,.1,.015), rmat(0x111111), 0, -.2, .04);
+        rm(g, new THREE.BoxGeometry(.04,.14,.04), wd, 0, .38, 0); rm(g, new THREE.TorusGeometry(.025,.012,5,10), wd, 0, .47, 0);
+        strings(g, -.009, .009, 4, -.17, .32, .06);
+        flowers(g, [[-.08,-.2],[.07,-.22],[-.06,.13],[.06,.1],[0,-.25]], .04);
+        const bow = rm(g, new THREE.BoxGeometry(.012,.78,.012), rmat(0x5a3a22), .21, .02, 0); bow.rotation.z = .12;
+        rm(g, new THREE.BoxGeometry(.004,.72,.004), rmat(0xf3e6c8), .225, .02, .01).rotation.z = .12;
+        peg(g, .52); }
+      // banjos: open-back (with a crescent moon peghead) and closed-back (resonator)
+      const banjo = (x, closed) => { const g = hang(x, 2.6), rimM = rmat(closed ? 0x3b2418 : 0x8a5a3a);
+        if (closed){ disc(g, .255, .07, rmat(0x5a3a22), 0, -.3, -.015); rm(g, new THREE.TorusGeometry(.235,.016,6,28), metal, 0, -.3, .03); }
+        rm(g, new THREE.TorusGeometry(.19,.03,6,26), rimM, 0, -.3, .01);
+        disc(g, .18, .01, rmat(0xf3e6c8), 0, -.3, .03);
+        for (let i=0;i<16;i++){ const a = i/16*Math.PI*2; rm(g, new THREE.BoxGeometry(.012,.04,.02), metal, Math.cos(a)*.215, -.3 + Math.sin(a)*.215, .02).rotation.z = a + Math.PI/2; }
+        rm(g, new THREE.BoxGeometry(.05,.04,.01), rmat(0xd8c49a), 0, -.38, .04);
+        rm(g, new THREE.BoxGeometry(.05,.78,.035), rmat(0x4a3022), 0, .27, .01); rm(g, new THREE.BoxGeometry(.045,.66,.01), dark, 0, .2, .03);
+        if (closed) rm(g, new THREE.BoxGeometry(.1,.16,.03), rmat(0x4a3022), 0, .74, 0);
+        else { const moon = rm(g, new THREE.TorusGeometry(.075,.028,5,12,Math.PI*1.25), rmat(0x1d1a2e), 0, .76, 0); moon.rotation.z = -Math.PI*.12; rm(g, new THREE.SphereGeometry(.012,5,4), rmat(0xf2a93b), -.03, .78, .03); }
+        for (const sd of [-1,1]) for (let i=0;i<2;i++) rm(g, new THREE.SphereGeometry(.014,5,4), rmat(0xf3e6c8), sd*.06, .7 + i*.06, 0);
+        rm(g, new THREE.SphereGeometry(.013,5,4), rmat(0xf3e6c8), .04, .2, 0);
+        strings(g, -.016, .016, 5, -.38, .62, .045);
+        peg(g, .86); return g; };
+      banjo(3.0, false); banjo(3.85, true);
+      // accordion
+      { const g = hang(4.75, 2.6), bel = [rmat(0xa83a2c), rmat(0x22397a)], gold = rmat(0xf2a93b);
+        rm(g, new THREE.BoxGeometry(.12,.42,.22), rmat(0x6e1f2a), -.27, 0, 0); rm(g, new THREE.BoxGeometry(.13,.42,.22), rmat(0x6e1f2a), .27, 0, 0);
+        for (let i=0;i<7;i++){ const sl = rm(g, new THREE.BoxGeometry(.06,.4,.2), bel[i%2], -.18 + i*.06, 0, 0); sl.rotation.y = i%2 ? .18 : -.18; }
+        rm(g, new THREE.BoxGeometry(.06,.36,.01), rmat(0xf3e6c8), .29, 0, .112);
+        for (let i=0;i<6;i++) rm(g, new THREE.BoxGeometry(.03,.025,.012), rmat(0x111111), .282, -.15 + i*.06, .12);
+        for (let i=0;i<8;i++) rm(g, new THREE.SphereGeometry(.012,5,4), rmat(0xf3e6c8), -.27 + (i%2)*.04 - .02, -.14 + Math.floor(i/2)*.09, .115);
+        for (const x of [-.27,.27]) rm(g, new THREE.BoxGeometry(.13,.02,.23), gold, x, .2, 0);
+        rm(g, new THREE.TorusGeometry(.24,.012,4,16,Math.PI), rmat(0x3b2418), 0, .21, -.05);
+        peg(g, .45); }
+      // washboard
+      { const g = hang(5.6, 2.55), wd = rmat(0x8a5a3a), tin = rmat(0xb8bcc4, {metalness:.7, roughness:.35});
+        for (const sd of [-1,1]) rm(g, new THREE.BoxGeometry(.04,.62,.03), wd, sd*.17, 0, 0);
+        rm(g, new THREE.BoxGeometry(.38,.13,.035), wd, 0, .25, .005); rm(g, new THREE.BoxGeometry(.38,.05,.03), wd, 0, -.29, 0);
+        for (let i=0;i<4;i++) rm(g, new THREE.CylinderGeometry(.014,.014,.02,8), rmat(0xf3e6c8), -.09 + i*.06, .26, .03).rotation.x = Math.PI/2;
+        rm(g, new THREE.BoxGeometry(.3,.44,.01), tin, 0, -.05, -.005);
+        for (let i=0;i<14;i++) rm(g, new THREE.CylinderGeometry(.009,.009,.3,6), tin, 0, -.25 + i*.03, .006).rotation.z = Math.PI/2;
+        for (const sd of [-1,1]) rm(g, new THREE.BoxGeometry(.012,.36,.006), rmat(0x111111), sd*.085, .465, -.01).rotation.z = sd*.5;
+        peg(g, .63); }
+    }
     // ---- kitchen along the back-left wall: checkered floor, counters, stove with soup, open shelves, hanging herbs
     { const chk = document.createElement('canvas'); chk.width = chk.height = 128; const cx = chk.getContext('2d');
       for (let i=0;i<4;i++) for (let j=0;j<4;j++){ cx.fillStyle = (i+j)%2 ? '#22243a' : '#c4623a'; cx.fillRect(i*32,j*32,32,32); }
@@ -913,6 +1192,7 @@ document.getElementById('goBtn').onclick = () => {
     const skin = rmat(o.skin), hair = rmat(o.hair||0x1b1210), shirt = rmat(o.shirt), pants = rmat(o.pants||0x2b2e44), shoe = rmat(0x1c1e28);
     const B = {root:new THREE.Group()};
     B.pelvis = pivot(B.root, 0, .56, 0); rm(B.pelvis, new THREE.BoxGeometry(.34,.14,.2), pants);
+    if (o.dress){ rm(B.pelvis, new THREE.CylinderGeometry(.17,.31,.54,10), rmat(o.dress), 0,-.25,0); if (o.hem) rm(B.pelvis, new THREE.CylinderGeometry(.312,.312,.05,10), rmat(o.hem), 0,-.49,0); }
     B.leg = {}; B.knee = {};
     for (const s of [-1,1]){ const hip = pivot(B.pelvis, s*.1, -.04, 0); rm(hip, new THREE.CylinderGeometry(.075,.07,.28,6), pants, 0,-.14,0);
       const knee = pivot(hip, 0, -.28, 0); rm(knee, new THREE.CylinderGeometry(.068,.06,.26,6), pants, 0,-.13,0); rm(knee, new THREE.BoxGeometry(.12,.07,.2), shoe, 0,-.27,.04);
@@ -926,6 +1206,9 @@ document.getElementById('goBtn').onclick = () => {
     else if (o.style === 'wrap'){ rm(B.head, new THREE.SphereGeometry(.2,10,8,0,Math.PI*2,0,Math.PI*.5), rmat(o.wrap), 0,.2,-.01); rm(B.head, new THREE.SphereGeometry(.15,8,6), rmat(o.wrap), 0,.36,-.06); }
     else if (o.style === 'cap'){ const hc = rm(B.head, new THREE.SphereGeometry(.188,12,8,0,Math.PI*2,0,Math.PI*.55), hair, 0,.18,-.01); hc.scale.set(1,1.05,1.05); }
     else if (o.style === 'hat'){ rm(B.head, new THREE.CylinderGeometry(.34,.34,.03,16), rmat(o.wrap), 0,.3,0); rm(B.head, new THREE.CylinderGeometry(.17,.2,.18,12), rmat(o.wrap), 0,.38,0); rm(B.head, new THREE.CylinderGeometry(.205,.205,.04,12), rmat(0xe8502e), 0,.32,0); }
+    else if (o.style === 'cornrows'){ rm(B.head, new THREE.SphereGeometry(.186,10,8,0,Math.PI*2,0,Math.PI*.52), rmat(0x3a2418), 0,.165,0);
+      for (let i=-3;i<=3;i++){ const xo = i*.05, r = Math.sqrt(Math.max(.002, .192*.192 - xo*xo)); const row = rm(B.head, new THREE.TorusGeometry(r, .022, 5, 16, Math.PI), hair, xo, .16, 0); row.rotation.y = Math.PI/2; }
+      for (let i=-2;i<=2;i++){ const t2 = rm(B.head, new THREE.CylinderGeometry(.014,.01,.2,4), hair, i*.05, .02, -.17); t2.rotation.x = .25; } }
     else { rm(B.head, new THREE.SphereGeometry(.195,10,8,0,Math.PI*2,0,Math.PI*.5), hair, 0,.2,0); rm(B.head, new THREE.SphereGeometry(.1,8,6), hair, 0,.34,-.13); }
     B.arm = {}; B.elbow = {}; B.hand = {};
     for (const s of [-1,1]){ const sh = pivot(B.chest, s*.25, .4, 0); rm(sh, new THREE.CylinderGeometry(.058,.054,.24,6), shirt, 0,-.12,0);
@@ -936,6 +1219,123 @@ document.getElementById('goBtn').onclick = () => {
   }
   const sit = (B, seatY) => { B.pelvis.position.y = seatY; for (const s of [-1,1]){ B.leg[s].rotation.x = -Math.PI/2; B.knee[s].rotation.x = Math.PI/2; } };
 
+  /* --- out back on a Saturday evening (members): market tables, indigo dyeing, braiding on the back porch --- */
+  const YARD = {};
+  { const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); return t; };
+    const flat = (map, o={}) => new THREE.MeshStandardMaterial(Object.assign({map, roughness:.9, side:THREE.DoubleSide}, o));
+    const granny = (seed) => tex(128, 128, (x, w, h) => { const cs = ['#e8502e','#f2a93b','#ff6fa8','#8fd6d0','#f3e6c8','#22397a','#6f9c86'];
+      x.fillStyle = '#1b1530'; x.fillRect(0,0,w,h);
+      for (let i=0;i<4;i++) for (let j=0;j<4;j++){ const X = i*32, Y = j*32; [14,10,6].forEach((r,k) => { x.fillStyle = cs[(i*3 + j*5 + k*2 + seed) % cs.length]; x.fillRect(X+16-r, Y+16-r, r*2, r*2); }); } });
+    const shibori = (kind) => tex(128, 160, (x, w, h) => { x.fillStyle = '#16245e'; x.fillRect(0,0,w,h); x.strokeStyle = 'rgba(232,236,255,.85)'; x.fillStyle = 'rgba(232,236,255,.85)';
+      if (kind === 0){ for (let i=0;i<3;i++) for (let j=0;j<4;j++){ const cx = 22 + i*42, cy = 22 + j*40; for (let r=5;r<18;r+=5){ x.lineWidth = 2; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.stroke(); } } }
+      else if (kind === 1){ for (let y=8;y<h;y+=18){ x.lineWidth = 4; x.beginPath(); for (let X=0;X<=w;X+=8) x.lineTo(X, y + Math.sin(X*.12 + y)*4); x.stroke(); } }
+      else { for (let i=0;i<5;i++) for (let j=0;j<6;j++){ x.save(); x.translate(14 + i*25, 14 + j*26); x.rotate(.78); x.fillRect(-5,-5,10,10); x.restore(); } }
+      x.fillStyle = 'rgba(16,26,70,.25)'; for (let k=0;k<200;k++) x.fillRect(Math.random()*w, Math.random()*h, 2, 2); });
+    const wood = rmat(0x8a5a3a), woodD = rmat(0x5a3a22);
+    // warm string lights from the back porch roof out to the market and the dye yard
+    const bulbM = new THREE.MeshBasicMaterial({color:0xffd27a}), wireM = new THREE.LineBasicMaterial({color:0x1a1a22});
+    const strand = (a, b, sag) => { const pts = []; for (let i=0;i<=16;i++){ const u = i/16; const p = new THREE.Vector3().lerpVectors(a, b, u); p.y -= Math.sin(u*Math.PI)*sag; pts.push(p); if (i%2 === 0 && i > 0 && i < 16) rm(scene, new THREE.SphereGeometry(.04,6,4), bulbM, p.x, p.y - .05, p.z).castShadow = false; }
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), wireM)); };
+    for (const [x,z] of [[6.9,-9.5],[-6.2,-9.6]]){ rm(scene, new THREE.CylinderGeometry(.05,.06,2.9,6), woodD, x, 1.45, z); }
+    strand(new THREE.Vector3(4.4, 3.05, -8.85), new THREE.Vector3(6.9, 2.85, -9.5), .3);
+    strand(new THREE.Vector3(6.9, 2.85, -9.5), new THREE.Vector3(10.1, 2.4, -7.6), .25);
+    strand(new THREE.Vector3(-4.4, 3.05, -8.85), new THREE.Vector3(-6.2, 2.85, -9.6), .3);
+    strand(new THREE.Vector3(-6.2, 2.85, -9.6), new THREE.Vector3(-9.6, 2.1, -7.6), .25);
+    for (const [x,z] of [[8.5,-8.4],[-7.8,-8.4]]){ const L = new THREE.PointLight(0xffc27a, 1.1, 7); L.position.set(x, 2.5, z); scene.add(L); }
+
+    // ---- the porch market: a table under a striped awning, two makers behind it, facing the yard
+    { const mk = pivot(scene, 8.5, 0, -8.6); YARD.market = mk;
+      const stripes = tex(128, 32, (x, w, h) => { const cs = ['#f2a93b','#f3e6c8','#e8502e','#f3e6c8']; for (let i=0;i<8;i++){ x.fillStyle = cs[i%4]; x.fillRect(i*16, 0, 16, h); } });
+      for (const [px,pz] of [[-1.3,-.75],[1.3,-.75],[-1.3,.75],[1.3,.75]]) rm(mk, new THREE.CylinderGeometry(.035,.035,2.35,6), woodD, px, 1.17, pz);
+      rm(mk, new THREE.BoxGeometry(2.8, .04, 1.8), flat(stripes), 0, 2.36, 0);
+      const val = rm(mk, new THREE.PlaneGeometry(2.8, .22), flat(stripes), 0, 2.24, -.9); val.rotation.y = Math.PI;
+      // table with an indigo resist-dot cloth
+      const cloth = tex(128, 64, (x, w, h) => { x.fillStyle = '#22397a'; x.fillRect(0,0,w,h); x.fillStyle = '#f3e6c8'; for (let i=0;i<16;i++) for (let j=0;j<8;j++) if ((i+j)%2 === 0){ x.beginPath(); x.arc(4 + i*8, 4 + j*8, 1.6, 0, 7); x.fill(); } x.fillStyle = '#f2a93b'; x.fillRect(0, h-6, w, 6); });
+      rm(mk, new THREE.BoxGeometry(2.2, .05, .8), wood, 0, .76, 0);
+      for (const [lx,lz] of [[-1,-.33],[1,-.33],[-1,.33],[1,.33]]) rm(mk, new THREE.BoxGeometry(.05,.74,.05), wood, lx, .37, lz);
+      rm(mk, new THREE.BoxGeometry(2.26, .02, .86), flat(cloth), 0, .795, 0);
+      const drape = rm(mk, new THREE.PlaneGeometry(2.26, .46), flat(cloth), 0, .57, -.43); drape.rotation.y = Math.PI;
+      const T = .806;
+      // records: a crate of sleeves and one record up on a stand
+      rm(mk, new THREE.BoxGeometry(.42,.2,.3), woodD, -.78, T + .1, .05);
+      [0xe8502e,0xf2a93b,0x8fd6d0,0xff6fa8,0xf3e6c8,0x6f9c86,0x22397a].forEach((c,i) => { const sl = rm(mk, new THREE.BoxGeometry(.3,.3,.012), rmat(c), -.78, T + .2, -.08 + i*.035); sl.rotation.x = -.15; });
+      const rec = pivot(mk, -.38, T + .17, -.05); rec.rotation.x = -.2;
+      { const d = rm(rec, new THREE.CylinderGeometry(.15,.15,.01,24), rmat(0x101014, {roughness:.3}), 0,0,0); d.rotation.x = Math.PI/2; const lb = rm(rec, new THREE.CylinderGeometry(.05,.05,.012,16), rmat(0xe8502e), 0,0,.002); lb.rotation.x = Math.PI/2; }
+      rm(mk, new THREE.BoxGeometry(.14,.03,.08), woodD, -.38, T + .015, -.02);
+      // jewelry on a velvet board
+      const jb = pivot(mk, .02, T + .07, -.05); jb.rotation.x = -.7;
+      rm(jb, new THREE.BoxGeometry(.38,.26,.02), rmat(0x3a1530));
+      [[-.12,.06,0xf2a93b],[.0,.07,0xd8dce4],[.12,.06,0xf2a93b]].forEach(([x,y,c]) => rm(jb, new THREE.TorusGeometry(.045,.006,4,16), rmat(c,{metalness:.8, roughness:.3}), x, y, .014));
+      for (let i=0;i<10;i++) rm(jb, new THREE.SphereGeometry(.012,5,4), rmat([0x8fd6d0,0xe8502e,0xf3e6c8,0xff6fa8][i%4]), -.15 + i*.033, -.06 + Math.sin(i*.6)*.02, .015);
+      // herbal teas in jars
+      for (let i=0;i<5;i++){ const x = .32 + (i%3)*.11, z = -.12 + Math.floor(i/3)*.14;
+        rm(mk, new THREE.CylinderGeometry(.042,.042,.13,10), new THREE.MeshStandardMaterial({color:0xd8efe0, transparent:true, opacity:.5, roughness:.1}), x, T + .065, z);
+        rm(mk, new THREE.CylinderGeometry(.036,.036,.09,10), rmat([0x6f8a3a,0xa8642a,0x8a3c1e,0x9fae5a,0xc49a3a][i]), x, T + .05, z);
+        rm(mk, new THREE.CylinderGeometry(.045,.045,.025,10), rmat(0xf2a93b), x, T + .14, z);
+        rm(mk, new THREE.CylinderGeometry(.043,.043,.035,10), rmat(0xf3e6c8), x, T + .07, z).scale.set(1.01,1,1.01); }
+      // crochet: a stack of folded blankets and one hanging on a rack
+      [0,1,2].forEach(i => rm(mk, new THREE.BoxGeometry(.34,.07,.26), flat(granny(i*2), {side:THREE.FrontSide}), .82, T + .035 + i*.07, .02).rotation.y = (i-1)*.08);
+      const rack = pivot(mk, 1.65, 0, -.1); for (const sx of [-.4,.4]) rm(rack, new THREE.BoxGeometry(.05,1.25,.05), woodD, sx, .62, 0); rm(rack, new THREE.CylinderGeometry(.025,.025,.86,6), woodD, 0, 1.2, 0).rotation.z = Math.PI/2;
+      const bl = rm(rack, new THREE.PlaneGeometry(.74, .95), flat(granny(5)), 0, .74, -.03); bl.rotation.y = Math.PI; YARD.blanket = bl;
+      // chalkboard sign
+      const sign = tex(192, 160, (x, w, h) => { x.fillStyle = '#20262a'; x.fillRect(0,0,w,h); x.strokeStyle = '#c99a5a'; x.lineWidth = 8; x.strokeRect(4,4,w-8,h-8); x.fillStyle = '#f3e6c8'; x.textAlign = 'center';
+        x.font = 'bold 30px Georgia'; x.fillText('Porch', w/2, 50); x.fillText('Market', w/2, 84); x.font = '15px monospace'; x.fillStyle = '#f2a93b'; x.fillText('records · jewelry', w/2, 116); x.fillText('teas · crochet', w/2, 136); });
+      const sg = pivot(mk, -1.65, 0, -.7); sg.rotation.y = Math.PI + .35;
+      const face = rm(sg, new THREE.PlaneGeometry(.52, .44), flat(sign), 0, .62, .03); face.rotation.x = -.18;
+      for (const sx of [-.27,.27]) { const lg = rm(sg, new THREE.BoxGeometry(.035,.95,.035), woodD, sx, .47, 0); lg.rotation.x = -.18; const lb2 = rm(sg, new THREE.BoxGeometry(.035,.95,.035), woodD, sx, .47, -.16); lb2.rotation.x = .18; }
+      // the two makers
+      const v1 = makeBody({skin:SKIN[1], shirt:0x8fd6d0, pants:0x22397a, style:'puff', pattern:0xf2a93b}); v1.root.position.set(-.5, 0, .62); v1.root.rotation.y = Math.PI; mk.add(v1.root);
+      v1.arm[1].rotation.x = -.9; v1.elbow[1].rotation.x = -.6;
+      const v2 = makeBody({skin:SKIN[2], shirt:0xff6fa8, pants:0x6e1f2a, style:'wrap', wrap:0xf2a93b, dress:0x6e1f2a, hem:0xf2a93b}); v2.root.position.set(.62, 0, .6); v2.root.rotation.y = Math.PI - .25; mk.add(v2.root);
+      v2.arm[-1].rotation.x = -.5; v2.arm[1].rotation.x = -.7;
+      YARD.marketAnim = (t) => { v1.head.rotation.y = Math.sin(t*.7)*.35; v1.arm[1].rotation.x = -.9 + Math.sin(t*1.6)*.2; v2.head.rotation.z = Math.sin(t*.9 + 1)*.08; YARD.blanket.rotation.x = Math.sin(t*1.1)*.04; };
+    }
+
+    // ---- three aunties at the indigo vat, with dyed cloth drying on the line
+    { const ig = pivot(scene, -7.8, 0, -8.6); YARD.indigo = ig;
+      const vat = rm(ig, new THREE.CylinderGeometry(.42,.36,.72,16), rmat(0x4a3022), 0, .36, 0);
+      for (const y of [.12,.6]) rm(ig, new THREE.TorusGeometry(.405 - y*.05,.02,5,20), rmat(0x2b2b33,{metalness:.6}), 0, y, 0).rotation.x = Math.PI/2;
+      const dye = rm(ig, new THREE.CylinderGeometry(.38,.38,.02,16), new THREE.MeshStandardMaterial({color:0x101a52, emissive:0x070c30, roughness:.2}), 0, .68, 0); dye.castShadow = false;
+      const foam = rm(ig, new THREE.SphereGeometry(.09,8,6), rmat(0x5a3a8a, {emissive:0x1a0c30}), .12, .69, -.05); foam.scale.y = .35;
+      rm(ig, new THREE.CylinderGeometry(.3,.27,.32,14), rmat(0xb8bcc4,{metalness:.6, roughness:.35}), .95, .16, .25);
+      rm(ig, new THREE.CylinderGeometry(.28,.28,.02,14), rmat(0x6a90b0, {roughness:.2}), .95, .31, .25);
+      // clothesline
+      for (const x of [-1.7,1.7]) rm(ig, new THREE.CylinderGeometry(.04,.05,2.0,6), woodD, x, 1.0, .85);
+      rm(ig, new THREE.CylinderGeometry(.006,.006,3.4,4), rmat(0xf3e6c8), 0, 1.92, .85).rotation.z = Math.PI/2;
+      YARD.cloths = [-1.05,-.25,.55].map((x,i) => { const pv = pivot(ig, x, 1.92, .85); const cl = rm(pv, new THREE.PlaneGeometry(.6, .82), flat(shibori(i)), 0, -.41, 0); cl.castShadow = false;
+        for (const sx of [-.24,.24]) rm(pv, new THREE.BoxGeometry(.02,.06,.02), wood, sx, -.01, 0); return pv; });
+      // a basket of tied bundles waiting for the vat
+      rm(ig, new THREE.CylinderGeometry(.22,.17,.18,12), rmat(0xb8874a), -.75, .09, .45);
+      for (let i=0;i<4;i++) rm(ig, new THREE.SphereGeometry(.07,6,5), rmat(i%2 ? 0xf3e6c8 : 0x22397a), -.82 + (i%2)*.12, .2, .4 + Math.floor(i/2)*.1);
+      // the aunties
+      const a1 = makeBody({skin:SKIN[0], shirt:0xf3e6c8, style:'wrap', wrap:0x22397a, dress:0x22397a, hem:0xf3e6c8}); a1.root.position.set(-.62, 0, -.05); a1.root.rotation.y = Math.PI/2; ig.add(a1.root);
+      for (const sd of [-1,1]){ a1.arm[sd].rotation.x = -1.1; a1.elbow[sd].rotation.x = -.5; }
+      const dip = rm(a1.hand[1], new THREE.PlaneGeometry(.22,.34), flat(shibori(2)), -.08, -.15, .05); dip.rotation.y = .4;
+      const a2 = makeBody({skin:SKIN[3], shirt:0xe8502e, style:'wrap', wrap:0xf2a93b, dress:0x6e1f2a, hem:0xf2a93b}); a2.root.position.set(.6, 0, -.25); a2.root.rotation.y = -Math.PI/2 - .3; ig.add(a2.root);
+      for (const sd of [-1,1]){ a2.arm[sd].rotation.x = -.9; a2.elbow[sd].rotation.x = -.8; a2.arm[sd].rotation.z = sd*.2; }
+      rm(a2.hand[1], new THREE.SphereGeometry(.08,6,5), rmat(0x22397a), .1, -.05, .06);
+      const a3 = makeBody({skin:SKIN[2], shirt:0x8fd6d0, style:'wrap', wrap:0xff6fa8, dress:0x22397a, hem:0xff6fa8}); a3.root.position.set(.35, 0, .45); a3.root.rotation.y = .2; ig.add(a3.root);
+      a3.arm[1].rotation.x = -2.7; a3.arm[-1].rotation.x = -2.3; a3.elbow[-1].rotation.x = -.3;
+      YARD.indigoAnim = (t) => { const d = Math.sin(t*1.3); for (const sd of [-1,1]) a1.arm[sd].rotation.x = -1.1 + d*.22; a1.chest.rotation.x = .12 + d*.08;
+        a2.arm[1].rotation.z = .2 + Math.sin(t*2.2)*.15; a2.head.rotation.y = Math.sin(t*.5)*.4 - .3; a3.arm[1].rotation.x = -2.7 + Math.sin(t*.8)*.12;
+        YARD.cloths.forEach((c,i) => { c.rotation.x = Math.sin(t*1.1 + i*1.7)*.12 + .06; }); foam.scale.x = 1 + Math.sin(t*2)*.15; };
+    }
+
+    // ---- getting cornrows braided on the back porch
+    { const br = pivot(scene, 1.7, .62, -7.45); br.rotation.y = Math.PI*.72; YARD.braids = br;
+      rm(br, new THREE.BoxGeometry(.4,.05,.38), wood, 0, .45, 0); for (const [lx,lz] of [[-.16,-.15],[.16,-.15],[-.16,.15],[.16,.15]]) rm(br, new THREE.BoxGeometry(.04,.43,.04), wood, lx, .215, lz);
+      const sitter = makeBody({skin:SKIN[1], shirt:0xf2a93b, pants:0x22397a, style:'cornrows', pattern:0xe8502e}); sit(sitter, .5); br.add(sitter.root);
+      for (const sd of [-1,1]){ sitter.arm[sd].rotation.x = -.6; sitter.elbow[sd].rotation.x = -.9; }
+      const bd = makeBody({skin:SKIN[3], shirt:0xff6fa8, style:'wrap', wrap:0x6e1f2a, dress:0x8fd6d0, hem:0xff6fa8}); bd.root.position.set(0, 0, -.5); br.add(bd.root);
+      bd.chest.rotation.x = .25; for (const sd of [-1,1]){ bd.arm[sd].rotation.x = -1.6; bd.arm[sd].rotation.z = sd*.25; bd.elbow[sd].rotation.x = -.6; }
+      rm(bd.hand[1], new THREE.BoxGeometry(.015,.12,.04), rmat(0x111111), 0, -.05, .02);
+      // a jar of hair grease and a comb on a crate beside them
+      rm(br, new THREE.BoxGeometry(.3,.28,.3), woodD, .55, .14, -.15); rm(br, new THREE.CylinderGeometry(.05,.05,.06,10), rmat(0x2a6a8a), .5, .31, -.15); rm(br, new THREE.CylinderGeometry(.052,.052,.015,10), rmat(0xf2a93b), .5, .345, -.15);
+      rm(br, new THREE.BoxGeometry(.16,.008,.04), rmat(0xe8502e), .6, .285, -.08);
+      YARD.braidAnim = (t) => { const w = Math.sin(t*5); bd.elbow[1].rotation.x = -.6 + w*.18; bd.elbow[-1].rotation.x = -.6 - w*.18; bd.hand[1].rotation.z = w*.4; bd.head.rotation.x = .25; sitter.head.rotation.x = .18 + Math.sin(t*.4)*.04; };
+    }
+  }
+
   const spots = {}; // key -> {obj, anchor (Vector3 in world for tag), view: [camPos, target]}
   const hitList = [];
   function register(key, obj, anchor, view){ spots[key] = {obj, anchor, view}; obj.traverse(m => { if (m.isMesh){ m.userData.key = key; hitList.push(m); } }); }
@@ -945,6 +1345,9 @@ document.getElementById('goBtn').onclick = () => {
   BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
   register('corn', BACK.turkey.tk, new THREE.Vector3(7.6, 3.0, -11), [[11.5,4.4,-5.5],[0,1.2,-12.5]]); spots.corn.wide = true;
   BACK.turkey.fm.traverse(m => { if (m.isMesh){ m.userData.key = 'corn'; hitList.push(m); } }); BACK.field.userData.key = 'corn'; hitList.push(BACK.field);
+  register('market', YARD.market, new THREE.Vector3(8.5, 2.95, -8.6), [[8.4,4.5,-12.6],[8.5,.9,-8.5]]); spots.market.wide = true; spots.market.anim = YARD.marketAnim;
+  register('indigo', YARD.indigo, new THREE.Vector3(-7.8, 2.6, -8.6), [[-7.6,4.4,-12.6],[-7.8,.9,-8.4]]); spots.indigo.wide = true; spots.indigo.anim = YARD.indigoAnim;
+  register('braids', YARD.braids, new THREE.Vector3(1.7, 2.35, -7.5), [[3.6,3.9,-12.8],[1.6,1.1,-7.4]]); spots.braids.wide = true; spots.braids.anim = YARD.braidAnim;
   const exitArrow = pivot(scene, 0, .655, -.85);
   { const sh = new THREE.Shape(); sh.moveTo(0,.34); sh.lineTo(.26,.06); sh.lineTo(.1,.06); sh.lineTo(.1,-.3); sh.lineTo(-.1,-.3); sh.lineTo(-.1,.06); sh.lineTo(-.26,.06); sh.closePath();
     const am = new THREE.MeshBasicMaterial({color:0xf2a93b}); const ar = rm(exitArrow, new THREE.ShapeGeometry(sh), am, 0,.005,0); ar.rotation.x = -Math.PI/2; ar.castShadow = false;
@@ -952,6 +1355,7 @@ document.getElementById('goBtn').onclick = () => {
     const pad = rm(exitArrow, new THREE.CircleGeometry(.6,24), new THREE.MeshBasicMaterial({transparent:true, opacity:0, depthWrite:false}), 0,.002,0); pad.rotation.x = -Math.PI/2;
     exitArrow.traverse(m => { if (m.isMesh){ m.userData.key = 'exit'; hitList.push(m); } });
     ROOM.exit = {g:exitArrow, ring, am}; }
+  register('musicwall', ROOM.musicwall, new THREE.Vector3(3.35, 3.85, -.3), [[3.35,2.3,-4.6],[3.35,2.5,-.1]]); spots.musicwall.inside = true;
   register('couch', ROOM.couch, new THREE.Vector3(2.6, 1.95, -2.4), [[2.62,1.72,-2.25],[2.06,1.85,-5.0]]); spots.couch.inside = true; spots.couch.noShift = true;
   register('stove', ROOM.stove, new THREE.Vector3(-3.6, 2.15, -5.4), [[-2.7,2.45,-2.7],[-3.6,1.5,-5.4]]); spots.stove.inside = true;
   register('coffee', ROOM.coffee, new THREE.Vector3(-1.85, 2.0, -5.6), [[-1.75,2.3,-3.35],[-1.05,1.55,-5.6]]); spots.coffee.anchorIn = new THREE.Vector3(-1.3, 2.05, -5.6); spots.coffee.inside = true;
@@ -1185,7 +1589,9 @@ document.getElementById('goBtn').onclick = () => {
   function resize(){ renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); }
   addEventListener('resize', resize); resize();
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mazeEl = document.getElementById('mazeView');
   function frame(){
+    if (!mazeEl.hidden){ requestAnimationFrame(frame); return; } // the corn maze is open: let the porch rest
     const t = clock.getElapsedTime(), m = reduce ? .25 : 1;
     skyU.t.value = t*m;
     if (tween){ const k = Math.min(1, (performance.now()-tween.s)/tween.d), e = k<.5 ? 4*k*k*k : 1 - Math.pow(-2*k+2,3)/2;
@@ -1280,7 +1686,7 @@ document.getElementById('goBtn').onclick = () => {
     tags.inside.textContent = inRoom ? 'Parlor TV' : 'Step inside';
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
-      const show = !current ? (!SPOTS[k].room || k === 'inside' || k === 'songs') : inRoom ? (!!SPOTS[k].room || !!SPOTS[k].everywhere) : current === k;
+      const show = !current ? ((!SPOTS[k].room && (!SPOTS[k].yard || behind(camera.position))) || k === 'inside' || k === 'songs') : inRoom ? (!!SPOTS[k].room || !!SPOTS[k].everywhere) : current === k;
       tg.classList.toggle('hidden', !vis || !show);
       if (vis){ tg.style.left = ((v3.x+1)/2*innerWidth) + 'px'; tg.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     requestAnimationFrame(frame);
