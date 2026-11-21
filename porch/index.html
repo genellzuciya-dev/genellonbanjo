@@ -315,9 +315,9 @@ function act(label, url, note, cls=''){
 }
 
 const LOCKED = (key) => SPOTS[key] && SPOTS[key].members && !MEMBER;
-const lockedCard = (key) => ({eyebrow: SPOTS[key].room ? 'Members · Inside the house' : 'Members · Out back',
+const lockedCard = (key) => ({eyebrow: 'Members only',
   title: SPOTS[key].title,
-  body: () => `${(SPOTS[key].body().match(/<p>[\s\S]*?<\/p>/) || [''])[0]}<p>${SPOTS[key].room ? "The front porch is open to everyone. Step inside as a member of the Virtual Porch." : "The backyard is for members of the Virtual Porch."} Members get the whole place: the parlor TV with old-time musicians, dancers and cloggers, the couch, the kitchen with coffee and soup, the song keeper's table with every song bubble map, and out back, the back porch and the cornfield where the corn maze game is coming soon.</p>
+  body: () => `${(SPOTS[key].body().match(/<p>[\s\S]*?<\/p>/) || [''])[0]}<p>The house, the backyard and the corn maze are open to everyone. Members of the Virtual Porch also get the magical greenhouse, the storytelling woods, the amphitheater, the underground archive, every song bubble map and more recipes.</p>
       <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3/mo · Patreon', 'warm')}${memberBtn()}</div>`});
 /* ===== What each spot says. Draft wording: rewrite in your own voice. ===== */
 const SPOTS = {
@@ -329,35 +329,51 @@ const SPOTS = {
       <div class="acts">${act('Watch the explainer', LINKS.porchBudVideo, 'YouTube')}${act('Get Banjo Porch Bud', LINKS.porchBudApp, 'iPhone')}</div>`},
   chair: {name:'Rocking chair', eyebrow:'Pull up a chair', title:'Join the Virtual Porch on Patreon',
     body:()=> MEMBER ? `${welcome()}<p>You're a member of the Virtual Porch. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
-      <div class="acts">${act('Visit me on Patreon', LINKS.patreon, 'Patreon')}<button class="act" type="button" data-go="backporch">Head to the back porch<span>Members</span></button></div>` : `<p>For full access to this virtual world, become a Patreon member. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
+      <div class="acts">${act('Visit me on Patreon', LINKS.patreon, 'Patreon')}<button class="act" type="button" data-go="backporch">Head to the back porch<span>Members</span></button></div>` : `<p>Most of the porch is open to everyone. Members of the Virtual Porch also get the magical greenhouse, the storytelling woods, the amphitheater, the underground archive, every song bubble map and more recipes. Your membership pays for the history research, the recordings, and the tools I build for the old-time community.</p>
       <div class="tiers">
         <div class="tier"><div><b>Rocking Chair Regular</b><small>Song bubble maps, field dispatches, polls and dev logs</small></div><i>$3/mo</i></div>
         <div class="tier soon"><div><b>The Folk Naturalist</b><small>Where old-time music meets the natural world</small></div><i>Coming soon</i></div>
         <div class="tier soon"><div><b>The Songster Society</b><small>A monthly live session with a small group</small></div><i>Coming soon</i></div>
       </div>
       <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
-  songs: {name:'Song map table', room:true, members:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
+  songs: {name:'Song map table', room:true, eyebrow:'The song keeper\'s table', title:'Follow a song back in time',
     body:()=>`<p>Every tune has a trail. My song bubble maps follow where a song came from, who carried it, and how it changed along the way, using sourced facts only. Pull up a seat and start with the Wellerman.</p>
       <div class="acts"><button class="act warm" type="button" id="openMap">Explore the Wellerman<span>Song bubble map</span></button>${MEMBER_MAPS.littleSadie ? '<button class="act" type="button" data-map="littleSadie">Little Sadie<span>Members map</span></button>' : act('Little Sadie', LINKS.patreon, 'For members')}${MEMBER_MAPS.shadyGrove ? '<button class="act" type="button" data-map="shadyGrove">Shady Grove<span>Members map</span></button>' : act('Shady Grove', LINKS.patreon, 'For members')}${memberBtn()}</div>`},
-  backporch: {name:'Back porch', members:true, everywhere:true, eyebrow:'Members · The back porch', title:'The back porch is for members',
-    body:()=> MEMBER ? `${welcome()}<p>Pull up a seat out back. Practice sessions and more kitchen recipes are on their way, and every song bubble map is open to you at the song keeper's table.</p>
-      <div class="acts">${act('Practice sessions', '', '')}${act('More recipes in the kitchen', '', '')}<button class="act" type="button" data-go="songs">Every song bubble map<span>Open</span></button></div>`
-    : `<p>Members of the Virtual Porch get the whole place: the back porch and backyard, more recipes in the kitchen, practice sessions, every song bubble map, and the research behind them.</p>
-      <div class="acts">${act('Practice sessions', '', '')}${act('More recipes in the kitchen', '', '')}${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
-  corn: {name:'Corn maze', members:true, eyebrow:'Members · Out back', title:'Gone like a turkey through the corn',
+  backporch: {name:'Back porch', everywhere:true, eyebrow:'Out back', title:'The back porch',
+    body:()=> MEMBER ? `${welcome()}<p>Pull up a seat out back. The backyard is open to everyone, and as a member you can head past the woods to the underground archive, step inside the greenhouse, and sit for a story in the storytelling woods.</p>
+      <div class="acts"><button class="act warm" type="button" data-go="archive">The underground archive<span>Members</span></button><button class="act" type="button" data-go="greenhouse">The magical greenhouse<span>Members</span></button><button class="act" type="button" data-go="sirens">The storytelling woods<span>Members</span></button></div>`
+    : `<p>Pull up a seat out back. The backyard is open to everyone: the porch market, the indigo vat, cornrows on the back steps, and the corn maze.</p>
+      <p>Members of the Virtual Porch also get the magical greenhouse, the storytelling woods, the amphitheater, and the underground archive past the woods, plus every song bubble map and more recipes.</p>
+      <div class="acts">${act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm')}${memberBtn()}</div>`},
+  corn: {name:'Corn maze', eyebrow:'Out back', title:'Gone like a turkey through the corn',
     body:()=>`<p>When I ran around the yard really fast as a kid, my grandfather used to say I was gone like a turkey through the corn. Out back, past the back porch, there's a corn maze where you help a turkey get away.</p>
       <p>Help the turkey slip past the two farmers and out the far side of the field. Every field you clear gets bigger, and the farmers get quicker.</p>
-      <div class="acts">${MEMBER ? '<button class="act warm" type="button" id="mazeBtn">Play the corn maze<span>Start</span></button>' : act('Play the corn maze', '', '') + act('Become a Rocking Chair Regular', LINKS.patreon, '$3 · Patreon', 'warm') + memberBtn()}</div>`},
+      <div class="acts"><button class="act warm" type="button" id="mazeBtn">Play the corn maze<span>Start</span></button></div>`},
   amphi: {name:'Amphitheater', members:true, yard:true, far:true, eyebrow:'Members · Past the corn', title:'The porch amphitheater',
     body:()=>`<p>Past the cornfield there's an amphitheater with a stage and a big screen. This is where I'll host live concerts and events, piped right into the porch.</p>
       <div class="acts">${act('Live concerts and events', '', '')}</div>`},
   greenhouse: {name:'Magical greenhouse', members:true, yard:true, far:true, eyebrow:'Members · Past the corn', title:'The magical greenhouse',
-    body:()=>`<p>Beyond the corn stands a glowing greenhouse full of plants that light up the night. It's still growing, so check back to see what blooms inside.</p>
+    body:()=>`<p>Beyond the corn stands a glowing greenhouse full of plants that light up the night. Members can step inside, where I share biomimicry: how plants and animals solve problems, and what we can learn from them.</p>
       <div class="acts">${act('Step inside the greenhouse', '', '')}</div>`},
   sirens: {name:'Storytelling woods', members:true, yard:true, far:true, eyebrow:'Members · Into the woods', title:'The storytelling woods',
     body:()=>`<p>Past the corn, the woods close in. Paths wind every which way under the trees, past glowing mushrooms and fireflies, and there's no seeing the way from above. Wander long enough and you'll stumble on a storytelling siren in a hidden clearing, with a stump to sit on and listen. They'll be sharing stories here soon.</p>
       <div class="acts">${act('Hear a story', '', '')}</div>`},
-  coffee: {name:'Coffee pot', room:true, members:true, eyebrow:'Kitchen counter', title:'Have a cup of coffee',
+  archive: {name:'Underground archive', members:true, yard:true, far:true, eyebrow:'Members · Beyond the woods', title:'The underground archive',
+    body:()=>`<p>Out past the storytelling woods, a stair winds down under the roots into the porch archive. This is where I keep the deep cuts: every song bubble map, the research behind them, family recipes, recordings and field notes.</p>
+      <div class="acts"><button class="act" type="button" data-go="archMaps">Song map vault<span>Maps</span></button><button class="act" type="button" data-go="archRecipes">Recipe box<span>Recipes</span></button><button class="act" type="button" data-go="archStories">Recording booth<span>Recordings</span></button><button class="act" type="button" data-go="archNotes">Field notes<span>Research</span></button><button class="act warm" type="button" id="climbUp">Climb back up<span>Porch</span></button></div>`},
+  archMaps: {name:'Song map vault', members:true, under:true, eyebrow:'The underground archive', title:'The song map vault',
+    body:()=>`<p>Every song bubble map lives down here, from the Wellerman to the newest one I'm building. Each one follows a song through sourced history.</p>
+      <div class="acts"><button class="act warm" type="button" id="openMap">The Wellerman<span>Song bubble map</span></button>${MEMBER_MAPS.littleSadie ? '<button class="act" type="button" data-map="littleSadie">Little Sadie<span>Members map</span></button>' : act('Little Sadie', '', '')}${MEMBER_MAPS.shadyGrove ? '<button class="act" type="button" data-map="shadyGrove">Shady Grove<span>Members map</span></button>' : act('Shady Grove', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
+  archRecipes: {name:'Recipe box', members:true, under:true, eyebrow:'The underground archive', title:'The recipe box',
+    body:()=>`<p>The okra soup is upstairs on the stove for everyone. The rest of the family recipes get filed here as I write them down.</p>
+      <div class="acts">${act('More recipes', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
+  archStories: {name:'Recording booth', members:true, under:true, eyebrow:'The underground archive', title:'The recording booth',
+    body:()=>`<p>Recordings of the stories from the woods, tunes and conversations, saved here so you can come back to them anytime.</p>
+      <div class="acts">${act('Recordings', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
+  archNotes: {name:'Field notes', members:true, under:true, eyebrow:'The underground archive', title:'Field notes',
+    body:()=>`<p>My research notes, field dispatches and the sources behind every map, filed by song and by place.</p>
+      <div class="acts">${act('Field notes', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
+  coffee: {name:'Coffee pot', room:true, eyebrow:'Kitchen counter', title:'Have a cup of coffee',
     body:()=>`<p>There's always a pot on. I poured you a cup, and one for whoever pulls up a chair next.</p>
       <div class="acts"><button class="act" type="button" id="pourBtn">Pour another round<span>Coffee</span></button></div>`},
   tea: {name:'Tea table', eyebrow:'Side table', title:'Have a cup of tea',
@@ -369,25 +385,25 @@ const SPOTS = {
   banjo: {name:'Gourd banjo', eyebrow:'On the wall', title:'The gourd banjo',
     body:()=>`<p>The banjo's story starts long before porches like this one, and I tell it on the main site.</p>
       <div class="acts">${act('Read the banjo\'s story', LINKS.site + '/#materiality', 'Interactive banjo timeline', 'warm')}</div>`},
-  braids: {name:'Getting braided', members:true, yard:true, eyebrow:'Members · The back porch', title:'Cornrows on the back porch',
+  braids: {name:'Getting braided', yard:true, eyebrow:'The back porch', title:'Cornrows on the back porch',
     body:()=>`<p>Out on the back porch, somebody's getting their hair cornrowed. Cornrows, braided flat to the scalp in rows, came to the Americas with Africans who already carried long braiding traditions. Under slavery, Sunday was often the only time there was to do hair, so braiding was time spent together.</p>
       <p>Maroon communities in Suriname, French Guiana and Brazil, descended from people who escaped slavery, tell of an enslaved woman who hid rice grains in her hair and planted them in freedom. Geographer Judith Carney has written about these oral histories.</p>`},
-  market: {name:'Porch market', members:true, yard:true, eyebrow:'Members · Out back', title:'The porch market',
+  market: {name:'Porch market', yard:true, eyebrow:'Out back', title:'The porch market',
     body:()=>`<p>A few friends spread their blankets out back: records, jewelry, herbal teas, crochet blankets and more. Every blanket leads straight to the maker's own shop. Your membership keeps the porch going, and the market is how the porch gives back.</p>
       <div class="acts">${(LINKS.market || []).length ? LINKS.market.map(v => act(v.name, v.url, v.sells || 'Shop')).join('') : '<span class="act soon">Makers and musicians<span>Coming soon</span></span>'}</div>`},
-  indigo: {name:'Indigo dyeing', members:true, yard:true, eyebrow:'Members · Out back', title:'Three aunties and an indigo vat',
+  indigo: {name:'Indigo dyeing', yard:true, eyebrow:'Out back', title:'Three aunties and an indigo vat',
     body:()=>`<p>Three aunties are dyeing cloth in an indigo vat, folding and tying it first so the blue takes in patterns.</p>
       <p>In the 1700s, indigo was one of colonial South Carolina's biggest cash crops. Enslaved Africans grew it and did the hard work of turning the leaves into dye, and indigo dyeing already had deep roots in West Africa. Along the Gullah Geechee Cultural Heritage Corridor, from North Carolina to Florida, that memory lives on. So does haint blue, the pale blue painted on porch ceilings to keep haints away, like the ceiling on my front porch.</p>`},
-  musicwall: {name:'Music wall', room:true, members:true, eyebrow:'The parlor', title:'The music wall',
+  musicwall: {name:'Music wall', room:true, eyebrow:'The parlor', title:'The music wall',
     body:()=>`<p>The front wall of the parlor is a little music museum: a fiddle, an open-back banjo, a closed-back banjo, a guitar, an accordion and a washboard, the kind of instruments you hear at old-time jams and folk gatherings.</p>`},
-  inside: {name:'Step inside', room:true, members:true, eyebrow:'The parlor', title:'Come on in',
+  inside: {name:'Step inside', room:true, eyebrow:'The parlor', title:'Come on in',
     body:()=>`<p>Make yourself at home. The porch TV plays old-time musicians, dancers and cloggers on a loop. Press play on the TV and sit a while.</p>
       ${!PLAYLIST ? '' : CAN_EMBED ? '' : '<p style="color:var(--muted)">The TV plays on genellonbanjo.com. In this preview it shows a test screen.</p>'}
       <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="musicwall">See the music wall<span>Instruments</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
-  couch: {name:'Sit on couch', room:true, members:true, eyebrow:'The couch', title:'Have a seat',
+  couch: {name:'Sit on couch', room:true, eyebrow:'The couch', title:'Have a seat',
     body:()=>`<p>Kick back and watch a while.${PLAYLIST && CAN_EMBED ? ' Press play on the TV.' : ''}</p>
       <div class="acts">${PLAYLIST && CAN_EMBED ? '<button class="act" type="button" id="tvPrev">◀ Previous video<span>Bottom dial</span></button><button class="act" type="button" id="tvNext">Next video ▶<span>Top dial</span></button>' : ''}<button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
-  stove: {name:'Soup on the stove', room:true, members:true, eyebrow:'Kitchen stove', title:'What\'s cooking: okra soup',
+  stove: {name:'Soup on the stove', room:true, eyebrow:'Kitchen stove', title:'What\'s cooking: okra soup',
     body:()=>`<p>There's a pot of okra and tomato soup on the stove. Here's how it comes together. Serves 6.</p>
       <div class="recipe"><h3>You'll need</h3><ul>
         <li>1 lb smoked turkey wings, or a ham hock</li><li>8 cups water and 1 bay leaf</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li>
@@ -396,17 +412,18 @@ const SPOTS = {
         <li>Simmer the smoked turkey in the water with the bay leaf for about an hour, until tender. Pull the meat from the bone and put it back in the pot.</li>
         <li>Add the onion and garlic and simmer 10 minutes.</li>
         <li>Stir in the tomatoes, okra and corn. Simmer uncovered for 30 to 40 minutes, until the okra is tender and the soup thickens.</li>
-        <li>Season with salt and pepper, take out the bay leaf, and serve over rice.</li></ol></div>`}
+        <li>Season with salt and pepper, take out the bay leaf, and serve over rice.</li></ol></div>
+      <div class="acts">${MEMBER ? act('More recipes in the archive', '', '') : act('More recipes', LINKS.patreon, 'For members')}</div>`},
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','songs','musicwall','stove','coffee','backporch','braids','market','indigo','corn','amphi','greenhouse','sirens','jambud','porchbud','chair','tea','banjo','cats'];
+const ORDER = ['inside','couch','songs','musicwall','stove','coffee','backporch','braids','market','indigo','corn','amphi','greenhouse','sirens','archive','jambud','porchbud','chair','tea','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
 const list = document.getElementById('list'), listBtn = document.getElementById('listBtn');
 document.getElementById('homeLink').href = LINKS.site + '/#porch'; document.getElementById('fbHome').href = LINKS.site;
-let current = null, focusSpot = () => {}, onStrum = () => {}, meowCats = () => {};
+let current = null, lockViewFor = () => null, focusSpot = () => {}, onStrum = () => {}, meowCats = () => {};
 function sipNote(key, ms){ cardInner.querySelectorAll('.sipnote').forEach(n => n.remove()); clearTimeout(sipNote.t); sipNote.t = setTimeout(() => { if (current === key && !cardInner.querySelector('.sipnote')) cardInner.insertAdjacentHTML('beforeend', '<div class="sipnote" role="status">Tap a cup to sip</div>'); }, ms); }
 function openSpot(key){
   { const sp0 = document.getElementById('sitPrompt'); if (sp0) sp0.hidden = true; }
@@ -427,7 +444,8 @@ function openSpot(key){
   const hb = document.getElementById('hollerBtn'); if (hb) hb.onclick = () => new Audio(LINKS.catHoller).play();
   const tb = document.getElementById('teaBtn'); if (tb) tb.onclick = () => pourTea();
   const mz = document.getElementById('mazeBtn'); if (mz) mz.onclick = () => MAZE.open();
-  focusSpot(lock ? 'door' : key);
+  const cu = document.getElementById('climbUp'); if (cu) cu.onclick = goOutside;
+  focusSpot(lock ? lockViewFor(key) || (SPOTS[key].room ? 'door' : key) : key);
   if (key === 'cats') meowCats();
 }
 const PUBLIC_MAPS = {wellerman:{eyebrow:'Song bubble map 01', title:'The Wellerman', embed:LINKS.wellermanEmbed, view:LINKS.wellerman,
@@ -1639,10 +1657,108 @@ document.getElementById('goBtn').onclick = () => {
   spots.inside.anchorIn = new THREE.Vector3(2.06, 3.25, -5.2);
   register('backporch', BACK.porch, new THREE.Vector3(-9.8, 1.7, -6.5), [[-8.2,4.6,-15.5],[-.8,1.3,-7.4]]); spots.backporch.anchorIn = new THREE.Vector3(-.4, 3.25, -5.95); spots.backporch.wide = true;
   BACK.door.traverse(m => { if (m.isMesh){ m.userData.key = 'backporch'; hitList.push(m); } });
+  /* --- the underground archive: members only, out beyond the storytelling woods --- */
+  { const AR = {}; YARD.archive = AR;
+    const E = new THREE.Vector3(0, 0, -84), C = new THREE.Vector3(0, -26, -92); AR.E = E; AR.C = C;
+    const glow = (col, k=1.4) => new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:k, roughness:.5});
+    const add = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false});
+    const PAL = [0xf2a93b, 0x8fd6d0, 0xff9fc8, 0xf3e6c8, 0x7dffc8, 0xb79ad8];
+    const noSh = (o) => { o.traverse(m => { if (m.isMesh){ m.castShadow = false; m.receiveShadow = false; } }); return o; };
+    // entrance: a stone ring in the ground, an iris hatch, two root arches and a slow spiral of light
+    const ent = pivot(scene, E.x, 0, E.z); AR.ent = ent; const stone = rmat(0x6f6a5c), dark = rmat(0x4a3426);
+    rm(ent, new THREE.CylinderGeometry(4.3, 4.5, .14, 48), stone, 0, .07, 0).castShadow = false;
+    const inlay = rm(ent, new THREE.TorusGeometry(3.4, .05, 6, 72), glow(0x8fd6d0, 1.6), 0, .15, 0); inlay.rotation.x = Math.PI/2;
+    rm(ent, new THREE.CircleGeometry(1.6, 40), new THREE.MeshBasicMaterial({color:0x05030a}), 0, .155, 0).rotation.x = -Math.PI/2;
+    const iris = rm(ent, new THREE.TorusGeometry(1.68, .13, 10, 48), rmat(0xb08a4a, {metalness:.6, roughness:.35}), 0, .2, 0); iris.rotation.x = Math.PI/2;
+    const ring = rm(ent, new THREE.TorusGeometry(1.95, .045, 6, 64), glow(0xf2a93b, 1.8), 0, .19, 0); ring.rotation.x = Math.PI/2;
+    for (let k=0;k<8;k++){ const a = k/8*Math.PI*2 + .2, st = rm(ent, new THREE.BoxGeometry(.55, 1.6 + (k%3)*.35, .32), stone, Math.cos(a)*4.7, .8, Math.sin(a)*4.7); st.rotation.y = -a + Math.PI/2; st.rotation.z = (k%2 ? .06 : -.05);
+      const gl = rm(ent, new THREE.PlaneGeometry(.22, .5), glow(PAL[k%6], 1.7), Math.cos(a)*4.53, 1.0, Math.sin(a)*4.53); gl.lookAt(0, 1.0, 0); gl.castShadow = false; }
+    for (const s of [-1, 1]){ const pts = [[-3.2*s,0,-1.2],[-2.2*s,2.6,-.4],[0,3.6,s*.3],[2.2*s,2.6,.5],[3.3*s,0,1.3]].map(p => new THREE.Vector3(...p));
+      const cv = new THREE.CatmullRomCurve3(pts); rm(ent, new THREE.TubeGeometry(cv, 40, .17, 8), dark);
+      const vein = new THREE.CatmullRomCurve3(pts.map(p => p.clone().add(new THREE.Vector3(0, .16, 0)))); rm(ent, new THREE.TubeGeometry(vein, 40, .035, 5), glow(0x7dffc8, 1.6)).castShadow = false; }
+    const sN = 72, spiral = new THREE.InstancedMesh(new THREE.SphereGeometry(.06, 6, 4), add.clone(), sN); spiral.castShadow = false; ent.add(spiral);
+    for (let i=0;i<sN;i++) spiral.setColorAt(i, new THREE.Color(PAL[i%3 === 0 ? 0 : i%3 === 1 ? 1 : 4]));
+    // the shaft: a glowing tube with a stair winding down from the hatch into the archive dome
+    const under = pivot(scene, 0, 0, 0); AR.under = under; under.visible = false;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 17.4, 32, 1, true), new THREE.MeshStandardMaterial({color:0x221c3a, roughness:.9, side:THREE.BackSide}));
+    shaft.position.set(E.x, -8.7, E.z); under.add(shaft);
+    for (let y=-1.5; y>-17; y-=2.2){ const rr = rm(under, new THREE.TorusGeometry(1.62, .035, 6, 48), glow(y % 4.4 < -2 ? 0xf2a93b : 0x8fd6d0, 1.5), E.x, y, E.z); rr.rotation.x = Math.PI/2; }
+    const stepM = rmat(0x8a7f6c);
+    for (let i=0;i<64;i++){ const a = i*.42, y = -.6 - i*.4; if (y < -25.8) break; const st = rm(under, new THREE.BoxGeometry(.9, .1, .42), stepM, E.x + Math.cos(a)*1.15, y, E.z + Math.sin(a)*1.15); st.rotation.y = -a; }
+    // the rotunda: a stone floor inlaid with glowing rings under a starry dome
+    const R = pivot(under, C.x, C.y, C.z); AR.room = R;
+    const fl = rm(R, new THREE.CircleGeometry(12, 72), rmat(0x231f33, {flatShading:false, roughness:.95}), 0, 0, 0); fl.rotation.x = -Math.PI/2;
+    [[3.2, 0xf2a93b], [6.4, 0x8fd6d0], [9.6, 0xff9fc8]].forEach(([r, c]) => { const t = rm(R, new THREE.TorusGeometry(r, .045, 6, 120), glow(c, 1.3), 0, .03, 0); t.rotation.x = Math.PI/2; });
+    const dc = document.createElement('canvas'); dc.width = dc.height = 512; const dx = dc.getContext('2d'); dx.fillStyle = '#000'; dx.fillRect(0, 0, 512, 512);
+    dx.lineCap = 'round';
+    for (let v=0; v<26; v++){ let x = Math.random()*512, y = 512, a = -Math.PI/2 + (Math.random()-.5)*.6, w = 2.6 + Math.random()*2; dx.strokeStyle = ['#7dffc8','#8fd6d0','#f2a93b','#ff9fc8'][v%4]; dx.globalAlpha = .55;
+      for (let k=0;k<60 && y > 0;k++){ const nx = x + Math.cos(a)*9, ny = y + Math.sin(a)*9; dx.lineWidth = w; dx.beginPath(); dx.moveTo(x, y); dx.lineTo(nx, ny); dx.stroke(); x = (nx + 512) % 512; y = ny; a += (Math.random()-.5)*.5; w = Math.max(.6, w*.97);
+        if (Math.random() < .08){ dx.globalAlpha = .9; dx.beginPath(); dx.arc(x, y, 2.2, 0, 7); dx.fillStyle = dx.strokeStyle; dx.fill(); dx.globalAlpha = .55; } } }
+    for (let i=0;i<160;i++){ dx.fillStyle = ['#f3e6c8','#8fd6d0','#f2a93b'][i%3]; dx.globalAlpha = .25 + Math.random()*.5; dx.beginPath(); dx.arc(Math.random()*512, Math.random()*512, Math.random()*1.3 + .3, 0, 7); dx.fill(); }
+    const dt = new THREE.CanvasTexture(dc); dt.wrapS = dt.wrapT = THREE.RepeatWrapping; dt.repeat.set(5, 1);
+    rm(R, new THREE.SphereGeometry(12, 56, 24, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshStandardMaterial({color:0x2a2238, emissive:0xffffff, emissiveMap:dt, emissiveIntensity:1.0, roughness:1, side:THREE.BackSide}), 0, 0, 0);
+    // eight tall alcoves of archive shelves around the wall
+    const shelfM = rmat(0x5a4632), frameM = rmat(0x7a6a52), boxes = [];
+    for (let k=0;k<8;k++){ const a = k/8*Math.PI*2 + Math.PI/8; if (Math.abs(Math.sin(a) - 1) < .2) continue; // leave the stair side open
+      const al = pivot(R, Math.cos(a)*10.6, 0, Math.sin(a)*10.6); al.lookAt(R.position.clone().setY(C.y)); al.rotation.x = 0; al.rotation.z = 0; al.rotation.y = Math.atan2(-Math.cos(a), -Math.sin(a));
+      for (const s of [-1, 1]) rm(al, new THREE.BoxGeometry(.35, 6.2, .5), frameM, s*1.55, 3.1, 0);
+      const arch = rm(al, new THREE.TorusGeometry(1.55, .2, 8, 24, Math.PI), frameM, 0, 6.2, 0);
+      rm(al, new THREE.BoxGeometry(3.0, 6.2, .1), rmat(0x15121f), 0, 3.1, -.35);
+      for (let sIdx=0; sIdx<5; sIdx++){ const y = .5 + sIdx*1.15; rm(al, new THREE.BoxGeometry(2.9, .07, .55), shelfM, 0, y, -.05);
+        let x = -1.32; while (x < 1.3){ const w = .1 + Math.random()*.12, h = .55 + Math.random()*.4; boxes.push({al, x: x + w/2, y: y + .035 + h/2, w, h, c: PAL[Math.floor(Math.random()*PAL.length)]}); x += w + .02; } }
+      const pl = rm(al, new THREE.PlaneGeometry(1.2, .32), glow(PAL[k%6], 1.6), 0, 6.35, .12); pl.castShadow = false; }
+    const bx = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, .42), rmat(0xffffff, {roughness:.7}), boxes.length), M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), P = new THREE.Vector3();
+    boxes.forEach((b, i) => { b.al.updateMatrixWorld(true); P.set(b.x, b.y, -.05); b.al.localToWorld(P); R.worldToLocal(P); b.al.getWorldQuaternion(Q); M.compose(P, Q, S.set(b.w, b.h, 1)); bx.setMatrixAt(i, M); bx.setColorAt(i, new THREE.Color(b.c).multiplyScalar(.75)); });
+    bx.instanceColor.needsUpdate = true; R.add(bx);
+    // the root column: roots come down from the dome into a glowing pool at the centre
+    const rootM = rmat(0x4a3426), veinM = glow(0x7dffc8, 1.5);
+    for (let k=0;k<9;k++){ const a = k/9*Math.PI*2, r0 = 7 + (k%3); const pts = [new THREE.Vector3(Math.cos(a)*r0, Math.sqrt(144 - r0*r0) - .3, Math.sin(a)*r0), new THREE.Vector3(Math.cos(a+.3)*3.2, 7.5, Math.sin(a+.3)*3.2), new THREE.Vector3(Math.cos(a+.7)*.9, 4.2, Math.sin(a+.7)*.9), new THREE.Vector3(Math.cos(a+1)*.45, .8, Math.sin(a+1)*.45), new THREE.Vector3(Math.cos(a+1.2)*1.3, .1, Math.sin(a+1.2)*1.3)];
+      const cv = new THREE.CatmullRomCurve3(pts); rm(R, new THREE.TubeGeometry(cv, 48, .2 - (k%3)*.03, 7), rootM);
+      if (k%2 === 0) rm(R, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => p.clone().multiplyScalar(1.02).add(new THREE.Vector3(0, .05, 0)))), 48, .035, 5), veinM).castShadow = false; }
+    const pool = rm(R, new THREE.CircleGeometry(1.9, 40), glow(0x8fd6d0, 1.2), 0, .05, 0); pool.rotation.x = -Math.PI/2;
+    const mN = 140, motes = new THREE.InstancedMesh(new THREE.SphereGeometry(.045, 6, 4), add.clone(), mN), md = []; motes.castShadow = false; R.add(motes);
+    for (let i=0;i<mN;i++){ md.push({a: Math.random()*7, r: .4 + Math.random()*(i < 70 ? 2.2 : 9), s: .2 + Math.random()*.5, ph: Math.random()*12}); motes.setColorAt(i, new THREE.Color(PAL[i%6])); }
+    // four stations around the room, each with a floating sign
+    const label = (txt) => { const c = document.createElement('canvas'); c.width = 512; c.height = 128; const x = c.getContext('2d');
+      x.fillStyle = 'rgba(243,230,200,.94)'; x.beginPath(); x.roundRect ? x.roundRect(8, 16, 496, 96, 48) : x.rect(8, 16, 496, 96); x.fill();
+      x.fillStyle = '#1b2a6b'; x.font = '700 46px ui-monospace, Menlo, monospace'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt.toUpperCase(), 256, 66);
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c), depthTest:true, transparent:true})); sp.scale.set(2.6, .65, 1); return sp; };
+    const stations = [['archMaps', 'Song map vault', Math.PI*.75], ['archRecipes', 'Recipe box', Math.PI*.25], ['archStories', 'Recording booth', -Math.PI*.25], ['archNotes', 'Field notes', -Math.PI*.75]];
+    AR.stations = {};
+    stations.forEach(([key, name, a]) => { const g = pivot(R, Math.cos(a)*6.4, 0, Math.sin(a)*6.4); g.rotation.y = Math.atan2(-Math.cos(a), -Math.sin(a));
+      rm(g, new THREE.CylinderGeometry(.62, .78, 1.05, 24), rmat(0x6f6a5c), 0, .52, 0); rm(g, new THREE.TorusGeometry(.66, .03, 6, 40), glow(0xf2a93b, 1.4), 0, 1.05, 0).rotation.x = Math.PI/2;
+      const top = pivot(g, 0, 1.08, 0);
+      if (key === 'archMaps'){ const nodes = [[0,.55,0],[.38,.8,.1],[-.36,.75,-.08],[.12,1.12,-.2],[-.18,.42,.3],[.42,.4,-.25],[-.4,1.08,.18]].map(p => new THREE.Vector3(...p));
+        nodes.forEach((n, i) => rm(top, new THREE.SphereGeometry(i ? .09 : .14, 12, 8), glow(PAL[i%6], 1.8), n.x, n.y, n.z).castShadow = false);
+        nodes.slice(1).forEach(n => { const d = n.clone().sub(nodes[0]), ln = rm(top, new THREE.CylinderGeometry(.012, .012, d.length(), 4), glow(0xf3e6c8, .9), 0, 0, 0); ln.position.copy(nodes[0].clone().add(n).multiplyScalar(.5)); ln.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize()); ln.castShadow = false; });
+        AR.spin = top; }
+      if (key === 'archRecipes'){ rm(top, new THREE.BoxGeometry(.8, .42, .5), rmat(0x9a6b3e), 0, .21, 0); const lid = rm(top, new THREE.BoxGeometry(.82, .05, .52), rmat(0x8a5c32), 0, .5, -.28); lid.rotation.x = -1.1;
+        for (let i=0;i<5;i++) rm(top, new THREE.BoxGeometry(.7, .34, .012), rmat([0xf3e6c8, 0xffe1a8, 0xf3e6c8, 0xd7f0e8, 0xf3e6c8][i]), 0, .5, -.16 + i*.075).rotation.x = -.12; }
+      if (key === 'archStories'){ rm(top, new THREE.BoxGeometry(.7, .26, .7), rmat(0x5a3d26), 0, .13, 0); rm(top, new THREE.CylinderGeometry(.27, .27, .02, 32), rmat(0x111111), 0, .27, 0);
+        const horn = rm(top, new THREE.ConeGeometry(.36, .9, 24, 1, true), rmat(0xd2a24a, {metalness:.7, roughness:.3, side:THREE.DoubleSide}), .15, .85, -.15); horn.rotation.set(-.9, 0, -.5); }
+      if (key === 'archNotes'){ for (const s of [-1, 1]){ const pg = rm(top, new THREE.BoxGeometry(.42, .02, .56), rmat(0xf3e6c8), s*.21, .08, 0); pg.rotation.z = -s*.18; }
+        const q = rm(top, new THREE.ConeGeometry(.03, .7, 6), rmat(0xf3e6c8), .3, .35, .1); q.rotation.z = -.7; }
+      const sg = label(name); sg.position.set(0, 2.55, 0); g.add(sg);
+      AR.stations[key] = {g, pos: g.getWorldPosition(new THREE.Vector3()), a}; });
+    { const pl = new THREE.PointLight(0xffd9a0, 1.3, 26, 1.6); pl.position.set(C.x, C.y + 7, C.z); scene.add(pl); }
+    noSh(under); R.updateMatrixWorld(true);
+    YARD.archiveAnim = (t) => {
+      for (let i=0;i<sN;i++){ const f = i/sN, a = f*Math.PI*6 + t*.6, y = (f*6 + t*.35) % 6; M.compose(P.set(Math.cos(a)*(1.3 - y*.12), y + .3, Math.sin(a)*(1.3 - y*.12)), Q.identity(), S.setScalar(1 - y/7)); spiral.setMatrixAt(i, M); }
+      spiral.instanceMatrix.needsUpdate = true; ring.material.emissiveIntensity = 1.4 + Math.sin(t*1.6)*.5;
+      const on = camera.position.y < 2 && camera.position.z < -70; under.visible = on; if (!on) return;
+      for (let i=0;i<mN;i++){ const d = md[i], y = (d.s*t + d.ph) % 10; M.compose(P.set(Math.cos(d.a + t*.08)*d.r, y + .2, Math.sin(d.a + t*.08)*d.r), Q.identity(), S.setScalar(Math.sin(y/10*Math.PI))); motes.setMatrixAt(i, M); }
+      motes.instanceMatrix.needsUpdate = true; if (AR.spin) AR.spin.rotation.y = t*.3; pool.material.emissiveIntensity = 1 + Math.sin(t*.9)*.3; };
+  }
   register('amphi', YARD.amphi, new THREE.Vector3(0, 5.4, -53.5), [[0,7.5,-38],[0,2,-52]]); spots.amphi.wide = true;
   register('greenhouse', YARD.greenhouse, new THREE.Vector3(-21, 8.2, -47), [[-12,6.5,-34],[-21,2.6,-47]]); spots.greenhouse.wide = true; spots.greenhouse.anim = YARD.ghAnim;
   { const s0 = YARD.trailStart, d0 = YARD.trailDir; register('sirens', YARD.trail, new THREE.Vector3(s0.x, 4.2, s0.z), [[s0.x, 1.6, s0.z],[s0.x + d0.x*3, 1.35, s0.z + d0.z*3]]); }
   spots.sirens.inside = true; spots.sirens.homeView = spots.sirens.view; spots.sirens.anim = YARD.sirenAnim;
+  { const AR = YARD.archive, C = AR.C, down = [[0,7,-76],[0,1.2,-84],[0,-9,-84],[0,-19,-84.4]];
+    register('archive', AR.ent, new THREE.Vector3(0, 4.6, -84), [[0, C.y + 1.75, -85.6],[0, C.y + 4.2, -95]]); spots.archive.inside = true; spots.archive.via = down; spots.archive.anim = YARD.archiveAnim;
+    for (const k in AR.stations){ const st = AR.stations[k], p = st.pos, u = new THREE.Vector3(p.x - C.x, 0, p.z - C.z).normalize();
+      register(k, st.g, new THREE.Vector3(p.x, C.y + 2.6, p.z), [[p.x - u.x*5.6, C.y + 2.5, p.z - u.z*5.6],[p.x, C.y + 1.7, p.z]]); spots[k].inside = true; spots[k].via = down; }
+    spots.archiveLock = {view:[[0,24,-62],[0,0,-84]], wide:true}; spots.sirensLock = {view:[[0,16,-24],[0,0,-56]], wide:true};
+    lockViewFor = (k) => spots[k + 'Lock'] ? k + 'Lock' : null; }
   YARD.stones.forEach((st,i) => { st.m.userData.key = 'hike' + i; hitList.push(st.m); });
   YARD.yardStones.forEach((st,i) => { st.m.userData.key = 'walk' + i; hitList.push(st.m); });
   YARD.clearLine = (a, b) => { for (let k=1;k<10;k++){ const x = a.x + (b.x - a.x)*k/10, z = a.z + (b.z - a.z)*k/10; if (Math.abs(x) < 6.6 && z < .6 && z > -6.8) return false; } return true; };
@@ -1865,7 +1981,7 @@ document.getElementById('goBtn').onclick = () => {
       controls.minDistance = controls.maxDistance = .12; controls.minAzimuthAngle = -Infinity; controls.maxAzimuthAngle = Infinity;
       controls.minPolarAngle = L.minP ?? .45; controls.maxPolarAngle = 2.3; controls.enableZoom = false; controls.rotateSpeed = -.45; looking = true; return; }
     looking = false; controls.enableZoom = true; controls.rotateSpeed = 1;
-    const front = !MEMBER && isFinite(L.maxD); // non-members: front porch only
+    const front = false; // the house and backyard are open to everyone
     controls.minDistance = L.minD; controls.maxDistance = front ? Math.min(L.maxD, NM_MAXD) : L.maxD; controls.minAzimuthAngle = L.minA; controls.maxAzimuthAngle = L.maxA;
     const off = camera.position.clone().sub(controls.target), pol = Math.atan2(Math.hypot(off.x, off.z), off.y) - .02;
     controls.minPolarAngle = front ? Math.max(L.minP ?? .5, Math.min(NM_MINP, pol)) : (L.minP ?? .5); controls.maxPolarAngle = L.maxP ?? 1.5; };
@@ -1884,16 +2000,17 @@ document.getElementById('goBtn').onclick = () => {
     tween = {p0:a.clone(), t0:controls.target.clone(), p1:pos.clone(), t1:tgt.clone(), curve, done, s:performance.now(), d:curve ? 1000 + pts.length*450 : 1100}; }
   flyToMap = (key='wellerman') => { const [p, t] = ROOM.mapView; flyTo(new THREE.Vector3(...p), new THREE.Vector3(...t), {look:true, minP:.02}, () => { afterMapClose = () => focusSpot('songs'); openMap(key); }); };
   focusSpot = (key) => {
-    if (!key){ flyTo(HOME_POS, HOME_T); return; }
+    const deep = camera.position.y < -5;
+    if (!key){ if (deep) flyTo(HOME_POS, HOME_T, undefined, null, [[0,-19,-84.4],[0,-9,-84],[0,1.5,-84],[0,8,-74],[0,14,-30]].map(v => new THREE.Vector3(...v))); else flyTo(HOME_POS, HOME_T); return; }
     const v = spots[key].view; const p = new THREE.Vector3(...v[0]), t = new THREE.Vector3(...v[1]);
-    if (spots[key].inside){ if (mobile && !spots[key].noShift) t.y -= .3; if (mobile && spots[key].noShift) t.y += .15; flyTo(p, t, IN_LIMITS); if (spots[key].hit) spots[key].hit(); return; }
+    if (spots[key].inside){ if (mobile && !spots[key].noShift) t.y -= .3; if (mobile && spots[key].noShift) t.y += .15; flyTo(p, t, IN_LIMITS, null, spots[key].via ? (deep ? [] : spots[key].via.map(v => new THREE.Vector3(...v))) : (deep ? [[0,-19,-84.4],[0,-9,-84],[0,1.5,-84],[0,8,-74]].map(v => new THREE.Vector3(...v)) : undefined)); if (spots[key].hit) spots[key].hit(); return; }
     if (mobile){ p.sub(t).multiplyScalar(1.35).add(t); t.y -= .5; }
     else { const side = new THREE.Vector3().subVectors(p, t).cross(new THREE.Vector3(0,1,0)).normalize().multiplyScalar(-.4); t.add(side); p.add(side); } // nudge left; the card sits beside the object
     const lim = spots[key].wide ? {minD:3, maxD:60, minA:-Infinity, maxA:Infinity, minP:.25, maxP:1.5} : undefined;
     if (key === 'backporch' && inHouse(camera.position)){ // walk straight out the back door
       BACK.doorTo = 1; click();
       flyTo(p, t, lim, () => setTimeout(() => { BACK.doorTo = 0; }, 400), [new THREE.Vector3(-.4, 1.75, -5.0), new THREE.Vector3(-.4, 1.75, -6.15), new THREE.Vector3(-.4, 1.9, -7.4)]); return; }
-    flyTo(p, t, lim); if (spots[key].hit) spots[key].hit();
+    flyTo(p, t, lim, null, deep ? [[0,-19,-84.4],[0,-9,-84],[0,1.5,-84],[0,8,-74]].map(v => new THREE.Vector3(...v)) : undefined); if (spots[key].hit) spots[key].hit();
   };
 
   /* --- picking: tap objects in the scene too --- */
@@ -2022,7 +2139,7 @@ document.getElementById('goBtn').onclick = () => {
     const inRoom = current && SPOTS[current].room && !LOCKED(current), outB = document.getElementById('outBtn');
     const away = !inRoom && !card.classList.contains('open') && camera.position.distanceTo(HOME_POS) > 4;
     outB.classList.toggle('show', (!!inRoom || away) && !tween);
-    const outTxt = inRoom ? '← Back out to the porch' : '← Back to the front porch'; if (outB.textContent !== outTxt) outB.textContent = outTxt;
+    const outTxt = inRoom ? '← Back out to the porch' : camera.position.y < -5 ? '← Climb back up to the porch' : '← Back to the front porch'; if (outB.textContent !== outTxt) outB.textContent = outTxt;
     exitTag.classList.toggle('hidden', !inRoom);
     if (inRoom){ v3.copy(ROOM.exit.g.position); v3.y += .5; v3.project(camera); const ev = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
       exitTag.classList.toggle('hidden', !ev); if (ev){ exitTag.style.left = ((v3.x+1)/2*innerWidth) + 'px'; exitTag.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
@@ -2042,7 +2159,7 @@ document.getElementById('goBtn').onclick = () => {
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
       const show = !current ? ((!SPOTS[k].room && (!SPOTS[k].yard || behind(camera.position) || (SPOTS[k].far && camera.position.distanceTo(controls.target) > 26))) || k === 'inside' || k === 'songs') : inRoom ? (!!SPOTS[k].room || !!SPOTS[k].everywhere) : current === k;
-      tg.classList.toggle('hidden', !vis || !show);
+      tg.classList.toggle('hidden', !vis || !show || (camera.position.y < -5 && current !== k));
       if (vis){ tg.style.left = ((v3.x+1)/2*innerWidth) + 'px'; tg.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     requestAnimationFrame(frame);
   }
