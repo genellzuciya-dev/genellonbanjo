@@ -198,11 +198,62 @@ header.top{position:fixed;top:14px;left:16px;right:16px;max-width:calc(100vw - 3
   .hint{bottom:12px}
 }
 @media (prefers-reduced-motion:reduce){.tag::before{animation:none}}
+
+/* ===== Recording booth ===== */
+.boothbox{width:min(980px,100%)}
+.boothtabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+.boothtabs button{font:inherit;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.boothtabs button[aria-selected="true"]{background:var(--marigold);color:var(--indigo-0);border-color:var(--marigold)}
+.boothpane[hidden]{display:none}
+.shelf{display:grid;gap:10px}
+.shelf .rec{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(243,230,200,.05)}
+.shelf .rec h4{font-family:var(--display);font-size:18px;margin:0 0 2px;color:var(--cream)}
+.shelf .rec .meta{font-size:11px;color:var(--muted);margin-bottom:8px}
+.shelf audio,.recbox audio{width:100%}
+.emptyshelf{border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted)}
+.recbox{border-radius:14px;padding:18px;background:rgba(243,230,200,.06);border:1px solid var(--line);display:grid;gap:12px;justify-items:center;text-align:center}
+.recbtn{width:92px;height:92px;border-radius:50%;border:4px solid var(--cream);background:var(--poppy);color:var(--ink);font:inherit;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--marigold)}
+.recbtn.on{background:var(--oxblood);animation:recpulse 1.4s ease-in-out infinite}
+@keyframes recpulse{50%{box-shadow:6px 6px 0 var(--marigold),0 0 0 10px rgba(232,80,46,.25)}}
+@media (prefers-reduced-motion:reduce){.recbtn.on{animation:none}}
+.rectime{font-size:22px;font-weight:700;color:var(--cream);font-variant-numeric:tabular-nums}
+.reclevel{width:min(320px,100%);height:8px;border-radius:4px;background:rgba(243,230,200,.12);overflow:hidden}
+.reclevel i{display:block;height:100%;width:0;background:var(--agave);transition:width .08s}
+.recrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+.recrow .act{flex:1 1 180px}
+.recnote{color:#e9e2f7;font-size:12px;margin:0;max-width:62ch}
+.storyform{display:grid;gap:12px;margin-top:16px}
+.storyform[hidden]{display:none}
+.storyform label{display:grid;gap:4px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--marigold)}
+.storyform label small{text-transform:none;letter-spacing:0;color:var(--muted);font-size:11px}
+.storyform input[type=text],.storyform input[type=email],.storyform textarea{font:inherit;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);background:rgba(7,11,34,.6);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.storyform textarea{min-height:76px;resize:vertical}
+.storyform .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.storyform .two{grid-template-columns:1fr}}
+.storyform .check{display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;color:var(--ink);font-size:12px}
+.storyform .check input{margin-top:3px;flex:none;accent-color:var(--marigold)}
+.storyform fieldset{border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:grid;gap:8px;margin:0}
+.storyform legend{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--marigold);padding:0 6px}
+.placerow{display:flex;gap:8px}
+.placerow input{flex:1}
+.placerow .act{flex:none}
+.pinmap,.storymap{height:260px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 3px var(--cream),8px 8px 0 3px var(--marigold);margin-right:8px;background:#e8dcc0}
+.storymap{height:min(520px,58vh)}
+.pinmap .leaflet-tile-pane,.storymap .leaflet-tile-pane{filter:sepia(.35) saturate(.85)}
+.storymap .leaflet-popup-content{font-family:var(--mono);font-size:12px;color:var(--indigo-0);min-width:220px}
+.storymap .leaflet-popup-content h4{font-family:var(--display);font-size:16px;margin:0 0 2px}
+.storymap .leaflet-popup-content audio{width:100%;margin-top:6px}
+.formmsg{font-size:12px;padding:10px 12px;border-radius:10px;background:rgba(111,156,134,.2);border:1px solid var(--agave)}
+.formmsg.err{background:rgba(232,80,46,.15);border-color:var(--poppy)}
+.formmsg[hidden]{display:none}
+.veil{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .42s ease;background:radial-gradient(circle at 50% 55%,#f3ffe9 0%,#7dffc8 30%,#1d5f3e 75%,#0a2418 100%)}
+.veil.on{opacity:1}
 </style>
 </head>
 <body>
 <canvas id="scene" aria-label="A 3D front porch at dusk. Use the Porch list button to visit each spot."></canvas>
 <div class="grain" aria-hidden="true"></div>
+<div class="veil" id="veil" aria-hidden="true"></div>
 <div id="labels"></div>
 <div id="tv" class="tv" aria-label="Porch TV"></div>
 <div class="mapview" id="mapView" role="dialog" aria-modal="true" aria-labelledby="mapTitle" hidden>
@@ -220,6 +271,68 @@ header.top{position:fixed;top:14px;left:16px;right:16px;max-width:calc(100vw - 3
     <div class="mazestage"><canvas id="mazeCanvas" aria-label="Corn maze seen from above"></canvas>
       <div class="mazemsg" id="mazeMsg" hidden><h3 id="mazeMsgTitle"></h3><p id="mazeMsgText"></p><button class="act warm" id="mazeGo" type="button">Start</button></div></div>
     <div class="dpad"><button type="button" data-d="0,-1" aria-label="Up">▲</button><button type="button" data-d="-1,0" aria-label="Left">◀</button><button type="button" data-d="1,0" aria-label="Right">▶</button><button type="button" data-d="0,1" aria-label="Down">▼</button></div>
+  </div>
+</div>
+<div class="mapview" id="boothView" role="dialog" aria-modal="true" aria-labelledby="boothTitle" hidden>
+  <div class="mapbox boothbox">
+    <div class="maphead"><div><div class="eyebrow">The underground archive</div><h2 id="boothTitle">The recording <em>booth</em></h2></div><button class="close" id="boothClose" type="button" aria-label="Close the recording booth">×</button></div>
+    <div class="boothtabs" role="tablist" aria-label="Recording booth">
+      <button type="button" role="tab" data-tab="listen" aria-selected="true">Listen</button>
+      <button type="button" role="tab" data-tab="record" aria-selected="false">Record a story</button>
+      <button type="button" role="tab" data-tab="map" aria-selected="false">Story map</button>
+    </div>
+
+    <section class="boothpane" data-pane="listen">
+      <p class="mapnote">Tunes, stories from the woods and conversations, saved down here so you can come back to them anytime.</p>
+      <div class="shelf" id="boothShelf"></div>
+    </section>
+
+    <section class="boothpane" data-pane="record" hidden>
+      <p class="mapnote">Do you carry a story about Black life, music, family or place that should be remembered? Record it here. You can listen back as many times as you like, and nothing leaves your device unless you choose to send it to me for the archive.</p>
+      <div class="recbox">
+        <button class="recbtn" id="recBtn" type="button" aria-pressed="false">Record</button>
+        <div class="rectime" id="recTime" aria-live="off">0:00</div>
+        <div class="reclevel" aria-hidden="true"><i id="recLevel"></i></div>
+        <p class="recnote" id="recNote">Press record when you're ready. Up to 15 minutes. The porch sounds go quiet while you record.</p>
+        <audio id="recPlay" controls hidden></audio>
+        <div class="recrow" id="recRow" hidden>
+          <button class="act" type="button" id="recAgain">Record it again<span>Starts over</span></button>
+          <button class="act warm" type="button" id="recShare">Add it to the archive<span>Optional</span></button>
+        </div>
+      </div>
+
+      <form class="storyform" id="storyForm" hidden novalidate>
+        <div class="two">
+          <label>Story title<input type="text" name="title" maxlength="120" required placeholder="What should we call it?"></label>
+          <label>Your name, as you'd like it credited<input type="text" name="credit" maxlength="80" placeholder="Leave blank to stay anonymous"></label>
+        </div>
+        <div class="two">
+          <label>Your email <small>So I can follow up. Never shown on the porch.</small><input type="email" name="email" maxlength="120" required></label>
+          <label>When does the story take place? <small>A year, a decade or "my grandmother's time"</small><input type="text" name="when" maxlength="80"></label>
+        </div>
+        <label>Where does this story come from? <small>A town, county, state or country. Then tap "Find it" or tap the map to drop a pin.</small>
+          <span class="placerow"><input type="text" name="place" id="placeIn" maxlength="120" required placeholder="e.g. Freetown, Maryland"><button class="act" type="button" id="placeFind">Find it</button></span></label>
+        <div class="pinmap" id="pinMap" aria-label="Map for placing where the story comes from"></div>
+        <label>Tell me a little about it <small>Who's in it, who told it to you, anything that helps it find its place</small><textarea name="about" maxlength="1500"></textarea></label>
+        <fieldset><legend>How it can be shared</legend>
+          <label class="check"><input type="radio" name="sharing" value="map" checked> Share it on the porch story map with the credit above</label>
+          <label class="check"><input type="radio" name="sharing" value="archive-only"> Keep it in the archive only, not on the public map</label>
+        </fieldset>
+        <fieldset><legend>Please confirm</legend>
+          <label class="check"><input type="checkbox" name="own" required> This is my story, or I have permission from the people in it to share it.</label>
+          <label class="check"><input type="checkbox" name="adult" required> I'm 18 or older, or my parent or guardian is helping me send this.</label>
+          <label class="check"><input type="checkbox" name="permission" required> I give Genell on Banjo permission to keep this recording in the porch archive and to share it the way I chose above. I can ask to have it taken down anytime.</label>
+        </fieldset>
+        <div class="formmsg" id="storyMsg" role="status" hidden></div>
+        <div class="recrow"><button class="act warm" type="submit" id="storySend">Send my story to Genell<span>Archive</span></button></div>
+      </form>
+    </section>
+
+    <section class="boothpane" data-pane="map" hidden>
+      <p class="mapnote">Every story sent to the archive and approved for sharing gets a pin where it comes from. Pins mark the town or region, never a home address. Tap a pin to listen.</p>
+      <div class="storymap" id="storyMap"></div>
+      <p class="recnote" id="storyMapNote" style="margin-top:14px"></p>
+    </section>
   </div>
 </div>
 <div class="thought" id="thought" aria-live="polite"></div>
@@ -280,6 +393,7 @@ const LINKS = {
   market: [],          // porch market tables, e.g. {name:'Maker or musician', sells:'Records', url:'https://their-shop.com'}
   catHoller: '',       // audio file of the cat holler, e.g. 'audio/cat-holler.m4a'
   memberApi: 'https://porch-login.genellzuciya.workers.dev',       // the Log in with Patreon service, e.g. 'https://porch-login.yourname.workers.dev'
+  storyForm: '',       // Formspree form for recording booth story submissions, e.g. 'https://formspree.io/f/abcdwxyz'
   tvPlaylist: 'https://www.youtube.com/playlist?list=PLOSrLODL1vG4'       // YouTube playlist link or ID for the parlor TV, e.g. 'https://www.youtube.com/playlist?list=PL...'
 };
 
@@ -354,7 +468,28 @@ const SPOTS = {
       <div class="acts">${act('Live concerts and events', '', '')}</div>`},
   greenhouse: {name:'Magical greenhouse', members:true, yard:true, far:true, eyebrow:'Members · Past the corn', title:'The magical greenhouse',
     body:()=>`<p>Beyond the corn stands a glowing greenhouse full of plants that light up the night. Members can step inside, where I share biomimicry: how plants and animals solve problems, and what we can learn from them.</p>
-      <div class="acts">${act('Step inside the greenhouse', '', '')}</div>`},
+      <div class="acts"><button class="act warm" type="button" data-go="ghInside">Step inside the greenhouse<span>Members</span></button></div>`},
+  ghInside: {name:'Inside the greenhouse', members:true, gh:true, eyebrow:'Members · Inside the greenhouse', title:'Inside the magical greenhouse',
+    body:()=>`<p>It's bigger on the inside. Glowing plants climb all the way up to the glass dome, and this is where I'll share biomimicry: how plants and animals solve problems, and what we can learn from them.</p><p>Out the back door, a covered path leads to the bee yard. In the heart of the greenhouse, a stair winds down under the roots to the seed vault.</p>
+      <div class="acts"><button class="act warm" type="button" data-go="ghVault">Down to the seed vault<span>Vault</span></button><button class="act" type="button" data-go="ghBees">Out to the bee yard<span>Out back</span></button>${act('Biomimicry stations', '', '')}</div>`},
+  ghBees: {name:'Bee yard', members:true, gh:true, eyebrow:'Members · Behind the greenhouse', title:'The bee yard',
+    body:()=>`<p>Out the back of the greenhouse, the hives sit under a covered shelter, tended and cared for. The bees drift out over the flowers and back again all night long.</p>
+      <div class="acts"><button class="act" type="button" data-go="ghInside">Back inside the greenhouse<span>Greenhouse</span></button></div>`},
+  ghVault: {name:'Seed vault', members:true, gh:true, eyebrow:'Members · Under the greenhouse', title:'The seed vault',
+    body:()=>`<p>Under the heart of the greenhouse is where the plant knowledge is kept. Right now it holds how medicinal plants are grown and multiplied in Nigeria: from seeds, from cuttings, and from the parts of a plant that live underground.</p>
+      <div class="acts"><button class="act" type="button" data-go="vSeeds">Seeds<span>Sexual propagation</span></button><button class="act" type="button" data-go="vCuttings">Cuttings<span>Leaf, stem, root</span></button><button class="act" type="button" data-go="vUnder">Underground parts<span>Bulbs to rhizomes</span></button><button class="act" type="button" data-go="vTubers">Tubers and transplanting<span>Storage organs</span></button><button class="act warm" type="button" data-go="ghInside">Climb back up<span>Greenhouse</span></button></div>`},
+  vSeeds: {name:'Seeds', members:true, gh:true, eyebrow:'The seed vault', title:'Growing from seed',
+    body:()=>`<p>Seeds come from a plant's sexual reproduction: a flower is pollinated, its ovules are fertilized, and seeds form. Every plant can be grown from seed, and it's the most common way flowering plants reproduce in nature.</p><p>Each seed carries a new mix of genes, so seedlings vary. For medicinal plants that matters, because the strength of the medicine can shift away from the parent plant. Collect seed as soon as it's ripe, and keep it somewhere dry and dark at room temperature until it's time to plant.</p><p style="font-size:11px;color:var(--muted)">From Akeem Babalola Kadiri, "Cultivation and Propagation of Medicinal Plants in Nigeria," chapter 12 of <em>A Textbook of Medicinal Plants from Nigeria</em>.</p>
+      <div class="acts"><button class="act" type="button" data-go="ghVault">Back to the seed vault<span>Vault</span></button></div>`},
+  vCuttings: {name:'Cuttings', members:true, gh:true, eyebrow:'The seed vault', title:'Cuttings',
+    body:()=>`<p>Cuttings are the most common way to grow a new plant from its vegetative parts, and the fastest. The new plant comes out exactly like its parent, and fresh roots form along the cut piece.</p><p><b>Leaf.</b> Whole leaves or pieces of leaf send out roots from notches at the margin, as with <em>Bryophyllum pinnatum</em> and <em>Peperomia pellucida</em>.</p><p><b>Stem.</b> The method used most for medicinal plants. Trim just below a node, strip the mature leaves so the cutting loses less water, and pick stems without flower buds, since flowering hormones hold back rooting.</p><p><b>Root.</b> Take young, vigorous roots. Cut the top straight and the bottom slanted, and the slanted end goes down. Herb roots are laid in the soil sideways, shrub and tree roots go in upright, as reported for <em>Acanthus</em> and <em>Zanthoxylum</em> species.</p><p style="font-size:11px;color:var(--muted)">From Akeem Babalola Kadiri, "Cultivation and Propagation of Medicinal Plants in Nigeria," chapter 12 of <em>A Textbook of Medicinal Plants from Nigeria</em>.</p>
+      <div class="acts"><button class="act" type="button" data-go="ghVault">Back to the seed vault<span>Vault</span></button></div>`},
+  vUnder: {name:'Underground parts', members:true, gh:true, eyebrow:'The seed vault', title:'The parts that live underground',
+    body:()=>`<p>Some plants lock their food reserves away in parts that usually live underground, and each of those parts can start a new plant.</p><p><b>Bulbs.</b> Chip them, or divide off the offsets, as with <em>Allium</em>.</p><p><b>Corms.</b> Little cormels form between the old corm and the new one, and big corms can be cut into pieces: <em>Colocasia</em>, <em>Xanthosoma</em>, <em>Gladiolus</em>.</p><p><b>Offsets.</b> Young plants that grow at the base of the parent and break away on their own.</p><p><b>Suckers.</b> Shoots that rise from a root or underground stem, like banana (<em>Musa</em>) and pineapple (<em>Ananas</em>).</p><p><b>Rhizomes.</b> Stems that grow sideways, usually under the soil. Cut them into pieces with at least one bud each, as in the ginger family and the grasses.</p><p style="font-size:11px;color:var(--muted)">From Akeem Babalola Kadiri, "Cultivation and Propagation of Medicinal Plants in Nigeria," chapter 12 of <em>A Textbook of Medicinal Plants from Nigeria</em>.</p>
+      <div class="acts"><button class="act" type="button" data-go="ghVault">Back to the seed vault<span>Vault</span></button></div>`},
+  vTubers: {name:'Tubers and transplanting', members:true, gh:true, eyebrow:'The seed vault', title:'Tubers and transplanting',
+    body:()=>`<p><b>Stem tubers.</b> Yams (<em>Dioscorea</em>) can be cut into pieces, as long as every piece has a bud.</p><p><b>Root tubers.</b> Swollen roots at the base of the stem, divided and planted, as with <em>Icacina</em>.</p><p><b>Transplanting.</b> Lifting a young plant and setting it somewhere new. It works for any plant, and it's safe and fast.</p><p>Medicinal plant farmers in Nigeria usually raise their seedlings in the backyard at home rather than in a special nursery. The chapter's tips: use only healthy plant parts, cut with a clean sharp knife, plant early in the morning or late in the evening, and water regularly until the plant is established.</p><p style="font-size:11px;color:var(--muted)">From Akeem Babalola Kadiri, "Cultivation and Propagation of Medicinal Plants in Nigeria," chapter 12 of <em>A Textbook of Medicinal Plants from Nigeria</em>.</p>
+      <div class="acts"><button class="act" type="button" data-go="ghVault">Back to the seed vault<span>Vault</span></button></div>`},
   sirens: {name:'Storytelling woods', members:true, yard:true, far:true, eyebrow:'Members · Into the woods', title:'The storytelling woods',
     body:()=>`<p>Past the corn, the woods close in. Paths wind every which way under the trees, past glowing mushrooms and fireflies, and there's no seeing the way from above. Wander long enough and you'll stumble on a storytelling siren in a hidden clearing, with a stump to sit on and listen. They'll be sharing stories here soon.</p>
       <div class="acts">${act('Hear a story', '', '')}</div>`},
@@ -368,8 +503,8 @@ const SPOTS = {
     body:()=>`<p>The okra soup is upstairs on the stove for everyone. The rest of the family recipes get filed here as I write them down.</p>
       <div class="acts">${act('More recipes', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
   archStories: {name:'Recording booth', members:true, under:true, eyebrow:'The underground archive', title:'The recording booth',
-    body:()=>`<p>Recordings of the stories from the woods, tunes and conversations, saved here so you can come back to them anytime.</p>
-      <div class="acts">${act('Recordings', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
+    body:()=>`<p>Put on the headphones and listen to tunes, stories from the woods and conversations. Or step up to the microphone and record a story of your own. You can play it back for yourself, and if you want, send it to me to add to the archive and the story map.</p>
+      <div class="acts"><button class="act" type="button" data-booth="listen">Listen<span>Recordings</span></button><button class="act warm" type="button" data-booth="record">Record a story<span>Microphone</span></button><button class="act" type="button" data-booth="map">Story map<span>Where stories come from</span></button><button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
   archNotes: {name:'Field notes', members:true, under:true, eyebrow:'The underground archive', title:'Field notes',
     body:()=>`<p>My research notes, field dispatches and the sources behind every map, filed by song and by place.</p>
       <div class="acts">${act('Field notes', '', '')}<button class="act" type="button" data-go="archive">Back to the archive<span>Rotunda</span></button></div>`},
@@ -437,6 +572,7 @@ function openSpot(key){
   cardInner.querySelectorAll('[data-login]').forEach(el => el.onclick = memberLogin);
   if (pendingLoginNote){ cardInner.insertAdjacentHTML('afterbegin', `<div class="welcomeback">${pendingLoginNote}</div>`); pendingLoginNote = ''; }
   cardInner.querySelectorAll('[data-go]').forEach(el => el.onclick = () => openSpot(el.dataset.go));
+  cardInner.querySelectorAll('[data-booth]').forEach(el => el.onclick = () => BOOTH.open(el.dataset.booth));
   const gu = document.getElementById('getUp'); if (gu) gu.onclick = () => openSpot('inside');
   const tn = document.getElementById('tvNext'); if (tn) tn.onclick = () => tvSkip(1);
   const tp = document.getElementById('tvPrev'); if (tp) tp.onclick = () => tvSkip(-1);
@@ -466,7 +602,7 @@ function closeMap(){ document.getElementById('mapView').hidden = true; const b =
 function goOutside(){ closeCard(); current = null; focusSpot(null); }
 function closeCard(){ card.classList.remove('open'); card.setAttribute('aria-hidden','true'); document.querySelectorAll('.tag').forEach(t => t.classList.remove('on')); }
 document.getElementById('cardClose').onclick = closeCard;
-addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mazeView').hidden){ MAZE.close(); return; } if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('mazeView').hidden){ MAZE.close(); return; } if (e.key === 'Escape' && !document.getElementById('mapView').hidden){ closeMap(); return; } if (e.key === 'Escape' && !document.getElementById('boothView').hidden){ BOOTH.close(); return; } if (e.key === 'Escape') { closeCard(); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); } });
 [['On the porch · free', k => !SPOTS[k].room && !SPOTS[k].members], ['Inside the house', k => SPOTS[k].room], ['Out back', k => SPOTS[k].members && !SPOTS[k].room]].forEach(([h, f]) => {
   const t = document.createElement('h3'); t.textContent = h; list.appendChild(t);
   ORDER.filter(f).forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.textContent = SPOTS[k].name; if (SPOTS[k].members){ const m = document.createElement('span'); m.className = 'm'; m.textContent = 'MEMBERS'; b.appendChild(m); } b.onclick = () => { openSpot(k); list.classList.remove('open'); listBtn.setAttribute('aria-expanded','false'); }; list.appendChild(b); });
@@ -484,7 +620,7 @@ function audio(){
   if (AC.state === 'suspended') AC.resume();
   return AC;
 }
-function pluck(freq, when=0, vol=.5, bright=.5){
+function pluck(freq, when=0, vol=.5, bright=.5, dest=null){
   const ac = audio(); if (!ac || !soundOn) return;
   const sr = ac.sampleRate, len = Math.floor(sr*1.6), buf = ac.createBuffer(1, len, sr), d = buf.getChannelData(0);
   const N = Math.round(sr/freq); const ring = new Float32Array(N);
@@ -495,13 +631,19 @@ function pluck(freq, when=0, vol=.5, bright=.5){
   const src = ac.createBufferSource(); src.buffer = buf;
   const g = ac.createGain(); g.gain.value = vol;
   const f = ac.createBiquadFilter(); f.type = 'peaking'; f.frequency.value = 2400; f.gain.value = 6; f.Q.value = .8; // the banjo head's bright pop
-  src.connect(f).connect(g).connect(master); src.start(ac.currentTime + when);
+  src.connect(f).connect(g).connect(dest || master); src.start(ac.currentTime + when);
 }
 const DC = {g:392.0, C:130.81, G:196.0, c:261.63, d:293.66}; // Double C: gCGCD
 function bumDitty(){
-  const t = .28; const strum = (w) => { [DC.d, DC.c, DC.G].forEach((f,i) => pluck(f, w + i*.012, .28, .7)); };
+  const ac = audio(); if (!ac || !soundOn) return;
+  // Soft welcome: the ditty runs through its own quiet bus that eases in, with the top end rounded off so it never blasts
+  const bus = ac.createGain(), soft = ac.createBiquadFilter(), now = ac.currentTime;
+  soft.type = 'lowpass'; soft.frequency.value = 2600; soft.Q.value = .5;
+  bus.gain.setValueAtTime(.14, now); bus.gain.linearRampToValueAtTime(.3, now + .7);
+  bus.connect(soft).connect(master);
+  const t = .28; const strum = (w) => { [DC.d, DC.c, DC.G].forEach((f,i) => pluck(f, w + i*.018, .22, .55, bus)); };
   const seq = [[DC.c,0],[null,1],[DC.g,1.5],[DC.d,2],[null,3],[DC.g,3.5],[DC.c*2/1.5,4],[null,5],[DC.g,5.5],[DC.c,6],[null,7],[DC.g,7.5]];
-  seq.forEach(([f,b]) => { if (f) pluck(f, b*t, b%2 ? .32 : .55, .45); else strum(b*t); });
+  seq.forEach(([f,b]) => { if (f) pluck(f, b*t, b%2 ? .3 : .45, .4, bus); else strum(b*t); });
 }
 function startCrickets(){
   const ac = audio(); if (!ac || crickets) return;
@@ -550,6 +692,166 @@ function sip(){ [1.0, 1.35, 1.7].forEach(d => blip(260, 140, .14, .09, 'sine', d
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; if (master) master.gain.value = soundOn ? .9 : 0; };
 onStrum = bumDitty;
+
+/* ===== Recording booth: listen, record a story, story map ===== */
+// Recordings for the Listen shelf, newest first, e.g. {title:'The sirens', who:'Genell', note:'Told in the storytelling woods', src:'audio/sirens.m4a'}
+const ARCHIVE_AUDIO = [];
+// Approved stories for the story map, e.g. {title:"Granddaddy's mule", teller:'A. Smith', place:'Freetown, Maryland', lat:39.2, lng:-76.9, when:'1950s', note:'Told by her grandmother', src:'audio/stories/mule.m4a'}
+const STORIES = [];
+const BOOTH = (() => {
+  const $ = id => document.getElementById(id), view = $('boothView');
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const MAX = 15*60;
+  let tab = 'listen', rec = null, stream = null, chunks = [], blob = null, url = '', t0 = 0, tick = null, meter = null, wasGain = null;
+  let leafletP = null, pinMap = null, pin = null, storyMap = null, picked = null;
+
+  function loadLeaflet(){
+    if (window.L) return Promise.resolve(window.L);
+    if (!leafletP) leafletP = new Promise((res, rej) => {
+      const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+      const sc = document.createElement('script'); sc.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; sc.onload = () => res(window.L); sc.onerror = () => { leafletP = null; rej(); }; document.head.appendChild(sc);
+    });
+    return leafletP;
+  }
+  const plain = m => m.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
+  const tiles = L => L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 12, attribution: '&copy; OpenStreetMap contributors'});
+  const dot = L => L.divIcon({className: '', iconSize: [18,18], iconAnchor: [9,9], html: '<span style="display:block;width:18px;height:18px;border-radius:50%;background:#e8502e;border:3px solid #f3e6c8;box-shadow:0 0 0 2px #070b22"></span>'});
+
+  function show(which){
+    tab = which;
+    view.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === which));
+    view.querySelectorAll('[data-pane]').forEach(p => p.hidden = p.dataset.pane !== which);
+    if (which === 'listen') paintShelf();
+    if (which === 'map') paintStoryMap();
+    if (which === 'record' && !$('storyForm').hidden) paintPinMap();
+  }
+  function open(which='listen'){ view.hidden = false; show(which); $('boothClose').focus(); }
+  function close(){ if (rec && rec.state === 'recording') stopRec(); view.querySelectorAll('audio').forEach(a => a.pause()); view.hidden = true; }
+
+  function paintShelf(){
+    const el = $('boothShelf');
+    el.innerHTML = ARCHIVE_AUDIO.length ? ARCHIVE_AUDIO.map(r => `<div class="rec"><h4>${esc(r.title)}</h4><div class="meta">${esc([r.who, r.note].filter(Boolean).join(' · '))}</div><audio controls preload="none" src="${esc(r.src)}"></audio></div>`).join('')
+      : '<div class="emptyshelf">The first recordings are being filed now. Check back soon, or record a story of your own.</div>';
+  }
+
+  /* --- recording --- */
+  const fmt = sec => Math.floor(sec/60) + ':' + String(Math.floor(sec%60)).padStart(2, '0');
+  function pickType(){ for (const t of ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg;codecs=opus']) if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) return t; return ''; }
+  function quietPorch(on){ // mute the porch sounds so they don't end up in the recording
+    if (!master || !AC) return;
+    if (on){ wasGain = master.gain.value; master.gain.setTargetAtTime(0, AC.currentTime, .05); }
+    else if (wasGain != null){ master.gain.setTargetAtTime(soundOn ? wasGain : 0, AC.currentTime, .3); wasGain = null; }
+  }
+  async function startRec(){
+    const note = $('recNote');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ note.textContent = "This browser can't record audio. Try Chrome, Safari or Firefox on a phone or computer."; return; }
+    try { stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: true}}); }
+    catch(e){ note.textContent = "The microphone didn't turn on. Allow microphone access for this page in your browser, then press record again."; return; }
+    if (url){ URL.revokeObjectURL(url); url = ''; } blob = null; chunks = [];
+    const type = pickType();
+    rec = new MediaRecorder(stream, Object.assign({audioBitsPerSecond: 48000}, type ? {mimeType: type} : {}));
+    rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = finishRec;
+    quietPorch(true);
+    rec.start(1000); t0 = Date.now();
+    $('recBtn').classList.add('on'); $('recBtn').textContent = 'Stop'; $('recBtn').setAttribute('aria-pressed', 'true');
+    $('recPlay').hidden = true; $('recRow').hidden = true; $('storyForm').hidden = true;
+    note.textContent = "Recording. Take your time. Press stop when you're done.";
+    tick = setInterval(() => { const sec = (Date.now() - t0)/1000; $('recTime').textContent = fmt(sec); if (sec >= MAX) stopRec(); }, 250);
+    try { // a simple level meter so people can see the mic hears them
+      const ac = audio(); const srcN = ac.createMediaStreamSource(stream), an = ac.createAnalyser(); an.fftSize = 512; srcN.connect(an);
+      const buf = new Uint8Array(an.fftSize);
+      meter = setInterval(() => { an.getByteTimeDomainData(buf); let m = 0; for (const v of buf) m = Math.max(m, Math.abs(v - 128)); $('recLevel').style.width = Math.min(100, m/128*180) + '%'; }, 80);
+    } catch(e){}
+  }
+  function stopRec(){ if (rec && rec.state !== 'inactive') rec.stop(); }
+  function finishRec(){
+    clearInterval(tick); clearInterval(meter); $('recLevel').style.width = '0';
+    if (stream) stream.getTracks().forEach(t => t.stop()); stream = null;
+    quietPorch(false);
+    $('recBtn').classList.remove('on'); $('recBtn').textContent = 'Record'; $('recBtn').setAttribute('aria-pressed', 'false');
+    blob = new Blob(chunks, {type: (rec && rec.mimeType) || 'audio/webm'}); rec = null;
+    if (!blob.size){ $('recNote').textContent = "That one didn't catch any sound. Press record to try again."; return; }
+    url = URL.createObjectURL(blob); const pl = $('recPlay'); pl.src = url; pl.hidden = false;
+    $('recRow').hidden = false;
+    $('recNote').textContent = "Here it is. Play it back. It stays right here on your device unless you choose to add it to the archive.";
+  }
+
+  /* --- sending it in --- */
+  async function paintPinMap(){
+    let L; try { L = await loadLeaflet(); } catch(e){ $('pinMap').innerHTML = '<div class="emptyshelf" style="border:0">The map didn\'t load. Just type the place above and I\'ll pin it.</div>'; return; }
+    if (!pinMap){
+      pinMap = L.map('pinMap', {worldCopyJump: true}).setView([30, -40], 2); plain(pinMap); tiles(L).addTo(pinMap);
+      pinMap.on('click', e => setPin(e.latlng.lat, e.latlng.lng));
+    }
+    setTimeout(() => pinMap.invalidateSize(), 60);
+  }
+  function setPin(lat, lng){
+    if (!window.L || !pinMap) return;
+    picked = [Math.round(lat*100)/100, Math.round(lng*100)/100]; // about a kilometer: enough for a town, never a house
+    if (pin) pin.setLatLng(picked); else pin = L.marker(picked, {icon: dot(L)}).addTo(pinMap);
+  }
+  async function findPlace(){
+    const q = $('placeIn').value.trim(); if (!q) { $('placeIn').focus(); return; }
+    const btn = $('placeFind'); btn.disabled = true;
+    try {
+      const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q), {headers: {'Accept-Language': 'en'}});
+      const d = await r.json();
+      if (d[0]){ await paintPinMap(); setPin(+d[0].lat, +d[0].lon); pinMap.setView(picked, 7); }
+      else msg("I couldn't find that place on the map. Tap the map to drop the pin yourself, or just leave the place written out.", true);
+    } catch(e){ msg("The map search didn't answer. Tap the map to drop the pin yourself, or just leave the place written out.", true); }
+    btn.disabled = false;
+  }
+  function msg(text, err){ const m = $('storyMsg'); m.textContent = text; m.classList.toggle('err', !!err); m.hidden = !text; }
+  async function send(e){
+    e.preventDefault(); const f = $('storyForm');
+    if (!blob){ msg('Record your story first, then send it.', true); return; }
+    if (!f.checkValidity()){ msg('Please add a title, your email and where the story comes from, and check the three boxes at the bottom.', true); f.reportValidity(); return; }
+    if (!LINKS.storyForm){ msg("The archive's mailbox isn't open yet, so this story can't be sent today. Your recording is still here to play back.", true); return; }
+    const fd = new FormData(f);
+    const ext = /mp4/.test(blob.type) ? 'm4a' : /ogg/.test(blob.type) ? 'ogg' : 'webm';
+    const slug = (fd.get('title') || 'story').toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+    fd.append('recording', blob, `porch-story-${slug}.${ext}`);
+    fd.append('length', $('recTime').textContent);
+    if (picked){ fd.append('lat', picked[0]); fd.append('lng', picked[1]); }
+    if (MEMBER){ fd.append('member', MEMBER.name || ''); if (MEMBER.id) fd.append('member_id', MEMBER.id); }
+    fd.append('_subject', 'Porch story: ' + (fd.get('title') || 'untitled'));
+    const btn = $('storySend'); btn.disabled = true; msg('Sending your story down the line…');
+    try {
+      const r = await fetch(LINKS.storyForm, {method: 'POST', body: fd, headers: {'Accept': 'application/json'}});
+      if (!r.ok) throw new Error(r.status);
+      msg("Thank you. Your story is on its way to me. I listen to every one before it goes into the archive, and if you chose the map, I'll pin it once it's filed.");
+      f.reset(); f.querySelectorAll('input,textarea').forEach(i => i.disabled = true); btn.hidden = true;
+    } catch(err){ msg("It didn't send that time. Check your connection and try again. Your recording is still here.", true); btn.disabled = false; }
+  }
+
+  async function paintStoryMap(){
+    const note = $('storyMapNote');
+    note.textContent = STORIES.length ? '' : 'No pins yet. The first stories are being listened to and filed. Yours could be one of them.';
+    let L; try { L = await loadLeaflet(); } catch(e){ $('storyMap').innerHTML = '<div class="emptyshelf" style="border:0">The story map didn\'t load. Try again in a moment.</div>'; return; }
+    if (!storyMap){
+      storyMap = L.map('storyMap', {worldCopyJump: true}).setView([28, -40], 2); plain(storyMap); tiles(L).addTo(storyMap);
+      const pts = [];
+      STORIES.forEach(s => { if (s.lat == null || s.lng == null) return; pts.push([s.lat, s.lng]);
+        L.marker([s.lat, s.lng], {icon: dot(L), title: s.title}).addTo(storyMap).bindPopup(`<h4>${esc(s.title)}</h4><div>${esc([s.teller || 'Anonymous', s.place, s.when].filter(Boolean).join(' · '))}</div>${s.note ? `<p style="margin:6px 0 0">${esc(s.note)}</p>` : ''}${s.src ? `<audio controls preload="none" src="${esc(s.src)}"></audio>` : ''}`); });
+      if (pts.length > 1) storyMap.fitBounds(pts, {padding: [40, 40], maxZoom: 6}); else if (pts.length) storyMap.setView(pts[0], 6);
+      storyMap.on('popupclose', e => { const a = e.popup.getElement() && e.popup.getElement().querySelector('audio'); if (a) a.pause(); });
+    }
+    setTimeout(() => storyMap.invalidateSize(), 60);
+  }
+
+  view.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => show(b.dataset.tab));
+  $('boothClose').onclick = close;
+  view.addEventListener('click', e => { if (e.target === view) close(); });
+  $('recBtn').onclick = () => rec && rec.state === 'recording' ? stopRec() : startRec();
+  $('recAgain').onclick = startRec;
+  $('recShare').onclick = () => { $('storyForm').hidden = false; msg(''); paintPinMap(); $('storyForm').querySelector('input').focus(); };
+  $('placeFind').onclick = findPlace;
+  $('placeIn').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); findPlace(); } });
+  $('storyForm').addEventListener('submit', send);
+  return {open, close};
+})();
+
 
 /* ===== Corn maze: gone like a turkey through the corn =====
    Top-down. The turkey starts by the back steps (bottom) and runs for the gap on the far side of the field (top).
@@ -1726,8 +2028,8 @@ document.getElementById('goBtn').onclick = () => {
     const stations = [['archMaps', 'Song map vault', Math.PI*.75], ['archRecipes', 'Recipe box', Math.PI*.25], ['archStories', 'Recording booth', -Math.PI*.25], ['archNotes', 'Field notes', -Math.PI*.75]];
     AR.stations = {};
     stations.forEach(([key, name, a]) => { const g = pivot(R, Math.cos(a)*6.4, 0, Math.sin(a)*6.4); g.rotation.y = Math.atan2(-Math.cos(a), -Math.sin(a));
-      rm(g, new THREE.CylinderGeometry(.62, .78, 1.05, 24), rmat(0x6f6a5c), 0, .52, 0); rm(g, new THREE.TorusGeometry(.66, .03, 6, 40), glow(0xf2a93b, 1.4), 0, 1.05, 0).rotation.x = Math.PI/2;
-      const top = pivot(g, 0, 1.08, 0);
+      rm(g, new THREE.CylinderGeometry(.62, .82, 2.5, 24), rmat(0x6f6a5c), 0, 1.25, 0); rm(g, new THREE.TorusGeometry(.66, .03, 6, 40), glow(0xf2a93b, 1.4), 0, 2.5, 0).rotation.x = Math.PI/2;
+      const top = pivot(g, 0, 2.53, 0);
       if (key === 'archMaps'){ const nodes = [[0,.55,0],[.38,.8,.1],[-.36,.75,-.08],[.12,1.12,-.2],[-.18,.42,.3],[.42,.4,-.25],[-.4,1.08,.18]].map(p => new THREE.Vector3(...p));
         nodes.forEach((n, i) => rm(top, new THREE.SphereGeometry(i ? .09 : .14, 12, 8), glow(PAL[i%6], 1.8), n.x, n.y, n.z).castShadow = false);
         nodes.slice(1).forEach(n => { const d = n.clone().sub(nodes[0]), ln = rm(top, new THREE.CylinderGeometry(.012, .012, d.length(), 4), glow(0xf3e6c8, .9), 0, 0, 0); ln.position.copy(nodes[0].clone().add(n).multiplyScalar(.5)); ln.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize()); ln.castShadow = false; });
@@ -1738,7 +2040,7 @@ document.getElementById('goBtn').onclick = () => {
         const horn = rm(top, new THREE.ConeGeometry(.36, .9, 24, 1, true), rmat(0xd2a24a, {metalness:.7, roughness:.3, side:THREE.DoubleSide}), .15, .85, -.15); horn.rotation.set(-.9, 0, -.5); }
       if (key === 'archNotes'){ for (const s of [-1, 1]){ const pg = rm(top, new THREE.BoxGeometry(.42, .02, .56), rmat(0xf3e6c8), s*.21, .08, 0); pg.rotation.z = -s*.18; }
         const q = rm(top, new THREE.ConeGeometry(.03, .7, 6), rmat(0xf3e6c8), .3, .35, .1); q.rotation.z = -.7; }
-      const sg = label(name); sg.position.set(0, 2.55, 0); g.add(sg);
+      const sg = label(name); sg.position.set(0, 4.15, 0); g.add(sg);
       AR.stations[key] = {g, pos: g.getWorldPosition(new THREE.Vector3()), a}; });
     { const pl = new THREE.PointLight(0xffd9a0, 1.3, 26, 1.6); pl.position.set(C.x, C.y + 7, C.z); scene.add(pl); }
     noSh(under); R.updateMatrixWorld(true);
@@ -1754,11 +2056,159 @@ document.getElementById('goBtn').onclick = () => {
   { const s0 = YARD.trailStart, d0 = YARD.trailDir; register('sirens', YARD.trail, new THREE.Vector3(s0.x, 4.2, s0.z), [[s0.x, 1.6, s0.z],[s0.x + d0.x*3, 1.35, s0.z + d0.z*3]]); }
   spots.sirens.inside = true; spots.sirens.homeView = spots.sirens.view; spots.sirens.anim = YARD.sirenAnim;
   { const AR = YARD.archive, C = AR.C, down = [[0,7,-76],[0,1.2,-84],[0,-9,-84],[0,-19,-84.4]];
-    register('archive', AR.ent, new THREE.Vector3(0, 4.6, -84), [[0, C.y + 1.75, -85.6],[0, C.y + 4.2, -95]]); spots.archive.inside = true; spots.archive.via = down; spots.archive.anim = YARD.archiveAnim;
+    register('archive', AR.ent, new THREE.Vector3(0, 4.6, -84), [[0, C.y + 4.3, -85.6],[0, C.y + 3.9, -95]]); spots.archive.inside = true; spots.archive.via = down; spots.archive.anim = YARD.archiveAnim;
     for (const k in AR.stations){ const st = AR.stations[k], p = st.pos, u = new THREE.Vector3(p.x - C.x, 0, p.z - C.z).normalize();
-      register(k, st.g, new THREE.Vector3(p.x, C.y + 2.6, p.z), [[p.x - u.x*5.6, C.y + 2.5, p.z - u.z*5.6],[p.x, C.y + 1.7, p.z]]); spots[k].inside = true; spots[k].via = down; }
+      register(k, st.g, new THREE.Vector3(p.x, C.y + 4.4, p.z), [[p.x - u.x*5.6, C.y + 4.3, p.z - u.z*5.6],[p.x, C.y + 3.0, p.z]]); spots[k].inside = true; spots[k].via = down; }
     spots.archiveLock = {view:[[0,24,-62],[0,0,-84]], wide:true}; spots.sirensLock = {view:[[0,16,-24],[0,0,-56]], wide:true};
     lockViewFor = (k) => spots[k + 'Lock'] ? k + 'Lock' : null; }
+  { // inside the magical greenhouse: bigger on the inside, with a covered bee yard out back and the seed vault under its heart
+    const GI = new THREE.Vector3(-160, 0, -40), gi = pivot(scene, GI.x, GI.y, GI.z); gi.visible = false; const GHI = {GI, g: gi}; YARD.ghIn = GHI;
+    const glow = (col, k=1.4) => new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:k, roughness:.5});
+    const glassM = new THREE.MeshStandardMaterial({color:0x5fae7c, emissive:0x1d5f3e, emissiveIntensity:.35, transparent:true, opacity:.22, roughness:.1, metalness:.1, side:THREE.DoubleSide, depthWrite:false});
+    const frameM = rmat(0xf3e6c8, {metalness:.3}), gold = rmat(0xf2a93b, {metalness:.6, roughness:.35}), stoneM = rmat(0x8a7f6c), wood = rmat(0x7a5a3a);
+    const PAL = [0x7dffc8, 0xb79ad8, 0xff9fc8, 0x8fd6d0, 0xf2a93b], glowMats = [];
+    const gm = (c, k=.8) => { const m = glow(c, k); glowMats.push(m); return m; }, pm = PAL.map(c => gm(c, .85)), vineG = gm(0x7dffc8, .7);
+    const R0 = 15, WH = 7, DY = .55, roofY = (r) => WH + .5 + DY*Math.sqrt(Math.max(0, R0*R0 - r*r));
+    // grounds: a meadow around the hall and a ring of dark trees so the night closes in
+    rm(gi, new THREE.RingGeometry(R0, 70, 64), rmat(0x34573c, {flatShading:false, roughness:1}), 0, -.02, 0).rotation.x = -Math.PI/2;
+    rm(gi, new THREE.RingGeometry(2.3, R0, 64), rmat(0x4b5a49, {flatShading:false, roughness:.95}), 0, 0, 0).rotation.x = -Math.PI/2;
+    for (let z=-13.6; z<=13.6; z+=1.1){ if (Math.abs(z) < 2.8) continue; rm(gi, new THREE.CylinderGeometry(.42 + Math.random()*.1, .48, .06, 9), stoneM, (Math.random()-.5)*.25, .03, z); }
+    const treeM = [rmat(0x24572f), rmat(0x2f6b3a), rmat(0x1d4a2a)], trunkM = rmat(0x4a3426);
+    for (let i=0;i<48;i++){ const a = i/48*Math.PI*2 + Math.random()*.08, r = 30 + Math.random()*14, x = Math.cos(a)*r, z = Math.sin(a)*r, h = 7 + Math.random()*7;
+      rm(gi, new THREE.CylinderGeometry(.25, .35, h*.4, 6), trunkM, x, h*.2, z); rm(gi, new THREE.ConeGeometry(2.2 + Math.random(), h, 7), treeM[i%3], x, h*.9 - .5, z); }
+    // the hall: a tall glass rotunda under a wide dome
+    const plinthM = rmat(0x9a8c70); plinthM.side = THREE.DoubleSide;
+    rm(gi, new THREE.CylinderGeometry(R0 + .2, R0 + .3, .5, 64, 1, true), plinthM, 0, .25, 0);
+    rm(gi, new THREE.CylinderGeometry(R0, R0, WH, 48, 1, true), glassM, 0, .5 + WH/2, 0);
+    for (let i=0;i<24;i++){ const a = i/24*Math.PI*2 + Math.PI/24; rm(gi, new THREE.BoxGeometry(.13, WH, .13), frameM, Math.cos(a)*R0, .5 + WH/2, Math.sin(a)*R0); }
+    for (const y of [.5, .5 + WH*.55, .5 + WH]) rm(gi, new THREE.TorusGeometry(R0, .07, 4, 64), frameM, 0, y, 0).rotation.x = Math.PI/2;
+    rm(gi, new THREE.SphereGeometry(R0, 40, 14, 0, Math.PI*2, 0, Math.PI/2), glassM, 0, WH + .5, 0).scale.y = DY;
+    for (let i=0;i<12;i++){ const rb = rm(gi, new THREE.TorusGeometry(R0, .08, 4, 32, Math.PI), frameM, 0, WH + .5, 0); rb.rotation.y = i/12*Math.PI; rb.scale.y = DY; }
+    rm(gi, new THREE.TorusGeometry(R0*.55, .06, 4, 48), frameM, 0, roofY(R0*.55), 0).rotation.x = Math.PI/2;
+    rm(gi, new THREE.CylinderGeometry(.9, .9, 1.2, 8, 1, true), glassM, 0, roofY(0) + .5, 0); rm(gi, new THREE.CylinderGeometry(.05, .1, .7, 6), gold, 0, roofY(0) + 1.4, 0); rm(gi, new THREE.SphereGeometry(.22, 10, 8), gold, 0, roofY(0) + 1.85, 0);
+    // front and back doors: golden arches with glass doors
+    const door = (z) => { const d = pivot(gi, 0, 0, z); for (const sx of [-1.25, 1.25]) rm(d, new THREE.BoxGeometry(.16, 3.2, .16), frameM, sx, 1.6, 0);
+      rm(d, new THREE.TorusGeometry(1.25, .1, 6, 24, Math.PI), gold, 0, 3.2, 0); return d; };
+    const front = door(R0 - .05); door(-R0 + .05);
+    // the heart: a ringed well with a stair down to the vault, and a glowing tree rising out of it
+    const heart = pivot(gi, 0, 0, 0);
+    rm(heart, new THREE.TorusGeometry(2.3, .14, 8, 48), stoneM, 0, .12, 0).rotation.x = Math.PI/2;
+    rm(heart, new THREE.TorusGeometry(2.05, .04, 6, 48), gm(0xf2a93b, 1.6), 0, .2, 0).rotation.x = Math.PI/2;
+    for (let i=0;i<14;i++){ const a = i/14*Math.PI*2; if (Math.abs(Math.sin(a) - 1) < .25) continue; rm(heart, new THREE.CylinderGeometry(.04, .04, 1, 6), gold, Math.cos(a)*2.35, .6, Math.sin(a)*2.35); }
+    rm(heart, new THREE.TorusGeometry(2.35, .04, 6, 48, Math.PI*1.72), gold, 0, 1.1, 0).rotation.set(Math.PI/2, 0, Math.PI*.64);
+    const shaftM = new THREE.MeshStandardMaterial({color:0x3a2f28, roughness:.95, side:THREE.BackSide});
+    rm(gi, new THREE.CylinderGeometry(2.3, 2.3, 3, 32, 1, true), shaftM, 0, -1.5, 0);
+    for (let i=0;i<34;i++){ const a = i*.46 + Math.PI/2, y = -.35 - i*.285; if (y < -9.9) break; const st = rm(gi, new THREE.BoxGeometry(.85, .09, .4), stoneM, Math.cos(a)*1.45, y, Math.sin(a)*1.45); st.rotation.y = -a; }
+    const trunk = new THREE.CatmullRomCurve3([[0,-10,0],[.3,-6,.2],[-.25,-2.5,-.2],[.2,1,.15],[0,4.6,0]].map(v => new THREE.Vector3(...v)));
+    rm(gi, new THREE.TubeGeometry(trunk, 48, .38, 9), rmat(0x5a3d2a));
+    for (let k=0;k<5;k++){ const a = k/5*Math.PI*2; const br = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 3.8, 0), new THREE.Vector3(Math.cos(a)*1.4, 5.1, Math.sin(a)*1.4), new THREE.Vector3(Math.cos(a+.3)*2.6, 6.2, Math.sin(a+.3)*2.6)]);
+      rm(gi, new THREE.TubeGeometry(br, 16, .14, 6), rmat(0x5a3d2a)); }
+    const canopy = pivot(gi, 0, 0, 0), canopyN = 46;
+    for (let i=0;i<canopyN;i++){ const a = Math.random()*Math.PI*2, r = Math.sqrt(Math.random())*3.3, y = 5.6 + Math.random()*1.8 - r*.25;
+      rm(canopy, new THREE.IcosahedronGeometry(.16 + Math.random()*.22, 1), pm[i%5], Math.cos(a)*r, y, Math.sin(a)*r); }
+    for (let i=0;i<14;i++){ const a = i/14*Math.PI*2, r = 1.2 + (i%3)*.8; for (let k=0;k<7;k++) rm(canopy, new THREE.SphereGeometry(.06, 6, 4), vineG, Math.cos(a)*r, 5.4 - k*.32, Math.sin(a)*r); }
+    // beds of greenery and glowing plants, with paths kept clear front to back
+    const bed = (x, z) => { const r = Math.hypot(x, z); return r > 3.6 && r < R0 - .8 && Math.abs(x) > 1.3; };
+    { const greens = [0x2f6b3a, 0x3f8a46, 0x5aa652, 0x24572f, 0x4f9a5e, 0x6fb86a], N = 560, fol = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), rmat(0xffffff), N), cc = new THREE.Color(), M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3();
+      let n = 0; for (let tr=0; tr<6000 && n<N; tr++){ const x = (Math.random()-.5)*2*R0, z = (Math.random()-.5)*2*R0; if (!bed(x, z)) continue;
+        const edge = Math.hypot(x, z) > R0 - 4, tall = edge && Math.random() < .5, y = .3 + Math.random()*(tall ? 4.2 : 1.2), r = .3 + Math.random()*(tall ? .7 : .5);
+        M.compose(P.set(x, y, z), Q.setFromAxisAngle(S.set(0,1,0), Math.random()*6), S.set(r, r*(1 + Math.random()*.6), r)); fol.setMatrixAt(n, M); fol.setColorAt(n++, cc.setHex(greens[n%6])); }
+      fol.count = n; fol.instanceColor.needsUpdate = true; gi.add(fol);
+      const VS = 90, VK = 10, vines = new THREE.InstancedMesh(new THREE.SphereGeometry(.09, 6, 4), rmat(0x3f8a46), VS*VK); let nv = 0;
+      for (let i=0;i<VS;i++){ const a = Math.random()*Math.PI*2, r = 4 + Math.random()*(R0 - 5), x = Math.cos(a)*r, z = Math.sin(a)*r, top = roofY(r) - .3, len = 5 + Math.floor(Math.random()*6);
+        for (let k=0;k<VK;k++){ if (k >= len){ M.compose(P.set(0,-50,0), Q.identity(), S.set(.001,.001,.001)); vines.setMatrixAt(nv++, M); continue; }
+          M.compose(P.set(x + Math.sin(k*.9 + i)*.07, top - k*.3, z + Math.cos(k*.7 + i)*.07), Q.setFromAxisAngle(S.set(0,1,0), k + i), S.set(1.2, .6, .5)); vines.setMatrixAt(nv++, M); } }
+      gi.add(vines); }
+    let pk = 0; for (let tr=0; tr<900 && pk<70; tr++){ const x = (Math.random()-.5)*2*(R0-1), z = (Math.random()-.5)*2*(R0-1); if (!bed(x, z)) continue; const mt = pm[pk%5];
+      if (pk%3 === 0){ rm(gi, new THREE.CylinderGeometry(.05,.08,.7,6), rmat(0xf3e6c8), x, .35, z); rm(gi, new THREE.SphereGeometry(.3,10,6,0,Math.PI*2,0,Math.PI/2), mt, x, .68, z); }
+      else { const bl = rm(gi, new THREE.IcosahedronGeometry(.3 + (pk%4)*.08, 1), mt, x, .5 + (pk%3)*.2, z); bl.scale.y = 1.3; } pk++; }
+    for (let i=0;i<10;i++){ const a = i/10*Math.PI*2 + .3, r = R0 - 2.6, x = Math.cos(a)*r, z = Math.sin(a)*r; if (Math.abs(x) < 2) continue; const h = 3.5 + (i%3)*.9;
+      rm(gi, new THREE.CylinderGeometry(.14, .22, h, 7), rmat(0x6a4a30), x, h/2, z);
+      for (let k=0;k<6;k++){ const lf = rm(gi, new THREE.ConeGeometry(.35, 2.2, 5), rmat(0x4f9a5e), x + Math.cos(k)*.9, h + .15, z + Math.sin(k)*.9); lf.rotation.set(Math.sin(k)*1.2, 0, -Math.cos(k)*1.2); }
+      rm(gi, new THREE.SphereGeometry(.18, 8, 6), pm[i%5], x, h + .1, z); }
+    // the bee yard: out the back door, hives sit under a covered shelter among flowers
+    for (let z=-15.7; z>=-19.6; z-=1.05) rm(gi, new THREE.CylinderGeometry(.42, .48, .06, 9), stoneM, (Math.random()-.5)*.3, .03, z);
+    const by = pivot(gi, 0, 0, -22.5), hives = pivot(by, 0, 0, 0); GHI.hives = hives;
+    const roofM = rmat(0x5a3d2a);
+    for (const [px, pz] of [[-4.7,-2],[4.7,-2],[-4.7,1.9],[4.7,1.9]]) rm(by, new THREE.BoxGeometry(.22, 3.1, .22), wood, px, 1.55, pz);
+    rm(by, new THREE.BoxGeometry(10.4, .16, 5.2), roofM, 0, 3.2, 0).rotation.x = .16;
+    rm(by, new THREE.BoxGeometry(10.4, .2, .2), wood, 0, 3.05, 1.95); rm(by, new THREE.BoxGeometry(10.4, .2, .2), wood, 0, 3.35, -2);
+    for (const x of [-2.4, 2.4]){ rm(by, new THREE.CylinderGeometry(.01, .01, .5, 4), rmat(0x222222), x, 2.85, 1.2); rm(by, new THREE.SphereGeometry(.1, 10, 8), gm(0xffc070, 1.8), x, 2.6, 1.2); }
+    const hc = [0xf3e6c8, 0xf2a93b, 0x8fd6d0, 0xff9fc8], hiveX = [];
+    for (let i=0;i<4;i++){ const x = -3.3 + i*2.2, hv = pivot(hives, x, 0, -.2); hiveX.push(x); const n = 2 + (i%2);
+      rm(hv, new THREE.BoxGeometry(1.15, .35, .95), wood, 0, .18, 0);
+      for (let k=0;k<n;k++) rm(hv, new THREE.BoxGeometry(.98, .42, .82), rmat(hc[(i+k)%4]), 0, .58 + k*.44, 0);
+      rm(hv, new THREE.BoxGeometry(1.08, .12, .92), rmat(0xd8d2c4, {metalness:.4}), 0, .43 + n*.44, 0);
+      rm(hv, new THREE.BoxGeometry(.34, .05, .04), rmat(0x1a1410), 0, .4, .42); }
+    for (let i=0;i<70;i++){ const a = Math.random()*Math.PI*2, r = 5.4 + Math.random()*4, x = Math.cos(a)*r*1.2, z = Math.sin(a)*r*.8; if (z > 2 && Math.abs(x) < 1.4) continue;
+      const lv = i%4 === 0 ? pm[i%5] : rmat(i%2 ? 0x9b7fd1 : 0x7a63b8); rm(by, new THREE.ConeGeometry(.12, .7, 5), lv, x, .35, z); rm(by, new THREE.SphereGeometry(.2, 6, 4), rmat(0x3f8a46), x, .12, z); }
+    const bN = 60, bees = new THREE.InstancedMesh(new THREE.SphereGeometry(.032, 6, 4), gm(0xffc43a, 1.1), bN), bd = [];
+    for (let i=0;i<bN;i++) bd.push({x: hiveX[i%4], r: .5 + Math.random()*2.6, s: .5 + Math.random()*1.1, ph: Math.random()*7, h: .6 + Math.random()*1.6}); by.add(bees);
+    // the seed vault: a round root cellar under the heart, with jars of seed and four teaching stations
+    const VY = -10, V = pivot(gi, 0, VY, 0); GHI.vault = V;
+    rm(V, new THREE.CircleGeometry(9, 56), rmat(0x3a2f28, {flatShading:false, roughness:1}), 0, 0, 0).rotation.x = -Math.PI/2;
+    rm(V, new THREE.CylinderGeometry(9, 9, 7, 56, 1, true), new THREE.MeshStandardMaterial({color:0x2c2420, roughness:1, side:THREE.BackSide}), 0, 3.5, 0);
+    const ceil = rm(V, new THREE.RingGeometry(2.3, 9, 56), new THREE.MeshStandardMaterial({color:0x241d1a, roughness:1, side:THREE.DoubleSide}), 0, 7, 0); ceil.rotation.x = Math.PI/2;
+    rm(V, new THREE.TorusGeometry(2.3, .05, 6, 48), gm(0x8fd6d0, 1.4), 0, .04, 0).rotation.x = Math.PI/2;
+    rm(V, new THREE.TorusGeometry(5.5, .04, 6, 72), gm(0xf2a93b, 1.2), 0, .04, 0).rotation.x = Math.PI/2;
+    const veinM = gm(0x7dffc8, 1.3), rootM = rmat(0x4a3426);
+    for (let k=0;k<14;k++){ const a = k/14*Math.PI*2; const cv = new THREE.CatmullRomCurve3([new THREE.Vector3(Math.cos(a)*3, 6.95, Math.sin(a)*3), new THREE.Vector3(Math.cos(a+.15)*8.85, 6.6, Math.sin(a+.15)*8.85), new THREE.Vector3(Math.cos(a+.25)*8.9, 3.5, Math.sin(a+.25)*8.9), new THREE.Vector3(Math.cos(a+.2)*8.85, .4, Math.sin(a+.2)*8.85)]);
+      rm(V, new THREE.TubeGeometry(cv, 32, .12, 6), rootM); if (k%2 === 0) rm(V, new THREE.TubeGeometry(cv, 32, .035, 4), veinM).scale.set(.982, 1, .982); }
+    for (let k=0;k<6;k++){ const a = k/6*Math.PI*2 + .4; rm(V, new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0, .5, 0), new THREE.Vector3(Math.cos(a)*1.2, .1, Math.sin(a)*1.2), new THREE.Vector3(Math.cos(a+.3)*2.6, .05, Math.sin(a+.3)*2.6)]), 16, .12, 6), rootM); }
+    { const jars = [], shelfM = rmat(0x5a4632);
+      for (const a of [0, Math.PI/2, Math.PI, -Math.PI/2]){ const sb = pivot(V, Math.cos(a)*8.4, 0, Math.sin(a)*8.4); sb.rotation.y = Math.atan2(-Math.cos(a), -Math.sin(a));
+        for (const sx of [-1.7, 1.7]) rm(sb, new THREE.BoxGeometry(.2, 4.6, .5), shelfM, sx, 2.3, 0);
+        for (let r=0;r<4;r++){ const y = .5 + r*1.15; rm(sb, new THREE.BoxGeometry(3.4, .07, .5), shelfM, 0, y, 0); for (let j=0;j<9;j++) jars.push({sb, x: -1.45 + j*.36, y: y + .22}); } }
+      const jm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.13, .13, .36, 10), new THREE.MeshStandardMaterial({color:0xffffff, emissive:0x553311, emissiveIntensity:.35, roughness:.3}), jars.length), M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(1,1,1);
+      const jc = [0xf2a93b, 0xc98a4b, 0x8fd6d0, 0xb79ad8, 0xe8d9a8, 0x7dffc8, 0xff9fc8, 0x9a6b3e];
+      jars.forEach((j, i) => { j.sb.updateMatrixWorld(true); P.set(j.x, j.y, 0); j.sb.localToWorld(P); gi.worldToLocal(P); j.sb.getWorldQuaternion(Q); M.compose(P, Q, S); jm.setMatrixAt(i, M); jm.setColorAt(i, new THREE.Color(jc[(i*5)%8])); });
+      jm.instanceColor.needsUpdate = true; gi.add(jm); }
+    const label = (txt) => { const c = document.createElement('canvas'); c.width = 512; c.height = 128; const x = c.getContext('2d');
+      x.fillStyle = 'rgba(243,230,200,.94)'; x.beginPath(); x.roundRect ? x.roundRect(8, 16, 496, 96, 48) : x.rect(8, 16, 496, 96); x.fill();
+      x.fillStyle = '#1b2a6b'; x.font = '700 40px ui-monospace, Menlo, monospace'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt.toUpperCase(), 256, 66);
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c), depthTest:true, transparent:true})); sp.scale.set(2.6, .65, 1); return sp; };
+    const glassJar = new THREE.MeshStandardMaterial({color:0xdff5ee, transparent:true, opacity:.35, roughness:.05, depthWrite:false});
+    const leafM = gm(0x7dffc8, .7), soilM = rmat(0x3a2a1e), tanM = rmat(0xc9a36a), brownM = rmat(0x7a4f2e);
+    GHI.stations = {};
+    [['vSeeds', 'Seeds', Math.PI*.75], ['vCuttings', 'Cuttings', Math.PI*.25], ['vUnder', 'Underground', -Math.PI*.25], ['vTubers', 'Tubers', -Math.PI*.75]].forEach(([key, name, a]) => {
+      const g = pivot(V, Math.cos(a)*5.5, 0, Math.sin(a)*5.5); g.rotation.y = Math.atan2(-Math.cos(a), -Math.sin(a));
+      rm(g, new THREE.CylinderGeometry(.66, .86, 2.5, 24), rmat(0x6f6a5c), 0, 1.25, 0); rm(g, new THREE.TorusGeometry(.7, .03, 6, 40), gm(0xf2a93b, 1.4), 0, 2.5, 0).rotation.x = Math.PI/2;
+      const top = pivot(g, 0, 2.53, 0);
+      if (key === 'vSeeds'){ [[-.32, .1, 0xf2a93b], [0, -.15, 0xc98a4b], [.32, .1, 0xb79ad8]].forEach(([x, z, c]) => { rm(top, new THREE.CylinderGeometry(.13, .13, .42, 12), glassJar, x, .21, z); rm(top, new THREE.CylinderGeometry(.11, .11, .2, 12), rmat(c), x, .1, z); rm(top, new THREE.CylinderGeometry(.14, .14, .05, 12), wood, x, .44, z); });
+        rm(top, new THREE.CylinderGeometry(.16, .12, .22, 10), rmat(0xb0603a), 0, .11, .3); rm(top, new THREE.CylinderGeometry(.03, .03, .4, 6), leafM, 0, .42, .3);
+        for (const s of [-1, 1]){ const lf = rm(top, new THREE.SphereGeometry(.13, 8, 6), leafM, s*.12, .62, .3); lf.scale.set(1, .25, .6); lf.rotation.z = s*.4; } }
+      if (key === 'vCuttings'){ rm(top, new THREE.CylinderGeometry(.16, .14, .5, 14), glassJar, -.2, .25, 0); rm(top, new THREE.CylinderGeometry(.13, .12, .3, 14), gm(0x8fd6d0, .5), -.2, .15, 0);
+        rm(top, new THREE.CylinderGeometry(.025, .025, .9, 6), rmat(0x4f7a3a), -.2, .55, 0); for (let k=0;k<3;k++){ const lf = rm(top, new THREE.SphereGeometry(.12, 8, 6), leafM, -.2 + (k%2 ? .1 : -.1), .82 + k*.08, 0); lf.scale.set(1, .2, .5); }
+        for (let k=0;k<5;k++) rm(top, new THREE.CylinderGeometry(.006, .006, .14, 4), rmat(0xf3e6c8), -.2 + (k-2)*.02, .02, 0);
+        rm(top, new THREE.BoxGeometry(.5, .08, .4), soilM, .3, .04, .05); const lf = rm(top, new THREE.SphereGeometry(.18, 10, 6), rmat(0x4f9a5e), .3, .1, .05); lf.scale.set(1, .15, .65);
+        for (const dx of [-.12, 0, .12]){ rm(top, new THREE.SphereGeometry(.035, 6, 4), leafM, .3 + dx, .17, .2); } }
+      if (key === 'vUnder'){ rm(top, new THREE.BoxGeometry(1.05, .1, .6), soilM, 0, .05, 0);
+        const bulb = rm(top, new THREE.SphereGeometry(.15, 12, 10), rmat(0xf3e6c8), -.34, .22, 0); bulb.scale.y = 1.1; rm(top, new THREE.ConeGeometry(.05, .2, 6), rmat(0xf3e6c8), -.34, .43, 0);
+        const corm = rm(top, new THREE.SphereGeometry(.16, 12, 8), brownM, 0, .17, -.05); corm.scale.y = .6; rm(top, new THREE.SphereGeometry(.05, 6, 4), brownM, .14, .14, .08);
+        for (let k=0;k<3;k++){ const rz = rm(top, new THREE.CylinderGeometry(.05, .05, .2, 8), tanM, .25 + k*.12, .14, .12); rz.rotation.z = Math.PI/2 + (k-1)*.15; }
+        rm(top, new THREE.ConeGeometry(.03, .22, 5), leafM, .37, .3, .12); }
+      if (key === 'vTubers'){ const bk = rm(top, new THREE.CylinderGeometry(.42, .34, .3, 16, 1, true), rmat(0x9a6b3e, {side:THREE.DoubleSide}), 0, .15, 0); rm(top, new THREE.CircleGeometry(.34, 16), rmat(0x9a6b3e), 0, .02, 0).rotation.x = -Math.PI/2;
+        for (let k=0;k<3;k++){ const yam = rm(top, new THREE.SphereGeometry(.12, 10, 8), brownM, -.12 + k*.12, .3, (k-1)*.08); yam.scale.set(2.2, .9, 1); yam.rotation.y = k*.7; }
+        rm(top, new THREE.SphereGeometry(.12, 8, 6), soilM, .55, .1, .1); rm(top, new THREE.CylinderGeometry(.02, .02, .3, 5), leafM, .55, .3, .1); const lf = rm(top, new THREE.SphereGeometry(.09, 8, 6), leafM, .6, .44, .1); lf.scale.set(1, .25, .6); }
+      const sg = label(name); sg.position.set(0, 4.15, 0); g.add(sg);
+      GHI.stations[key] = {g, a}; });
+    gi.traverse(m => { if (m.isMesh){ m.castShadow = false; m.receiveShadow = false; } });
+    const hallL = new THREE.PointLight(0x9fffd8, 1.15, 34, 1.4); hallL.position.set(GI.x, 6, GI.z); scene.add(hallL);
+    const vaultL = new THREE.PointLight(0xffd9a0, 1.5, 22, 1.4); vaultL.position.set(GI.x, VY + 5.5, GI.z); scene.add(vaultL);
+    GHI.front = front; GHI.heart = heart;
+    YARD.ghInAnim = (t) => { const on = camera.position.x < -60; gi.visible = on; if (!on) return;
+      glowMats.forEach((mt, i) => { mt.emissiveIntensity = .6 + Math.sin(t*.9 + i*1.3)*.3; }); canopy.rotation.y = t*.03;
+      const M = new THREE.Matrix4(), P = new THREE.Vector3(), Q = new THREE.Quaternion(), S = new THREE.Vector3(1,1,1);
+      bd.forEach((b, i) => { const a = t*b.s + b.ph; M.compose(P.set(b.x + Math.cos(a)*b.r, b.h + Math.sin(a*1.7)*.35, .9 + Math.sin(a)*b.r*.8), Q, S); bees.setMatrixAt(i, M); }); bees.instanceMatrix.needsUpdate = true;
+      hallL.intensity = 1.1 + Math.sin(t*.6)*.2; };
+  }
+  { const GHI = YARD.ghIn, GI = GHI.GI, L = (x, y, z) => [GI.x + x, GI.y + y, GI.z + z];
+    register('ghInside', GHI.front, new THREE.Vector3(...L(0, 4.2, 0)), [L(0, 3.2, 12.2), L(0, 3.0, 0)]); spots.ghInside.anim = YARD.ghInAnim;
+    register('ghVault', GHI.heart, new THREE.Vector3(...L(0, -5.6, 0)), [L(0, -6.0, 7.4), L(0, -7.4, -3)]);
+    register('ghBees', GHI.hives, new THREE.Vector3(...L(0, 3.2, -22.5)), [L(0, 2.7, -15.0), L(0, 1.2, -22.6)]);
+    for (const k in GHI.stations){ const st = GHI.stations[k], ux = Math.cos(st.a), uz = Math.sin(st.a), px = ux*5.5, pz = uz*5.5;
+      register(k, st.g, new THREE.Vector3(...L(px, -5.6, pz)), [L(px - ux*4.6, -6.0, pz - uz*4.6), L(px, -7.1, pz)]); } }
+
   YARD.stones.forEach((st,i) => { st.m.userData.key = 'hike' + i; hitList.push(st.m); });
   YARD.yardStones.forEach((st,i) => { st.m.userData.key = 'walk' + i; hitList.push(st.m); });
   YARD.clearLine = (a, b) => { for (let k=1;k<10;k++){ const x = a.x + (b.x - a.x)*k/10, z = a.z + (b.z - a.z)*k/10; if (Math.abs(x) < 6.6 && z < .6 && z > -6.8) return false; } return true; };
@@ -2013,6 +2463,37 @@ document.getElementById('goBtn').onclick = () => {
     flyTo(p, t, lim, null, deep ? [[0,-19,-84.4],[0,-9,-84],[0,1.5,-84],[0,8,-74]].map(v => new THREE.Vector3(...v)) : undefined); if (spots[key].hit) spots[key].hit();
   };
 
+  { // stepping into and out of the greenhouse: fly to its door, a green glow, and you're inside
+    const GI = YARD.ghIn.GI, gin = (p) => p.x < -60, veil = document.getElementById('veil');
+    const GH_KEYS = new Set(Object.keys(SPOTS).filter(k => SPOTS[k].gh));
+    const L = (x, y, z) => new THREE.Vector3(GI.x + x, GI.y + y, GI.z + z);
+    const DOOR = [new THREE.Vector3(-21, 1.9, -41.3), new THREE.Vector3(-21, 1.7, -47)], FREE = {minD:0, maxD:Infinity, minA:-Infinity, maxA:Infinity, minP:0, maxP:Math.PI};
+    const viewOf = (key) => { const v = spots[key].view, p = new THREE.Vector3(...v[0]), t = new THREE.Vector3(...v[1]); if (mobile) t.y -= .3; return [p, t]; };
+    const route = (a, p) => { const pts = [], low = (v) => v.y < GI.y - 4, bee = (v) => v.z < GI.z - 14.3;
+      if (bee(a) && !bee(p)) pts.push(L(0, 2.5, -14.6), L(0, 2.7, -11));
+      if (low(a) && !low(p)) pts.push(L(0, -7.4, 1.4), L(-.4, -4.5, .4), L(.3, -1, -.5), L(0, 3, 3.4));
+      if (!low(a) && low(p)) pts.push(L(0, 3, 3.4), L(.3, -1, -.5), L(-.4, -4.5, .4), L(0, -7.4, 1.4));
+      if (!bee(a) && bee(p)) pts.push(L(0, 2.7, -11), L(0, 2.5, -14.6));
+      return pts; };
+    const inside = (key) => { const [p, t] = viewOf(key); flyTo(p, t, IN_LIMITS, null, route(camera.position, p)); };
+    let busy = false;
+    const fade = (fn) => { busy = true; veil.classList.add('on'); setTimeout(() => { fn(); setTimeout(() => { veil.classList.remove('on'); busy = false; }, 120); }, 450); };
+    const enter = (key) => { let fired = false, w = null; const go = () => { if (fired) return; fired = true; clearInterval(w);
+        fade(() => { tween = null; setLimits(FREE); camera.position.copy(L(0, 3.0, 14.4)); controls.target.copy(L(0, 3.0, 8)); inside(key); }); };
+      const a = camera.position, near = a.distanceTo(DOOR[0]) < 9;
+      flyTo(DOOR[0], DOOR[1], IN_LIMITS, go, near ? [] : [new THREE.Vector3(-13, 6.5, -34), new THREE.Vector3(-19.5, 3, -39)]);
+      w = setInterval(() => { if (!tween) go(); }, 200); };
+    const leave = (key) => fade(() => { tween = null; setLimits(FREE); camera.position.copy(DOOR[0]); controls.target.copy(DOOR[1]); base(key); });
+    const base = focusSpot;
+    focusSpot = (key) => {
+      if (busy) return;
+      const here = gin(camera.position) || (tween && gin(tween.p1));
+      if (key && GH_KEYS.has(key)){ if (here) inside(key); else enter(key); return; }
+      if (here){ leave(key); return; }
+      base(key); };
+    const lv0 = lockViewFor; lockViewFor = (k) => GH_KEYS.has(k) ? 'greenhouse' : lv0(k);
+  }
+
   /* --- picking: tap objects in the scene too --- */
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(); let down = null, hoverKey = null;
   const canvas = renderer.domElement;
@@ -2065,7 +2546,7 @@ document.getElementById('goBtn').onclick = () => {
     for (const k in spots) if (spots[k].anim) spots[k].anim(t*m);
     if (BACK.doorK !== BACK.doorTo){ BACK.doorK += Math.sign(BACK.doorTo - BACK.doorK)*Math.min(Math.abs(BACK.doorTo - BACK.doorK), .05); BACK.hinge.rotation.y = -1.5*BACK.doorK*BACK.doorK*(3 - 2*BACK.doorK); BACK.outDoor.visible = BACK.doorK < .03; }
     YARD.roam(t*m); if (flowerGlow) flowerGlow(t*m);
-    { const cd = camera.position.distanceTo(controls.target); scene.fog.density = .016*Math.min(1, Math.max(.4, 24/cd)); }
+    { const cd = camera.position.distanceTo(controls.target); scene.fog.density = camera.position.x < -60 ? .03 : .016*Math.min(1, Math.max(.4, 24/cd)); }
     for (const c of cats){ c.segs.forEach((s,i) => { s.rotation.y = Math.sin(t*m*2 + c.ph + i*.6)*.35; s.rotation.x = c.curled ? 0 : -.25; }); if (!c.curled) c.head.rotation.y = Math.sin(t*m*.4 + c.ph)*.5; const mu = c.meowAt != null ? (t - c.meowAt)/.75 : -1; c.head.rotation.x = mu > 0 && mu < 1 ? -.45*Math.sin(mu*Math.PI) : 0; }
     ROOM.pour.cups.concat(ROOM.tea.cups).forEach(c => { const hot = c.fill.visible && c.fill.position.y > c.hotY && !(ROOM.drink && ROOM.drink.c === c);
       c.steam.forEach(s => { s.visible = hot; if (!hot) return; const u = (t*m*.28 + s.userData.ph) % 1; s.position.set(c.x + Math.sin(u*7 + s.userData.ph*11)*.025, c.top + u*.42, c.z + Math.cos(u*5 + s.userData.ph*7)*.015); s.scale.setScalar(.5 + u*1.5); s.material.opacity = .42*Math.sin(u*Math.PI)*Math.min(1, (c.fill.position.y-c.hotY)*40); }); });
@@ -2139,7 +2620,7 @@ document.getElementById('goBtn').onclick = () => {
     const inRoom = current && SPOTS[current].room && !LOCKED(current), outB = document.getElementById('outBtn');
     const away = !inRoom && !card.classList.contains('open') && camera.position.distanceTo(HOME_POS) > 4;
     outB.classList.toggle('show', (!!inRoom || away) && !tween);
-    const outTxt = inRoom ? '← Back out to the porch' : camera.position.y < -5 ? '← Climb back up to the porch' : '← Back to the front porch'; if (outB.textContent !== outTxt) outB.textContent = outTxt;
+    const outTxt = inRoom ? '← Back out to the porch' : camera.position.x < -60 ? '← Leave the greenhouse' : camera.position.y < -5 ? '← Climb back up to the porch' : '← Back to the front porch'; if (outB.textContent !== outTxt) outB.textContent = outTxt;
     exitTag.classList.toggle('hidden', !inRoom);
     if (inRoom){ v3.copy(ROOM.exit.g.position); v3.y += .5; v3.project(camera); const ev = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
       exitTag.classList.toggle('hidden', !ev); if (ev){ exitTag.style.left = ((v3.x+1)/2*innerWidth) + 'px'; exitTag.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
@@ -2159,7 +2640,7 @@ document.getElementById('goBtn').onclick = () => {
     for (const k of ORDER){ const sp = spots[k], tg = tags[k]; v3.copy(inRoom && sp.anchorIn ? sp.anchorIn : sp.anchor).project(camera);
       const vis = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
       const show = !current ? ((!SPOTS[k].room && (!SPOTS[k].yard || behind(camera.position) || (SPOTS[k].far && camera.position.distanceTo(controls.target) > 26))) || k === 'inside' || k === 'songs') : inRoom ? (!!SPOTS[k].room || !!SPOTS[k].everywhere) : current === k;
-      tg.classList.toggle('hidden', !vis || !show || (camera.position.y < -5 && current !== k));
+      tg.classList.toggle('hidden', !vis || !show || ((camera.position.y < -5 || camera.position.x < -60) && current !== k));
       if (vis){ tg.style.left = ((v3.x+1)/2*innerWidth) + 'px'; tg.style.top = ((1-v3.y)/2*innerHeight) + 'px'; } }
     requestAnimationFrame(frame);
   }
