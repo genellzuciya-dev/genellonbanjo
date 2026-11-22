@@ -534,7 +534,7 @@ const SPOTS = {
   inside: {name:'Step inside', room:true, eyebrow:'The parlor', title:'Come on in',
     body:()=>`<p>Make yourself at home. The porch TV plays old-time musicians, dancers and cloggers on a loop. Press play on the TV and sit a while.</p>
       ${!PLAYLIST ? '' : CAN_EMBED ? '' : '<p style="color:var(--muted)">The TV plays on genellonbanjo.com. In this preview it shows a test screen.</p>'}
-      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="musicwall">See the music wall<span>Instruments</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
+      <div class="acts"><button class="act" type="button" data-go="couch">Sit on the couch<span>Watch TV</span></button><button class="act" type="button" data-go="songs">Visit the song map table<span>Song maps</span></button><button class="act" type="button" data-go="stove">Go to the kitchen<span>Soup's on</span></button>${act('Watch the playlist on YouTube', PLAYLIST ? 'https://www.youtube.com/playlist?list=' + PLAYLIST : '', 'YouTube')}<button class="act" type="button" id="backOut">Back out to the porch<span>Porch</span></button></div>`},
   couch: {name:'Sit on couch', room:true, eyebrow:'The couch', title:'Have a seat',
     body:()=>`<p>Kick back and watch a while.${PLAYLIST && CAN_EMBED ? ' Press play on the TV.' : ''}</p>
       <div class="acts">${PLAYLIST && CAN_EMBED ? '<button class="act" type="button" id="tvPrev">◀ Previous video<span>Bottom dial</span></button><button class="act" type="button" id="tvNext">Next video ▶<span>Top dial</span></button>' : ''}<button class="act" type="button" id="getUp">Get up<span>Parlor</span></button><button class="act" type="button" data-go="stove">Check on the soup<span>Kitchen</span></button></div>`},
@@ -552,7 +552,7 @@ const SPOTS = {
 };
 const PLAYLIST = (LINKS.tvPlaylist.match(/[?&]list=([\w-]+)/) || [null, LINKS.tvPlaylist.trim()])[1];
 const CAN_EMBED = /(^|\.)genellonbanjo\.com$/.test(location.hostname) || location.hostname === 'localhost' || location.protocol === 'file:';
-const ORDER = ['inside','couch','songs','musicwall','stove','coffee','backporch','braids','market','indigo','corn','amphi','greenhouse','sirens','archive','jambud','porchbud','chair','tea','banjo','cats'];
+const ORDER = ['inside','couch','songs','stove','coffee','backporch','braids','market','indigo','corn','amphi','greenhouse','sirens','archive','jambud','porchbud','chair','tea','banjo','cats'];
 
 /* ===== UI ===== */
 const card = document.getElementById('card'), cardInner = document.getElementById('cardInner');
@@ -1542,9 +1542,11 @@ document.getElementById('goBtn').onclick = () => {
     BACK.porch = bp;
     // back door seen from outside
     const od = pivot(scene, -.4, .62, -6.3); BACK.outDoor = od; rm(od, new THREE.BoxGeometry(1.0, 2.24, .06), rmat(0x6e1f2a), 0, 1.12, 0); rm(od, new THREE.PlaneGeometry(.6,.78), new THREE.MeshBasicMaterial({color:0xffc27a}), 0, 1.66, -.035).rotation.y = Math.PI; }
-  { // the cornfield, with a path cut into it from the back steps
+  { // the cornfield, with a path cut into it from the back steps, meandering on out to the back of the yard
+    BACK.cornPath = new THREE.CatmullRomCurve3([[0,-20],[2.4,-22.6],[2.2,-25.2],[-1.2,-27.4],[-3.6,-30.2],[-2.6,-33],[0,-35.4]].map(([x,z]) => new THREE.Vector3(x, 0, z)));
+    const cutPts = BACK.cornPath.getSpacedPoints(120), onPath = (x, z) => { for (const q of cutPts) if ((q.x-x)**2 + (q.z-z)**2 < 1.5) return true; return false; };
     const mob = matchMedia('(max-width:720px)').matches, step = mob ? 1.15 : .8; const pts = [];
-    for (let z = -11; z > -34; z -= step) for (let x = -26; x < 26; x += step){ const jx = x + (Math.random()-.5)*.3, jz = z + (Math.random()-.5)*.3; if (Math.abs(jx) < 1.1 && jz > -20) continue; if (Math.abs(Math.abs(jx) - 8.4) < 4.2 && jz > -15.5) continue; if (Math.abs(jz + 20) < .9 && Math.abs(jx) < 9) continue; pts.push([jx, jz, 1.9 + Math.random()*.8]); }
+    for (let z = -11; z > -34; z -= step) for (let x = -26; x < 26; x += step){ const jx = x + (Math.random()-.5)*.3, jz = z + (Math.random()-.5)*.3; if (Math.abs(jx) < 1.1 && jz > -20) continue; if (Math.abs(Math.abs(jx) - 8.4) < 4.2 && jz > -15.5) continue; if (Math.abs(jz + 20) < .9 && Math.abs(jx) < 9) continue; if (jz < -19 && onPath(jx, jz)) continue; pts.push([jx, jz, 1.9 + Math.random()*.8]); }
     const n = pts.length; const leafG = new THREE.SphereGeometry(1, 6, 4), tasG = new THREE.SphereGeometry(1, 8, 6);
     leafG.scale(.075, .42, .02); leafG.translate(0, .4, 0); tasG.scale(.07, .17, .07);
     const stalk = new THREE.InstancedMesh(new THREE.CylinderGeometry(.022,.035,1,6), rmat(0x7f8f3c), n), leaf = new THREE.InstancedMesh(leafG, rmat(0x5f8a3a, {flatShading:false}), n*3), tas = new THREE.InstancedMesh(tasG, rmat(0xd9b24a, {flatShading:false}), n), cob = new THREE.InstancedMesh(new THREE.CylinderGeometry(.045,.035,.26,6), rmat(0xe8b84a), n);
@@ -1892,6 +1894,13 @@ document.getElementById('goBtn').onclick = () => {
       [[-7.7,.9],[-8.1,-.1]].forEach(([x,z]) => add(x, z, -9.6 - x, -3.0 - z));
       for (let z = -12.2; z >= -19.6; z -= 2.1) add(0, z, 0, -1);
       for (const sd of [-1,1]) for (let x = 2.1; x <= 8.4; x += 2.1) add(sd*x, -20, sd, 0);
+      // on through the corn, then forking out to the greenhouse, the amphitheater and the woods trailhead
+      const lay = (c, skipFirst) => { const Lc = c.getLength(), nc = Math.max(1, Math.round(Lc/2.1)); for (let i = skipFirst ? 1 : 0; i <= nc; i++){ const u = i/nc, q = c.getPointAt(u), tg = c.getTangentAt(Math.min(.999, u)); add(q.x, q.z, tg.x, tg.z); } };
+      lay(BACK.cornPath, true);
+      const hub = BACK.cornPath.getPointAt(1), V2 = (x, z) => new THREE.Vector3(x, 0, z), ts = YARD.trailStart;
+      lay(new THREE.CatmullRomCurve3([hub, V2(.8, -37.2), V2(0, -39.3)]), true);
+      lay(new THREE.CatmullRomCurve3([hub, V2(-4.5, -36.6), V2(-9.5, -36.4), V2(-14.5, -38.2), V2(-18.6, -39.6), V2(-21, -41.3)]), true);
+      if (ts) lay(new THREE.CatmullRomCurve3([hub, V2(5, -35.9), V2(10, -34.9), V2(15, -36.3), V2((15 + ts.x)/2 + 1, (-36.3 + ts.z)/2 + .8), V2(ts.x - 1.2, ts.z + 1.1)]), true);
       YARD.yardStones = ys; }
     const hens = [{g:chicken(0xf3e6c8), u:.3, per:150, off:.55, ph:0}, {g:chicken(0x8a4a24), u:.36, per:175, off:.95, ph:2.1}];
     const place = (g, u, off, bob) => { const p = loop.getPointAt(u), tg = loop.getTangentAt(u); g.position.set(p.x - tg.z*off, bob, p.z + tg.x*off); g.rotation.y = Math.atan2(tg.x, tg.z); };
@@ -2245,6 +2254,7 @@ document.getElementById('goBtn').onclick = () => {
     exitArrow.traverse(m => { if (m.isMesh){ m.userData.key = 'exit'; hitList.push(m); } });
     ROOM.exit = {g:exitArrow, ring, am}; }
   register('musicwall', ROOM.musicwall, new THREE.Vector3(3.35, 3.85, -.3), [[3.35,2.5,-3.9],[3.35,2.25,-.1]]); spots.musicwall.inside = true; spots.musicwall.cardMode = 'bottom';
+  for (let i = hitList.length - 1; i >= 0; i--) if (hitList[i].userData.key === 'musicwall'){ hitList[i].userData.key = null; hitList.splice(i, 1); } // the instruments are just to look at
   register('couch', ROOM.couch, new THREE.Vector3(2.6, 1.95, -2.4), [[2.62,1.72,-2.25],[2.06,1.85,-5.0]]); spots.couch.inside = true; spots.couch.noShift = true;
   register('stove', ROOM.stove, new THREE.Vector3(-3.6, 2.15, -5.4), [[-2.7,2.45,-2.7],[-3.6,1.5,-5.4]]); spots.stove.inside = true;
   register('coffee', ROOM.coffee, new THREE.Vector3(-1.85, 2.0, -5.6), [[-1.75,2.3,-3.35],[-1.05,1.55,-5.6]]); spots.coffee.anchorIn = new THREE.Vector3(-1.3, 2.05, -5.6); spots.coffee.inside = true;
