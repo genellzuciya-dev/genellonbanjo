@@ -161,6 +161,11 @@ p{margin:0}
 .roots-mini ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px}
 .roots-mini li{font-size:.9rem;line-height:1.4;color:var(--on-vat-soft)}
 .roots-mini b{display:block;color:var(--on-vat);font-weight:600}
+.why-make{display:grid;gap:12px;justify-items:start;padding:22px 24px 24px}
+.why-make h3{font-size:1.45rem;font-weight:500;color:var(--on-vat)}
+.why-make h3 em{font-style:italic;color:var(--marigold)}
+.why-make p{color:var(--on-vat-soft);font-size:.98rem;line-height:1.6}
+.why-make .btn{margin-top:4px}
 @media (max-width:560px){.roots-mini ul{grid-template-columns:1fr}}
 .sample-cols{columns:2;column-gap:clamp(28px,4vw,52px)}
 .sample-cols p{margin:0 0 1em}
@@ -884,19 +889,16 @@ html,body{overflow-x:clip}
   <section class="band dyed" id="path" aria-labelledby="path-title">
     <div class="wrap">
       <div class="head">
-        <h2 id="path-title">My path to <em>the banjo</em></h2>
+        <h2 id="path-title">About me and my path to <em>the banjo</em></h2>
       </div>
       <div class="path">
         <div class="roots">
           <p>I was raised singing <strong>alto</strong> in both the <strong>gospel choir at church</strong> and the <strong>school choir</strong>, from elementary school all the way through college. I dabbled with guitar and piano along the way, and I've always been involved in dance and the performing arts.</p>
-          <div class="roots-mini" aria-labelledby="roots-title">
-            <p class="eyebrow" id="roots-title">My roots</p>
-            <ul>
-              <li><b>Cameroon</b>Hausa and Tikar roots</li>
-              <li><b>Martinique</b>Ancestry through the Caribbean</li>
-              <li><b>South Carolina Lowcountry</b>Gullah Geechee heritage, and the indigo that runs through this site</li>
-              <li><b>Columbia, Maryland</b>Home: Freetown, Howard County, near the Chesapeake Bay</li>
-            </ul>
+          <div class="roots-mini why-make" aria-labelledby="why-title">
+            <h3 id="why-title">Why create apps and a <em>virtual porch?</em></h3>
+            <p>I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. I've spent more than 18 years in themed entertainment and immersive design, including Walt Disney Imagineering and Meow Wolf.</p>
+            <p>The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp.</p>
+            <a class="btn btn-line" href="https://ilovephotons.com" target="_blank" rel="noopener">See my portfolio</a>
           </div>
         </div>
         <div class="tl-wrap">
@@ -1005,9 +1007,6 @@ html,body{overflow-x:clip}
         <div class="head sample-head">
           <p class="eyebrow">The Virtual Porch · Step inside</p>
           <h3 id="porchworld-title">Come sit on the <em>virtual porch.</em></h3>
-          <div class="sample-cols">
-            <p><b>Why a virtual porch?</b> I love sitting in at jams, festivals and music camps. What also lights me up is the artistry I've practiced all my life: animation, visual effects and graphic design. The Virtual Porch is where those two worlds meet. It's how I express myself and share the music when I'm not at a festival, a jam or a camp. You can see more of my art at <a href="https://ilovephotons.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ilovephotons.com</a>.</p>
-          </div>
         </div>
         <div class="song-links">
           <a class="btn btn-poppy" href="/porch/">Step onto the virtual porch</a>
