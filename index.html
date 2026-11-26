@@ -684,7 +684,7 @@ html,body{overflow-x:clip}
 .coffee-note a{color:inherit;font-weight:600;text-decoration:underline;text-decoration-color:var(--poppy);text-decoration-thickness:2px;text-underline-offset:3px}
 .apps-grid{display:grid;grid-template-columns:1fr;gap:22px}
 .app-wrap{position:relative}
-.tipcup{position:absolute;z-index:3;right:-70px;bottom:-84px;width:230px;display:grid;justify-items:center;text-decoration:none;color:var(--ink);transition:transform .3s ease}
+.tipcup{position:absolute;z-index:3;right:-78px;top:-34px;width:230px;display:grid;justify-items:center;text-decoration:none;color:var(--ink);transition:transform .3s ease}
 .tipcup svg{width:230px;height:auto;display:block;animation:cupBob 3.2s ease-in-out infinite;transform-origin:50% 90%}
 .tipcup .steam path{animation:steamUp 2.6s ease-in-out infinite}
 .tipcup .steam .s2{animation-delay:.5s}.tipcup .steam .s3{animation-delay:1s}
@@ -698,10 +698,13 @@ html,body{overflow-x:clip}
 @keyframes cupBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(-3deg)}}
 @keyframes steamUp{0%{opacity:0;transform:translateY(10px)}35%{opacity:.95}100%{opacity:0;transform:translateY(-14px)}}
 @media (prefers-reduced-motion:reduce){.tipcup svg,.tipcup .steam path{animation:none}}
-@media (max-width:860px){.tipcup{right:2px;bottom:-72px;width:160px}.tipcup svg{width:160px}.app-wrap{margin-bottom:56px}.tiptag{font-size:.55rem;padding:5px 10px}.tiptag b{font-size:.62rem}}
-.app-card{background:#fff8ec;border:2px solid var(--ink);border-radius:14px;box-shadow:10px 10px 0 var(--marigold);overflow:hidden;display:grid}
-.app-card img{display:block;width:100%;height:auto;background:var(--vat);border-bottom:2px solid var(--ink)}
-.app-body{padding:24px 26px 28px;display:grid;gap:12px}
+@media (max-width:860px){.tipcup{position:relative;right:auto;top:auto;justify-self:end;order:9;margin:4px -14px -4px 0;width:160px}.tipcup svg{width:160px}.app-icon{width:60px;height:60px;border-radius:14px}.tiptag{font-size:.55rem;padding:5px 10px}.tiptag b{font-size:.62rem}}
+.app-card{background:#fff8ec;border:2px solid var(--ink);border-radius:14px;box-shadow:10px 10px 0 var(--marigold);display:grid}
+.app-card > img{display:block;width:100%;height:auto;background:var(--vat);border-bottom:2px solid var(--ink);border-radius:12px 12px 0 0}
+.app-title{display:flex;align-items:center;gap:18px}
+.app-title > div{display:grid;gap:6px}
+.app-icon{width:76px;height:76px;flex:none;border-radius:18px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--poppy)}
+.app-body{position:relative;padding:24px 26px 28px;display:grid;gap:12px}
 .app-body h3{font-size:1.7rem;font-weight:500}
 .app-body h3 em{font-style:italic;color:var(--poppy)}
 .app-body p{font-size:1rem}
@@ -1023,7 +1026,10 @@ html,body{overflow-x:clip}
       </div>
       <div class="apps-grid">
         <div class="app-wrap">
-          <a class="tipcup" href="https://buymeacoffee.com/genellonbanjo" target="_blank" rel="noopener" aria-label="Buy me a coffee to support free and accessible music apps">
+        <article class="app-card">
+          <img src="img/banjo-jam-bud-screens.jpg" width="1600" height="546" loading="lazy" alt="Five Banjo Jam BUD screens: picking your tuning, tuning with the mic or by ear, common jam chords for that tuning, the Queen Bee jam tune book, and the tuning, capo and chords for each tune.">
+          <div class="app-body">
+            <a class="tipcup" href="https://buymeacoffee.com/genellonbanjo" target="_blank" rel="noopener" aria-label="Buy me a coffee to support free and accessible music apps">
             <svg viewBox="-56 -42 312 252" aria-hidden="true">
               <defs><path id="tiparc" d="M-30 140A130 130 0 0 1 230 140"/></defs>
               <text class="tiparc"><textPath href="#tiparc" startOffset="50%" text-anchor="middle">Want to support · free apps?</textPath></text>
@@ -1041,11 +1047,13 @@ html,body{overflow-x:clip}
             </svg>
             <span class="tiptag">Tip jar<br><b>Buy me a coffee</b></span>
           </a>
-        <article class="app-card">
-          <img src="img/banjo-jam-bud-screens.jpg" width="1600" height="546" loading="lazy" alt="Five Banjo Jam BUD screens: picking your tuning, tuning with the mic or by ear, common jam chords for that tuning, the Queen Bee jam tune book, and the tuning, capo and chords for each tune.">
-          <div class="app-body">
-            <p class="app-meta">iPhone and iPad · No ads</p>
-            <h3>Banjo Jam <em>BUD</em></h3>
+            <div class="app-title">
+              <img class="app-icon" src="/img/banjo-jam-bud-icon.png" onerror="this.onerror=null;this.src='https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/55/8a/93/558a9361-6db1-deb3-c089-8a2d769dcae3/AppIcon-0-0-1x_U007epad-0-1-85-220.png/256x256bb.jpg'" width="76" height="76" alt="Banjo Jam BUD app icon">
+              <div>
+                <p class="app-meta">iPhone and iPad · No ads</p>
+                <h3>Banjo Jam <em>BUD</em></h3>
+              </div>
+            </div>
             <p>Get tuned up and playing at the jam. Pick your tuning, tune with the mic or by ear, see the common chords for that tuning, and open a jam's tune book to find the tuning, capo and chord shapes for every tune. It starts with the Queen Bee Music Association jam book from Santa Fe.</p>
             <div class="app-actions">
               <a class="btn btn-ink" href="https://apps.apple.com/app/id6830488273" target="_blank" rel="noopener">Get it free on the App Store</a>
